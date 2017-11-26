@@ -7,10 +7,7 @@ import {
   ScrollView,
   TouchableOpacity
 } from 'react-native';
-const dimensions = {
-  width: Dimensions.get('window').width,
-  height: Dimensions.get('window').height
-}
+import SelectorButton from '../selectorButton';
 class StoryMode extends Component {
   render() {
     return (
@@ -21,31 +18,11 @@ class StoryMode extends Component {
         <ScrollView
           horizontal={true}
           >
-          <TouchableOpacity style={styles.characterContainer} onPress={() => this.props.store.navigationState = 'LEVEL_SELECT'}>
-            <Text>
-              character1
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.characterContainer} onPress={() => this.props.store.navigationState = 'LEVEL_SELECT'}>
-            <Text>
-              character2
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.characterContainer} onPress={() => this.props.store.navigationState = 'LEVEL_SELECT'}>
-            <Text>
-              character3
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.characterContainer} onPress={() => this.props.store.navigationState = 'LEVEL_SELECT'}>
-            <Text>
-              character4
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.characterContainer} onPress={() => this.props.store.navigationState = 'LEVEL_SELECT'}>
-            <Text>
-              character5
-            </Text>
-          </TouchableOpacity>
+          <SelectorButton
+            goTo={'LEVEL_SELECT'}
+            store={this.props.store}
+            buttonText={'uglass'}
+          />
         </ScrollView>
       </View>
     );
@@ -62,14 +39,6 @@ const styles = StyleSheet.create({
   },
   characterWheel: {
     flexDirection: 'row'
-  },
-  characterContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    height: dimensions.height*.8,
-    width: dimensions.width*.25,
-    margin: 10
   },
 });
 
