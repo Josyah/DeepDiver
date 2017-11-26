@@ -12,6 +12,9 @@ class StoryMode extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <TouchableOpacity onPress={() => this.props.store.navigationState = 'HOME'}>
+          <Text>Back</Text>
+        </TouchableOpacity>
         <Text>
           Character Select
         </Text>

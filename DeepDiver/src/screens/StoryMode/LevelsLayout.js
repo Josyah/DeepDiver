@@ -3,13 +3,17 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import LevelContainer from './LevelContainer';
 class LevelsLayout extends Component {
   render() {
     return (
       <View style={styles.wrapper}>
+        <TouchableOpacity onPress={() => this.props.store.navigationState = 'CHAR_SELECT'}>
+          <Text>Back</Text>
+        </TouchableOpacity>
         <View style={styles.title}>
           <Text>
             Levels Layout Component
