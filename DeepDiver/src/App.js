@@ -6,60 +6,41 @@ import {
   Text,
   View
 } from 'react-native';
-import { Loop, Stage, World, Body } from 'react-game-kit/native';
-import Matter from 'matter-js';
+import { Loop, Stage, World } from 'react-game-kit/native';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react/native';
+import store from './store';
 import Game from './components/Game';
-import Background from './components/background';
-import {GLOBALS} from './globals'
-import Player from './components/player2';
-import Home from './screens/Home';
-import Navigation from './screens';
 export default class App extends Component<{}> {
-
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      gravity: 1,
-      ballPosition: {
-        x: 0,
-        y: 0,
-      },
-      ballAngle: 0,
-    };
-  }
-  handleUpdate = () => {
-    this.setState({
-      ballPosition: this.ball.body.position,
-      ballAngle: this.ball.body.angle,
-    });
-  }
-
-
-  getBallStyles() {
-    return {
-      height: 75,
-      width: 75,
-      position: 'absolute',
-      bottom: 500,
-      left: 300,
-      transform: [
-        { translateX: this.state.ballPosition.x },
-        { translateY: this.state.ballPosition.y },
-        { rotate: (this.state.ballAngle * (180 / Math.PI)) + 'deg'}
-      ],
-    };
-  }
+  update = () => {
+    console.log('update')
+  };
   render() {
     return (
       <Loop>
         <Stage>
-          <Navigation/>
+          <Game store={store}/>
         </Stage>
       </Loop>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+});

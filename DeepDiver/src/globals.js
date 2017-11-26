@@ -9,9 +9,8 @@ exports.GLOBALS = {
     y: Dimensions.get('window').height*.2,
   },
   initBackgroundPosition: {
-    x: 0,
-    y: 0,
+    x: 300,
+    y: Dimensions.get('window').height*.8,
   },
-  gameSpeed: 2,
-  jumpConstant: 40
+  gameSpeed: 1
 }
