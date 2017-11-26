@@ -13,7 +13,6 @@ import {observer} from 'mobx-react/native';
 import Game from './components/Game';
 import Background from './components/background';
 import {GLOBALS} from './globals'
-import Player from './components/player2';
 import Home from './screens/Home';
 import Navigation from './screens';
 export default class App extends Component<{}> {

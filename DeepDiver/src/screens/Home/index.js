@@ -18,7 +18,7 @@ class Home extends Component {
             Story Mode
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.store.navigationState = 'LEVEL'}>
           <Text style={styles.linkToPage}>
             Arcade
           </Text>

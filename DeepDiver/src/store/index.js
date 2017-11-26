@@ -9,7 +9,7 @@ class ObservableListStore {
       y: GLOBALS.initBackgroundPosition.y
     }
   }
-  @observable character = {
+  @observable player = {
     position: {
       x: GLOBALS.initCharacterPosition.x,
       y: GLOBALS.initCharacterPosition.y
@@ -17,12 +17,19 @@ class ObservableListStore {
     angle: 0
   };
   @observable navigationState = 'HOME'
+  @observable forceUp = 0
   moveBackground () {
     this.background.position.x = this.background.position.x-(1.5*GLOBALS.gameSpeed)
   }
   pressScreen () {
     console.log('pressed');
-    this.character.position.y = this.character.position.y + GLOBALS.jumpConstant
+    // this.player.position.y = tis.player.position.y - GLOBALS.jumpConstant;
+    this.forceUp = -5
+  }
+  releaseScreen () {
+    console.log('released');
+    // this.player.position.y = tis.player.position.y - GLOBALS.jumpConstant;
+    this.forceUp = 0
   }
 }
 
