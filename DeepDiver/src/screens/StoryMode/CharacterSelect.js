@@ -8,12 +8,19 @@ import {
   TouchableOpacity
 } from 'react-native';
 import SelectorButton from '../selectorButton';
+import IonIcons from 'react-native-vector-icons/Ionicons';
 class StoryMode extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => this.props.store.navigationState = 'HOME'}>
-          <Text>Back</Text>
+        <TouchableOpacity
+          onPress={() => this.props.store.navigationState = 'HOME'}
+          style={styles.backButton}
+          >
+          <IonIcons
+            size={30}
+            name={'md-arrow-back'}
+            />
         </TouchableOpacity>
         <Text>
           Character Select
@@ -57,6 +64,13 @@ const styles = StyleSheet.create({
   },
   characterWheel: {
     flexDirection: 'row'
+  },
+  backButton: {
+    position: 'absolute',
+    top: 5,
+    left: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

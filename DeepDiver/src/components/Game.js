@@ -69,6 +69,9 @@ class Game extends Component {
                 style={{margin: 10}}
               />
             </TouchableOpacity>
+            <View style={styles.distance}>
+              <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
+            </View>
             <Enemies
               store={this.props.store}
               enemies={this.enemyPositions}
@@ -105,6 +108,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  distance: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: 'black',
+    padding: 5,
+    margin: 5
+  },
+  distanceText: {
+    fontSize: 20
+  }
 });
 
 module.exports = Game;
