@@ -9,8 +9,9 @@ import Loading from './Loading';
 import {observer} from 'mobx-react';
 import store from '../store';
 import LevelSelect from './StoryMode/LevelsLayout'
-import CharSelect from './StoryMode';
+import CharSelect from './StoryMode/CharacterSelect';
 import Game from '../components/Game';
+import GameOver from './GameOver';
 @observer
 class Navigation extends Component {
   render() {
@@ -31,6 +32,10 @@ class Navigation extends Component {
       case 'LEVEL':
         return(
           <Game store={store}/>
+        )
+      case 'DEAD':
+        return(
+          <GameOver store={store}/>
         )
       default:
         return (

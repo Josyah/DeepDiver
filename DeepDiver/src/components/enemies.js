@@ -21,7 +21,6 @@ class Enemies extends Component {
               store={this.props.store}
             />
           );
-
         })}
       </View>
     );

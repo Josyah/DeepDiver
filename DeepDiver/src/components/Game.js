@@ -26,6 +26,9 @@ class Game extends Component {
     if(store.forceUp!=0){
       Matter.Body.setVelocity(this.player.body, {x: 0, y: store.forceUp});
     }
+    Matter.Events.on(this.player.body, 'collision', function(e) {
+      console.log('collision')
+    })
   }
 
   static contextTypes = {

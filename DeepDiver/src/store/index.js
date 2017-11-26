@@ -22,12 +22,12 @@ class ObservableListStore {
     this.background.position.x = this.background.position.x-(1.5*GLOBALS.gameSpeed)
   }
   pressScreen () {
-    console.log('pressed');
+    // console.log('pressed');
     // this.player.position.y = tis.player.position.y - GLOBALS.jumpConstant;
     this.forceUp = -5
   }
   releaseScreen () {
-    console.log('released');
+    // console.log('released');
     // this.player.position.y = tis.player.position.y - GLOBALS.jumpConstant;
     this.forceUp = 0
   }

@@ -21,7 +21,22 @@ class StoryMode extends Component {
           <SelectorButton
             goTo={'LEVEL_SELECT'}
             store={this.props.store}
-            buttonText={'uglass'}
+            buttonText={'Sea Dude'}
+          />
+          <SelectorButton
+            goTo={'LEVEL_SELECT'}
+            store={this.props.store}
+            buttonText={'Character 2'}
+          />
+          <SelectorButton
+            goTo={'LEVEL_SELECT'}
+            store={this.props.store}
+            buttonText={'Character 3'}
+          />
+          <SelectorButton
+            goTo={'LEVEL_SELECT'}
+            store={this.props.store}
+            buttonText={'Character 4'}
           />
         </ScrollView>
       </View>
