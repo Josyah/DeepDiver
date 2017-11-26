@@ -21,34 +21,33 @@ class Game extends Component {
     this.enemyPositions = generateEnemies();
     store = this.props.store;
   }
-  handleUpdate = () => {
+  handleUpdate = (engine) => {
     store.player.position = this.player.body.position;
     if(store.forceUp!=0){
       Matter.Body.setVelocity(this.player.body, {x: 0, y: store.forceUp});
     }
-    Matter.Events.on(this.player.body, 'collision', function(e) {
-      console.log('collision')
-    })
+    store.moveBackground();
+  }
+  onCollision(e){
+    console.log('COLLIDED', e.pairs[0].id)
+    if(e.pairs[0].id=='A26B28'){
+      console.log('HIT CEILING')
+    }
+    if(e.pairs[0].id=='A26B27'){
+      console.log('HIT FLOOR')
+    }
+    else{
+      console.log('HIT ENEMY')
+    }
+
   }
 
-  static contextTypes = {
-    loop: PropTypes.object,
-  };
-  update(){
-    store.moveBackground();
-    //moves the background on every update
-  };
-  componentDidMount() {
-    this.context.loop.subscribe(this.update);
-  }
-  componentWillUnmount() {
-    this.context.loop.unsubscribe(this.update);
-  }
   render() {
     return (
       <World
         onInit={physicsInit}
         onUpdate={this.handleUpdate}
+        onCollision={this.onCollision}
         gravity={{ x: 0, y: 2, scale: 0.0005 }}
         >
         <TouchableWithoutFeedback
@@ -61,18 +60,18 @@ class Game extends Component {
               store={this.props.store}
               enemies={this.enemyPositions}
               />
-              <Body
-                shape="rectangle"
-                args={[50, 0, 75, 75]}
-                friction={0}
-                frictionStatic={0}
-                restitution={0}
-                ref={(b) => { this.player = b; }}
-              >
-                <Player
-                  store={store}
-                  />
-              </Body>
+            <Body
+              shape="rectangle"
+              args={[50, 0, 75, 75]}
+              friction={0}
+              frictionStatic={0}
+              restitution={0}
+              ref={(b) => { this.player = b; }}
+            >
+              <Player
+                store={store}
+                />
+            </Body>
           </View>
         </TouchableWithoutFeedback>
       </World>
