@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity
 } from 'react-native';
 import {World, Body} from 'react-game-kit/native';
 import PropTypes from 'prop-types';
@@ -12,7 +13,9 @@ import Enemies from './enemies';
 import {generateEnemies} from '../utils/generateEnemies';
 import {observer} from 'mobx-react/native';
 import {physicsInit} from '../utils/physics';
-import Matter from 'matter-js'
+import Matter from 'matter-js';
+import IonIcons from 'react-native-vector-icons/Ionicons';
+
 @observer
 class Game extends Component {
   constructor(props) {
@@ -56,6 +59,16 @@ class Game extends Component {
           style={styles.container}
           >
           <View style={styles.container}>
+            <TouchableOpacity
+              onPress={() => this.props.store.navigationState = 'PAUSED'}
+              style={styles.pauseButton}
+              >
+              <IonIcons
+                name={'ios-pause'}
+                size={30}
+                style={{margin: 10}}
+              />
+            </TouchableOpacity>
             <Enemies
               store={this.props.store}
               enemies={this.enemyPositions}
@@ -82,6 +95,13 @@ class Game extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pauseButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
