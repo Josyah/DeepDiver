@@ -17,6 +17,7 @@ class Enemies extends Component {
           return (
             <Enemy
               key={index}
+              index={index}
               position={position}
               store={this.props.store}
             />

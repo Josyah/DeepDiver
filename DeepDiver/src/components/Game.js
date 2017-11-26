@@ -30,15 +30,15 @@ class Game extends Component {
   }
   onCollision(e){
     console.log('COLLIDED', e.pairs[0].id)
-    if(e.pairs[0].id=='A26B28'){
-      console.log('HIT CEILING')
-    }
-    if(e.pairs[0].id=='A26B27'){
-      console.log('HIT FLOOR')
-    }
-    else{
-      console.log('HIT ENEMY')
-    }
+    // if(e.pairs[0].id=='A26B28'){
+    //   console.log('HIT CEILING')
+    // }
+    // if(e.pairs[0].id=='A26B27'){
+    //   console.log('HIT FLOOR')
+    // }
+    // else{
+    //   console.log('HIT ENEMY')
+    // }
 
   }
 

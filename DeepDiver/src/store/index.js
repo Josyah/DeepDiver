@@ -9,6 +9,7 @@ class ObservableListStore {
       y: GLOBALS.initBackgroundPosition.y
     }
   }
+  @observable enemy = []
   @observable player = {
     position: {
       x: GLOBALS.initCharacterPosition.x,
