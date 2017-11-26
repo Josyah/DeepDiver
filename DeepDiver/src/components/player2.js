@@ -8,19 +8,23 @@ import {observer} from 'mobx-react/native';
 import { Body } from 'react-game-kit/native';
 import Matter from 'matter-js';
 
-@observer
 class Player extends Component {
-  getPosition() {
-    return {
-      left: this.props.store.character.position.x,
-      bottom: this.props.store.character.position.y
-    }
-  }
   render() {
     return (
-        <View style={[styles.container,this.getPosition()]}>
-          <Text>Player</Text>
-        </View>
+        <Body
+          shape="rectangle"
+          args={[0,0, 50, 75]}
+          frictionStatic={0}
+          friction={1}
+          restitution={0}
+          frictionAir={0.01}
+          mass={50}
+          ref={(b) => { this.body = b; }}
+        >
+          <View style={[styles.container]}>
+            <Text>Player</Text>
+          </View>
+        </Body>
     );
   }
 }
@@ -35,7 +39,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 1,
     borderColor: 'blue',
-    position: 'absolute'
   },
 });
 

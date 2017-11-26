@@ -14,8 +14,6 @@ import Game from './components/Game';
 import Background from './components/background';
 import {GLOBALS} from './globals'
 import Player from './components/player2';
-import Home from './screens/Home';
-import Navigation from './screens';
 export default class App extends Component<{}> {
 
 
@@ -53,11 +51,39 @@ export default class App extends Component<{}> {
       ],
     };
   }
+  physicsInit = (engine) => {
+    const ground = Matter.Bodies.rectangle(
+      512, 448,
+      1024, 64,
+      {
+        isStatic: true,
+      },
+    );
+
+    Matter.World.addBody(engine.world, ground);
+  }
   render() {
     return (
       <Loop>
         <Stage>
-          <Navigation/>
+          <World
+            onInit={this.physicsInit}
+            onUpdate={this.handleUpdate}
+            gravity={{ x: 0, y: 2, scale: 0.0005 }}
+            >
+            <Body
+              shape="circle"
+              args={[0, GLOBALS.dimensions.height - 75, 75]}
+              friction={1}
+              frictionStatic={0}
+              restitution={0.5}
+              ref={(b) => { this.ball = b; }}
+            >
+              <View style={this.getBallStyles()}>
+                <Text>Player</Text>
+              </View>
+            </Body>
+          </World>
         </Stage>
       </Loop>
     );

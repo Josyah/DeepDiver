@@ -6,15 +6,19 @@ import {
 } from 'react-native';
 import Enemy from './enemy';
 class Enemies extends Component {
+  onComponentWillMount(){
+    console.log('enemies '+this.props.enemies)
+  }
   render() {
     return (
       <View style={styles.container}>
-        {this.props.spikes.map((position, index) => {
+        {this.props.enemies.map((position, index) => {
 
           return (
             <Enemy
               key={index}
               position={position}
+              store={this.props.store}
             />
           );
 
