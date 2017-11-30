@@ -39,7 +39,7 @@ class Player extends Component {
   render() {
     return (
       <View style={[this.getPlayerStyles(), styles.container]}>
-        <Text>Player</Text>
+        <Text style={styles.text}>Player</Text>
       </View>
     );
   }
@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 1,
     borderColor: 'blue',
+    backgroundColor: 'white'
   },
 });
 

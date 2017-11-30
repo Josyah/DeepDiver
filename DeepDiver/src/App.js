@@ -4,7 +4,8 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  AppState
 } from 'react-native';
 import { Loop, Stage, World, Body } from 'react-game-kit/native';
 import Matter from 'matter-js';
@@ -16,42 +17,26 @@ import {GLOBALS} from './globals'
 import Home from './screens/Home';
 import Navigation from './screens';
 export default class App extends Component<{}> {
-
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      gravity: 1,
-      ballPosition: {
-        x: 0,
-        y: 0,
-      },
-      ballAngle: 0,
-    };
+  state = {
+    appState: AppState.currentState
   }
-  handleUpdate = () => {
-    this.setState({
-      ballPosition: this.ball.body.position,
-      ballAngle: this.ball.body.angle,
-    });
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
   }
 
-
-  getBallStyles() {
-    return {
-      height: 75,
-      width: 75,
-      position: 'absolute',
-      bottom: 500,
-      left: 300,
-      transform: [
-        { translateX: this.state.ballPosition.x },
-        { translateY: this.state.ballPosition.y },
-        { rotate: (this.state.ballAngle * (180 / Math.PI)) + 'deg'}
-      ],
-    };
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
+
+  _handleAppStateChange = (nextAppState) => {
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      console.log('App has come to the foreground!')
+    } else {
+      console.log('BACKGROUND')
+    }
+    this.setState({appState: nextAppState});
+  }
+
   render() {
     return (
       <Loop>

@@ -40,17 +40,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#3a9bdc'
   },
   title: {
-    fontSize: 40,
+    fontSize: 50,
     marginBottom: 15
   },
   linkToPage: {
-    fontSize: 18,
-    margin: 5
+    fontSize: 24,
+    margin: 5,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 5,
   },
   multiplayerPage: {
-    fontSize: 18,
+    fontSize: 24,
     margin: 5,
-    opacity: .7
+    opacity: .7,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 5
   }
 });
 

@@ -6,39 +6,37 @@ import {
   TouchableOpacity
 } from 'react-native';
 import {GLOBALS} from '../../globals'
+import SelectorButton from '../selectorButton'
 class LevelContainer extends Component {
   render() {
     return (
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => this.props.store.navigationState = 'LEVEL'}
-        >
-        <View style={styles.levelBox}>
-          <Text style={styles.levelNumber}>
-            {this.props.init}
-          </Text>
-        </View>
-        <View style={styles.levelBox}>
-          <Text style={styles.levelNumber}>
-            {this.props.init+1}
-          </Text>
-        </View>
-        <View style={styles.levelBox}>
-          <Text style={styles.levelNumber}>
-            {this.props.init+2}
-          </Text>
-        </View>
-        <View style={styles.levelBox}>
-          <Text style={styles.levelNumber}>
-            {this.props.init+3}
-          </Text>
-        </View>
-        <View style={styles.levelBox}>
-          <Text style={styles.levelNumber}>
-            {this.props.init+4}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.container}>
+        <SelectorButton
+          goTo={'LEVEL'}
+          store={this.props.store}
+          buttonText={this.props.init}
+          />
+        <SelectorButton
+          goTo={'LEVEL'}
+          store={this.props.store}
+          buttonText={this.props.init+1}
+          />
+        <SelectorButton
+          goTo={'LEVEL'}
+          store={this.props.store}
+          buttonText={this.props.init+2}
+          />
+        <SelectorButton
+          goTo={'LEVEL'}
+          store={this.props.store}
+          buttonText={this.props.init+3}
+          />
+        <SelectorButton
+          goTo={'LEVEL'}
+          store={this.props.store}
+          buttonText={this.props.init+4}
+          />
+      </View>
     );
   }
 }

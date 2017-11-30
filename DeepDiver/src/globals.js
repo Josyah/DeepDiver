@@ -12,7 +12,12 @@ exports.GLOBALS = {
     x: 0,
     y: 0,
   },
-  gameSpeed: 2,
+  gameSpeed: {
+    horiziontal: 4,
+    vertical: 4
+  },
   jumpConstant: 40,
-  pxToMeters: 10
+  pxToMeters: 10,
+  topBoundary: 50,
+  bottomBoundary: 100,
 }

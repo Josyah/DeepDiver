@@ -15,6 +15,7 @@ import {observer} from 'mobx-react/native';
 import {physicsInit} from '../utils/physics';
 import Matter from 'matter-js';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import Background from './background'
 
 @observer
 class Game extends Component {
@@ -36,19 +37,10 @@ class Game extends Component {
       Matter.Body.setVelocity(this.player.body, {x: 0, y: store.forceUp});
     }
     store.moveBackground();
+    store.checkPlayerPosition();
   }
   onCollision(e){
     console.log('COLLIDED', e.pairs[0].id)
-    // if(e.pairs[0].id=='A26B28'){
-    //   console.log('HIT CEILING')
-    // }
-    // if(e.pairs[0].id=='A26B27'){
-    //   console.log('HIT FLOOR')
-    // }
-    // else{
-    //   console.log('HIT ENEMY')
-    // }
-
   }
 
   render() {
@@ -57,7 +49,7 @@ class Game extends Component {
         onInit={physicsInit}
         onUpdate={this.handleUpdate}
         onCollision={this.onCollision}
-        gravity={{ x: 0, y: 2, scale: 0.0005 }}
+        gravity={{ x: 0, y: this.props.gravity, scale: 0.0005 }}
         >
         <TouchableWithoutFeedback
           onPressIn={() => this.props.store.pressScreen()}
@@ -74,19 +66,17 @@ class Game extends Component {
                 size={30}
               />
             </TouchableOpacity>
+            <Background store={this.props.store}/>
             <View style={styles.distance}>
               <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
             </View>
-            <Enemies
-              store={this.props.store}
-              enemies={this.enemyPositions}
-              />
             <Body
               shape="rectangle"
               args={[this.props.store.player.position.x, this.props.store.player.position.y, 75, 75]}
               friction={0}
               frictionStatic={0}
               restitution={0}
+              frictionAir={this.props.airFriction}
               ref={(b) => { this.player = b; }}
             >
               <Player
@@ -124,7 +114,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     padding: 5,
-    margin: 10
+    margin: 10,
+    backgroundColor: 'white'
   },
   distanceText: {
     fontSize: 20

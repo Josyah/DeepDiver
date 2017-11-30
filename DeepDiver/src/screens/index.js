@@ -11,6 +11,7 @@ import store from '../store';
 import LevelSelect from './StoryMode/LevelsLayout'
 import CharSelect from './StoryMode/CharacterSelect';
 import Game from '../components/Game';
+import Level from '../components/Level';
 import GameOver from './GameOver';
 import Paused from './Paused';
 @observer
@@ -31,6 +32,14 @@ class Navigation extends Component {
           <CharSelect store={store}/>
         )
       case 'LEVEL':
+        return(
+          <Level
+            store={store}
+            gravity={2}
+            airFriction={0.1}
+            />
+        )
+      case 'GAME':
         return(
           <Game store={store}/>
         )
