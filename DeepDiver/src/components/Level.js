@@ -66,10 +66,6 @@ class Game extends Component {
                 size={30}
               />
             </TouchableOpacity>
-            <Background store={this.props.store}/>
-            <View style={styles.distance}>
-              <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
-            </View>
             <Body
               shape="rectangle"
               args={[this.props.store.player.position.x, this.props.store.player.position.y, 75, 75]}
@@ -78,11 +74,19 @@ class Game extends Component {
               restitution={0}
               frictionAir={this.props.airFriction}
               ref={(b) => { this.player = b; }}
-            >
+              >
               <Player
                 store={store}
+
                 />
             </Body>
+            <Enemies
+              enemies={this.enemyPositions}
+              store={store}
+              />
+            <View style={styles.distance}>
+              <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </World>
