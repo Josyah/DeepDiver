@@ -14,6 +14,7 @@ import {generateEnemies} from '../utils/generateEnemies';
 import {observer} from 'mobx-react/native';
 import {physicsInit} from '../utils/physics';
 import Matter from 'matter-js';
+import Enemy from './enemy'
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import Background from './background'
 
@@ -33,14 +34,25 @@ class Game extends Component {
   }
   handleUpdate = (engine) => {
     store.player.position = this.player.body.position;
+    store.enemy.position = this.enemy.body.position;
     if(store.forceUp!=0){
-      Matter.Body.setVelocity(this.player.body, {x: 0, y: store.forceUp});
+      Matter.Body.setVelocity(this.player.body, {x: 2, y: store.forceUp});
+      Matter.Body.setVelocity(this.enemy.body, {x: 0, y: store.forceUp});
     }
+    Matter.Body.setPosition(this.enemy.body, {x: store.background.position.x+300, y: store.enemy.position.y})
+    // Matter.Body.setPosition(this.enemy.body, {x: store.enemy.position.x, y: store.enemy.position.y});
     store.moveBackground();
     store.checkPlayerPosition();
   }
   onCollision(e){
-    console.log('COLLIDED', e.pairs[0].id)
+    // console.log('COLLIDED', e.pairs[0].bodyA.id, 'WITH', e.pairs[0].bodyB.id)
+    const bodyA = e.pairs[0].bodyA.id
+    const bodyB = e.pairs[0].bodyB.id
+    if(bodyA == 1){
+      if(bodyB == 2){
+        store.die()
+      }
+    }
   }
 
   render() {
@@ -66,6 +78,7 @@ class Game extends Component {
                 size={30}
               />
             </TouchableOpacity>
+            <Background store={store}/>
             <Body
               shape="rectangle"
               args={[this.props.store.player.position.x, this.props.store.player.position.y, 75, 75]}
@@ -77,13 +90,24 @@ class Game extends Component {
               >
               <Player
                 store={store}
-
+                left={300}
+                bottom={300}
+                index={0}
                 />
             </Body>
-            <Enemies
-              enemies={this.enemyPositions}
-              store={store}
-              />
+            <Body
+              shape="rectangle"
+              args={[this.props.store.enemy.position.x, this.props.store.enemy.position.y, 75, 75]}
+              friction={0}
+              frictionStatic={0}
+              restitution={1}
+              frictionAir={0}
+              ref={(b2) => { this.enemy = b2; }}
+              >
+              <Enemy
+                store={this.props.store}
+                />
+            </Body>
             <View style={styles.distance}>
               <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
             </View>
@@ -113,13 +137,13 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     justifyContent: 'center',
-    alignItems: 'center',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'black',
     padding: 5,
     margin: 10,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    width: 100
   },
   distanceText: {
     fontSize: 20

@@ -12,47 +12,26 @@ import Matter from 'matter-js'
 @observer
 class Enemy extends Component {
   getPosition() {
-    // this.posLeft = this.props.store.backgroundPosition - this.props.index;
-    // console.log(this.props.index)
-    // console.log(this.props.position.bottom)
-    // this.props.store.background.position.x+this.props.position.left;
-    // this.props.store.background.position.y-this.props.position.bottom
     return {
-      left: this.props.store.background.position.x+this.props.position.left,
-      bottom: this.props.store.background.position.y+this.props.position.bottom,
-
+      left: this.props.store.enemy.position.x,
+      top: this.props.store.enemy.position.y,
     }
   }
-  static contextTypes = {
-    loop: PropTypes.object,
-  };
-
-  update = () => {
-    // tick logic
-    // console.log(this.props.index)
-    this.props.store.enemy[this.props.index].position.x = this.props.store.background.position.x+this.props.position.left;
-    this.props.store.enemy[this.props.index].position.y = this.props.store.background.position.y-this.props.position.bottom
-    // this.enemy.body.position=this.props.store.enemy[this.props.index].position
-    // Matter.Body.setPosition(this.enemy.body, this.props.store.enemy[this.props.index].position)
-    // console.log('x',this.props.store.enemy[this.props.index].position.x)
-    // console.log('y',this.props.store.enemy[this.props.index].position.y)
-  };
-
-  componentDidMount() {
-    this.context.loop.subscribe(this.update);
-    this.props.store.enemy.push(
-      {
-        position: {
-          x: this.props.store.background.position.x+this.props.position.left,
-          y: this.props.store.background.position.y+this.props.position.bottom
-        }
-      }
-    )
-  }
-
-  componentWillUnmount() {
-    this.context.loop.unsubscribe(this.update);
-  }
+//   static contextTypes = {
+//     loop: PropTypes.object,
+//   };
+//
+//   update = () => {
+//     // this.props.store.enemy.position.x = this.props.bottom + this.props.store.background.position.x
+//     // this.props.store.enemy.position.y = this.props.bottom + this.props.store.background.position.y
+// }
+//   componentDidMount() {
+//     this.context.loop.subscribe(this.update);
+//   }
+//
+//   componentWillUnmount() {
+//     this.context.loop.unsubscribe(this.update);
+//   }
   render() {
     return (
       <View style={[this.getPosition(), styles.container]}>
@@ -75,6 +54,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'red',
     position: 'absolute',
+    backgroundColor: 'white'
   },
 });
 

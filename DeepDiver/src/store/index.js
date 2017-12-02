@@ -9,7 +9,12 @@ class ObservableListStore {
       y: GLOBALS.initBackgroundPosition.y
     }
   }
-  @observable enemy = []
+  @observable enemy = {
+    position: {
+      x: 300,
+      y: 300
+    }
+  }
   @observable gamePlay = false
   @observable player = {
     position: {
@@ -42,13 +47,16 @@ class ObservableListStore {
   }
   checkPlayerPosition() {
     if(this.player.position.y < GLOBALS.topBoundary){
-      console.log('MOVE SCREEN UP BREH')
+      // console.log('MOVE SCREEN UP BREH')
       this.background.position.y = this.background.position.y-(1.5*GLOBALS.gameSpeed.vertical)
     }
     if(this.player.position.y > (GLOBALS.dimensions.height-GLOBALS.bottomBoundary)){
-      console.log('MOVE SCREEN DOWN BREH')
+      // console.log('MOVE SCREEN DOWN BREH')
       this.background.position.y = this.background.position.y+(1.5*GLOBALS.gameSpeed.vertical)
     }
+  }
+  die() {
+    this.navigationState = 'DEAD'
   }
 }
 
