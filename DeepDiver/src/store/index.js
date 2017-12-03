@@ -15,6 +15,7 @@ class ObservableListStore {
       y: 300
     }
   }
+  @observable enemies = []
   @observable gamePlay = false
   @observable player = {
     position: {

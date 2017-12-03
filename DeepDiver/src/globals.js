@@ -20,4 +20,6 @@ exports.GLOBALS = {
   pxToMeters: 10,
   topBoundary: 50,
   bottomBoundary: 100,
+  defaultEnemyHeight: 75,
+  defaultEnemyWidth: 75
 }

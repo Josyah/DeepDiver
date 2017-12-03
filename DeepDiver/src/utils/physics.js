@@ -1,6 +1,11 @@
 import Matter from 'matter-js';
 import {GLOBALS} from '../globals';
-exports.physicsInit = (engine) => {
+import {addEnemy} from './addEnemy';
+var Engine = Matter.Engine,
+    Render = Matter.Render,
+    World = Matter.World,
+    Bodies = Matter.Bodies;
+exports.physicsInit = (engine, render) => {
 
   const ground = Matter.Bodies.rectangle(
     GLOBALS.dimensions.width / 2,  // distance from left
@@ -22,6 +27,7 @@ exports.physicsInit = (engine) => {
       restitution: 0
     },
   );
-
+  addEnemy(engine, {left: 100, top: 100})
   Matter.World.add(engine.world, [ground, ceiling]);
+  // ender.run(render);
 }

@@ -28,19 +28,20 @@ class Game extends Component {
   }
   componentDidMount(){
     this.props.store.gamePlay = true
+    // Matter.Body.setStatic(this.props.store.enemies[0].body, true)
   }
   componentWillUnmount(){
     this.props.store.gamePlay = false
   }
   handleUpdate = (engine) => {
     store.player.position = this.player.body.position;
-    store.enemy.position = this.enemy.body.position;
+    store.enemy.position = this.props.store.enemies[0].body.position;
     if(store.forceUp!=0){
       Matter.Body.setVelocity(this.player.body, {x: 2, y: store.forceUp});
-      Matter.Body.setVelocity(this.enemy.body, {x: 0, y: store.forceUp});
+      Matter.Body.setVelocity(this.props.store.enemies[0].body, {x: 0, y: store.forceUp});
     }
-    Matter.Body.setPosition(this.enemy.body, {x: store.background.position.x+300, y: store.enemy.position.y})
-    // Matter.Body.setPosition(this.enemy.body, {x: store.enemy.position.x, y: store.enemy.position.y});
+
+    Matter.Body.setPosition(this.props.store.enemies[0].body, {x: store.enemy.position.x, y: store.enemy.position.y});
     store.moveBackground();
     store.checkPlayerPosition();
   }
@@ -78,7 +79,6 @@ class Game extends Component {
                 size={30}
               />
             </TouchableOpacity>
-            <Background store={store}/>
             <Body
               shape="rectangle"
               args={[this.props.store.player.position.x, this.props.store.player.position.y, 75, 75]}
@@ -95,19 +95,10 @@ class Game extends Component {
                 index={0}
                 />
             </Body>
-            <Body
-              shape="rectangle"
-              args={[this.props.store.enemy.position.x, this.props.store.enemy.position.y, 75, 75]}
-              friction={0}
-              frictionStatic={0}
-              restitution={1}
-              frictionAir={0}
-              ref={(b2) => { this.enemy = b2; }}
-              >
-              <Enemy
-                store={this.props.store}
-                />
-            </Body>
+            <Enemy
+              store={this.props.store}
+              />
+
             <View style={styles.distance}>
               <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
             </View>

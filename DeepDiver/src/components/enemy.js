@@ -34,11 +34,22 @@ class Enemy extends Component {
 //   }
   render() {
     return (
-      <View style={[this.getPosition(), styles.container]}>
-        <Text>
-          Enemy
-        </Text>
-      </View>
+      <Body
+          shape="rectangle"
+          args={[this.props.store.enemy.position.x, this.props.store.enemy.position.y, 75, 75]}
+          friction={0}
+          frictionStatic={0}
+          restitution={1}
+          frictionAir={0}
+          ref={(b2) => { this.props.store.enemies.push(b2)
+        }}
+        >
+        <View style={[this.getPosition(), styles.container]}>
+          <Text>
+            Enemy
+          </Text>
+        </View>
+      </Body>
     );
   }
 }
