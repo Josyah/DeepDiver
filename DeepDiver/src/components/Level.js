@@ -4,7 +4,8 @@ import {
   Text,
   View,
   TouchableWithoutFeedback,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native';
 import {World, Body} from 'react-game-kit/native';
 import PropTypes from 'prop-types';
@@ -25,10 +26,18 @@ class Game extends Component {
 
     this.enemyPositions = generateEnemies();
     store = this.props.store;
+    this.callback = this.callback.bind(this);
   }
-  componentDidMount(){
-    this.props.store.gamePlay = true
-    // Matter.Body.setStatic(this.props.store.enemies[0].body, true)
+  callback(){
+
+  }
+  componentDidMount() {
+    physicsInit({
+      store: this.store,
+      dimensions: Dimensions.get('window'),
+      enemies: this.enemyPositions,
+      callback: this.callback,
+    });
   }
   componentWillUnmount(){
     this.props.store.gamePlay = false
@@ -52,19 +61,13 @@ class Game extends Component {
     const bodyB = e.pairs[0].bodyB.id
     if(bodyA == 1){
       if(bodyB == 2){
-        store.die()
+        // store.die()
       }
     }
   }
 
   render() {
     return (
-      <World
-        onInit={physicsInit}
-        onUpdate={this.handleUpdate}
-        onCollision={this.onCollision}
-        gravity={{ x: 0, y: this.props.gravity, scale: 0.0005 }}
-        >
         <TouchableWithoutFeedback
           onPressIn={() => this.props.store.pressScreen()}
           onPressOut={() => this.props.store.releaseScreen()}
@@ -81,22 +84,12 @@ class Game extends Component {
               />
             </TouchableOpacity>
             <Background store={store}/>
-            <Body
-              shape="rectangle"
-              args={[this.props.store.player.position.x, this.props.store.player.position.y, 75, 75]}
-              friction={0}
-              frictionStatic={0}
-              restitution={0}
-              frictionAir={this.props.airFriction}
-              ref={(b) => { this.player = b; }}
-              >
-              <Player
-                store={store}
-                left={300}
-                bottom={300}
-                index={0}
-                />
-            </Body>
+            <Player
+              store={store}
+              left={300}
+              bottom={300}
+              index={0}
+              />
             <Enemy
               store={this.props.store}
               />
@@ -106,7 +99,6 @@ class Game extends Component {
             </View>
           </View>
         </TouchableWithoutFeedback>
-      </World>
     );
   }
 }

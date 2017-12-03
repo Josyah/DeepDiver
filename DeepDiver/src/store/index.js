@@ -26,6 +26,17 @@ class ObservableListStore {
   };
   @observable navigationState = 'HOME'
   @observable forceUp = 0
+  @observable character = {
+    position: [-100, -100],
+    angle: 0
+  };
+
+  @observable backgroundX = 0;
+
+  setPositions(position, backgroundX) {
+    this.character.position = position;
+    this.backgroundX = backgroundX;
+  }
   moveBackground () {
     if(this.gamePlay){
       this.background.position.x = this.background.position.x-(1.5*GLOBALS.gameSpeed.horiziontal)
