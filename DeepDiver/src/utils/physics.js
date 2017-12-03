@@ -27,7 +27,7 @@ exports.physicsInit = (engine, render) => {
       restitution: 0
     },
   );
-  addEnemy(engine, {left: 100, top: 100})
+  // addEnemy(engine, {left: s100, top: 100})
   Matter.World.add(engine.world, [ground, ceiling]);
   // ender.run(render);
 }

@@ -10,7 +10,6 @@ import {observer} from 'mobx-react';
 import store from '../store';
 import LevelSelect from './StoryMode/LevelsLayout'
 import CharSelect from './StoryMode/CharacterSelect';
-import Game from '../components/Game';
 import Level from '../components/Level';
 import GameOver from './GameOver';
 import Paused from './Paused';

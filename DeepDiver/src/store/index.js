@@ -31,6 +31,11 @@ class ObservableListStore {
       this.background.position.x = this.background.position.x-(1.5*GLOBALS.gameSpeed.horiziontal)
     }
   }
+  moveBackgroundUp () {
+    if(this.gamePlay){
+      this.background.position.y = this.background.position.y-(1.5*GLOBALS.gameSpeed.vertical)
+    }
+  }
   pressScreen () {
     // console.log('pressed');
     // this.player.position.y = tis.player.position.y - GLOBALS.jumpConstant;

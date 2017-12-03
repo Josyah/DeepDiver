@@ -11,7 +11,6 @@ import { Loop, Stage, World, Body } from 'react-game-kit/native';
 import Matter from 'matter-js';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react/native';
-import Game from './components/Game';
 import Background from './components/background';
 import {GLOBALS} from './globals'
 import Home from './screens/Home';

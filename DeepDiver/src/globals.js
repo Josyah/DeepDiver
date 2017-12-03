@@ -13,13 +13,13 @@ exports.GLOBALS = {
     y: 0,
   },
   gameSpeed: {
-    horiziontal: 1,
-    vertical: 1
+    horiziontal: 3,
+    vertical: 3
   },
   jumpConstant: 40,
   pxToMeters: 10,
-  topBoundary: 50,
-  bottomBoundary: 100,
+  topBoundary: 75,
+  bottomBoundary: 125,
   defaultEnemyHeight: 75,
   defaultEnemyWidth: 75
 }

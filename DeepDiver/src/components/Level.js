@@ -37,8 +37,9 @@ class Game extends Component {
     store.player.position = this.player.body.position;
     store.enemy.position = this.props.store.enemies[0].body.position;
     if(store.forceUp!=0){
-      Matter.Body.setVelocity(this.player.body, {x: 2, y: store.forceUp});
-      Matter.Body.setVelocity(this.props.store.enemies[0].body, {x: 0, y: store.forceUp});
+      Matter.Body.setVelocity(this.player.body, {x: 0, y: store.forceUp});
+      // Matter.Body.setVelocity(this.props.store.enemies[0].body, {x: 0, y: store.forceUp});
+      // store.moveBackgroundUp();
     }
 
     Matter.Body.setPosition(this.props.store.enemies[0].body, {x: store.enemy.position.x, y: store.enemy.position.y});
@@ -79,6 +80,7 @@ class Game extends Component {
                 size={30}
               />
             </TouchableOpacity>
+            <Background store={store}/>
             <Body
               shape="rectangle"
               args={[this.props.store.player.position.x, this.props.store.player.position.y, 75, 75]}
