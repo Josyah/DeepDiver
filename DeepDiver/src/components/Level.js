@@ -97,8 +97,9 @@ class Game extends Component {
                 index={0}
                 />
             </Body>
-            <Enemy
+            <Enemies
               store={this.props.store}
+              enemies={this.enemyPositions}
               />
 
             <View style={styles.distance}>

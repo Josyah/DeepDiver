@@ -13,8 +13,12 @@ import Matter from 'matter-js'
 class Enemy extends Component {
   getPosition() {
     return {
-      left: this.props.store.enemy.position.x,
-      top: this.props.store.enemy.position.y,
+      left: this.props.position.left,
+      top: this.props.position.top,
+      transform: [
+        {translateX: this.props.store.background.position.x},
+        {translateY: -this.props.store.background.position.y}
+      ]
     }
   }
 //   static contextTypes = {
