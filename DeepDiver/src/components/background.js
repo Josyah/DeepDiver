@@ -22,7 +22,7 @@ class Background extends Component {
   }
   render() {
     return (
-      <View style={[styles.container]}>
+      <View style={styles.container}>
         <Image
           source={require('../utils/water.jpg')}
           style={[styles.mainBg, this.getPosition(0,0)]}
@@ -38,7 +38,8 @@ class Background extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    zIndex: -1,
+
   },
   mainBg: {
     height: GLOBALS.dimensions.height*10,

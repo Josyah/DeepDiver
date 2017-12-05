@@ -12,12 +12,12 @@ import Player from './player';
 import Enemies from './enemies';
 import {generateEnemies} from '../utils/generateEnemies';
 import {observer} from 'mobx-react/native';
-import {physicsInit} from '../utils/physics';
+import {physicsInit, updateEnemies} from '../utils/physics';
 import Matter from 'matter-js';
 import Enemy from './enemy'
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import Background from './background'
-
+import {GLOBALS} from '../globals'
 @observer
 class Game extends Component {
   constructor(props) {
@@ -25,6 +25,7 @@ class Game extends Component {
 
     this.enemyPositions = generateEnemies();
     store = this.props.store;
+    this.callback = this.callback.bind(this);
   }
   componentDidMount(){
     this.props.store.gamePlay = true
@@ -40,11 +41,16 @@ class Game extends Component {
       Matter.Body.setVelocity(this.player.body, {x: 0, y: store.forceUp});
       // Matter.Body.setVelocity(this.props.store.enemies[0].body, {x: 0, y: store.forceUp});
       // store.moveBackgroundUp();
+      this.props.store.goingUp()
+    } else {
+
+      this.props.store.falling()
     }
 
     // Matter.Body.setPosition(this.props.store.enemies[0].body, {x: store.enemy.position.x, y: store.enemy.position.y});
     store.moveBackground();
     store.checkPlayerPosition();
+    updateEnemies(store);
   }
   onCollision(e){
     // console.log('COLLIDED', e.pairs[0].bodyA.id, 'WITH', e.pairs[0].bodyB.id)
@@ -52,15 +58,26 @@ class Game extends Component {
     const bodyB = e.pairs[0].bodyB.id
     if(bodyA == 1){
       if(bodyB == 2){
-        store.die()
+        // store.die()
       }
     }
   }
-
+  callback(enemyBodies){
+    console.log(enemyBodies.length)
+    for(let i = 0; i < enemyBodies.length ; i++){
+      enemyBodies[i].position.x -= 5
+      console.log(enemyBodies[0].position.x)
+    }
+  }
   render() {
     return (
       <World
-        onInit={physicsInit}
+        onInit={(engine) => physicsInit({
+          engine,
+          store,
+          enemies: this.enemyPositions,
+          callback: this.callback
+        })}
         onUpdate={this.handleUpdate}
         onCollision={this.onCollision}
         gravity={{ x: 0, y: this.props.gravity, scale: 0.0005 }}
@@ -71,15 +88,6 @@ class Game extends Component {
           style={styles.container}
           >
           <View style={styles.container}>
-            <TouchableOpacity
-              onPress={() => this.props.store.navigationState = 'PAUSED'}
-              style={styles.pauseButton}
-              >
-              <IonIcons
-                name={'ios-pause'}
-                size={30}
-              />
-            </TouchableOpacity>
             <Background store={store}/>
             <Body
               shape="rectangle"
@@ -97,13 +105,30 @@ class Game extends Component {
                 index={0}
                 />
             </Body>
-            <Enemies
-              store={this.props.store}
-              enemies={this.enemyPositions}
-              />
+            <View style={styles.topBar}>
 
-            <View style={styles.distance}>
-              <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
+              <View style={styles.distance}>
+                <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
+              </View>
+              <View style={styles.shells}>
+                <Text style={styles.distanceText}>123 Shells</Text>
+              </View>
+              <View style={styles.healthBar}>
+                <Text style={styles.distanceText}>Health Bar</Text>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => this.props.store.navigationState = 'PAUSED'}
+                style={styles.pauseButton}
+                >
+                <IonIcons
+                  name={'ios-pause'}
+                  size={20}
+                  />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.bottomBar}>
+              <Text>Bottom</Text>
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -124,7 +149,12 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10
+    margin: 3,
+    backgroundColor: 'white',
+    padding: 3,
+    paddingLeft: 5,
+    paddingRight: 5,
+    borderRadius: 3
   },
   distance: {
     position: 'absolute',
@@ -135,12 +165,53 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     padding: 5,
-    margin: 10,
+    margin: 3,
+    backgroundColor: 'white',
+    width: 100
+  },
+  shells: {
+    position: 'absolute',
+    top: 0,
+    left: 125,
+    justifyContent: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 5,
+    margin: 3,
     backgroundColor: 'white',
     width: 100
   },
   distanceText: {
-    fontSize: 20
+    fontSize: 15
+  },
+  topBar: {
+    height: 35,
+    width: GLOBALS.dimensions.width,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    backgroundColor: 'red'
+  },
+  bottomBar: {
+    height: 35,
+    width: GLOBALS.dimensions.width,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    backgroundColor: 'red'
+  },
+  healthBar: {
+    position: 'absolute',
+    top: 0,
+    right: 125,
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 5,
+    margin: 3,
+    backgroundColor: 'white',
+    width: 100
   }
 });
 

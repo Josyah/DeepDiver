@@ -39,7 +39,7 @@ class Player extends Component {
   render() {
     return (
       <View style={[this.getPlayerStyles(), styles.container]}>
-        <Text style={styles.text}>Player</Text>
+        <Text style={styles.text}>{this.props.store.player.animationState}</Text>
       </View>
     );
   }

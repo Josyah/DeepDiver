@@ -9,7 +9,7 @@ export const generateEnemies = () => {
   for (var i = 0; i < 25; i++) {
     enemyPositions.push({
       left: enemyStart + (i * random(350, 500)),
-      bottom: random(0, GLOBALS.dimensions.height*2)
+      top: random(-GLOBALS.dimensions.height*2, GLOBALS.dimensions.height*2)
     });
   }
   return enemyPositions;

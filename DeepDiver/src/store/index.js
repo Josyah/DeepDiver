@@ -17,22 +17,28 @@ class ObservableListStore {
   }
   @observable enemies = []
   @observable gamePlay = false
+  @observable navigationState = 'HOME'
+  @observable forceUp = 0
   @observable player = {
     position: {
       x: GLOBALS.initCharacterPosition.x,
       y: GLOBALS.initCharacterPosition.y
     },
-    angle: 0
-  };
-  @observable navigationState = 'HOME'
-  @observable forceUp = 0
-  @observable character = {
-    position: [-100, -100],
-    angle: 0
+    angle: 0,
+    animationState: 'Falling'
   };
 
   @observable backgroundX = 0;
-
+  falling(){
+    if(this.player.animationState != 'Falling'){
+      this.player.animationState = 'Falling'
+    }
+  }
+  goingUp(){
+    if(this.player.animationState != 'Going Up'){
+      this.player.animationState = 'Going Up'
+    }
+  }
   setPositions(position, backgroundX) {
     this.character.position = position;
     this.backgroundX = backgroundX;
