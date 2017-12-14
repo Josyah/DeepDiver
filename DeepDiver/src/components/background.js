@@ -38,8 +38,7 @@ class Background extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    zIndex: -1,
-
+    flex: 1
   },
   mainBg: {
     height: GLOBALS.dimensions.height*10,

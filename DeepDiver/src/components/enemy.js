@@ -13,14 +13,20 @@ import Matter from 'matter-js'
 class Enemy extends Component {
   constructor(props){
     super(props)
-    this.x = 0
-    this.y = 0
+    this.state = {
+      x: 0,
+      y: 0,
+      index: this.props.index,
+      doneLoading: false
+    }
   }
   getPosition() {
-    return {
-      left: this.x,
-      top: this.y,
-    }
+
+      return {
+        left: this.state.doneLoading ? this.props.store.enemies[this.props.index].x : 0,
+        top: this.state.doneLoading ? this.props.store.enemies[this.props.index].y : 0,
+      }
+
   }
   static contextTypes = {
     loop: PropTypes.object,
@@ -30,15 +36,33 @@ class Enemy extends Component {
     // this.props.store.enemy.position.y = this.props.bottom + this.props.store.background.position.y
     // this.props.store.enemies.length = this.props.index+1;
     // this.props.store.enemies[this.props.index] = this.enemy.body.position;
-    Matter.Body.translate(this.enemy.body,
-      {
-        x: this.props.store.background.position.x,
-        y: -this.props.store.background.position.y
+    var bodyX = this.props.left + this.props.store.background.position.x
+    var bodyY = -this.props.store.background.position.y
+    var trying = false;
+      trying = true
+      while(trying){
+        try{
+          if(this.props.store.enemies.length != 0){
+            // console.log('there')
+            this.props.store.enemies[this.props.index].x -= 4
+            this.props.store.enemies[this.props.index].y = (this.props.store.background.position.y)
+          } else{
+            // console.log('not there')
+            this.props.store.enemies.push({
+              x: this.props.position.left,
+              y: this.props.position.top
+            })
+            console.log(this.props.store.enemies[this.props.index].x)
+            this.setState({
+              doneLoading: true
+            })
+          }
+          trying = false
+        } catch(e) {
+          trying = true
+        }
       }
 
-    )
-    this.x = this.enemy.body.position.x
-    this.y = this.enemy.body.position.y
 }
   componentDidMount() {
     this.context.loop.subscribe(this.update);
@@ -48,21 +72,15 @@ class Enemy extends Component {
     this.context.loop.unsubscribe(this.update);
   }
   render() {
-    return (
-      <Body
-        shape="rectangle"
-        args={[this.props.position.left, this.props.position.top, 75, 75]}
-        isStatic={true}
-        ref={(b) => { this.enemy = b; }}
-        >
+      return (
         <View style={[this.getPosition(), styles.container]}>
           <Text>
-            Enemy
+            Enemyy
           </Text>
         </View>
-      </Body>
-    );
-  }
+      );
+    }
+
 }
 
 const styles = StyleSheet.create({

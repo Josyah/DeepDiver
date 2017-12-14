@@ -13,9 +13,9 @@ exports.physicsInit = (options) => {
   randomEnemies = enemies;
   const ground = Matter.Bodies.rectangle(
     GLOBALS.dimensions.width / 2,  // distance from left
-    GLOBALS.dimensions.height-35, // distance from top
+    (GLOBALS.dimensions.height+20)-(GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter), // distance from top
     GLOBALS.dimensions.width, // width
-    35, // height
+    40, // height
     {
       isStatic: true,
       restitution: 0
@@ -25,7 +25,7 @@ exports.physicsInit = (options) => {
     GLOBALS.dimensions.width / 2,  // distance from left
     -7, // distance from top
     GLOBALS.dimensions.width, // width
-    10, // height
+    15, // height
     {
       isStatic: true,
       restitution: 0

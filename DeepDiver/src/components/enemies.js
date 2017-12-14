@@ -13,7 +13,6 @@ class Enemies extends Component {
     return (
       <View style={styles.container}>
         {this.props.enemies.map((position, index) => {
-
           return (
             <Enemy
               key={index}

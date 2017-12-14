@@ -16,7 +16,8 @@ import {physicsInit, updateEnemies} from '../utils/physics';
 import Matter from 'matter-js';
 import Enemy from './enemy'
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import Background from './background'
+import Background from './background';
+import HealthBar from './healthBar'
 import {GLOBALS} from '../globals'
 @observer
 class Game extends Component {
@@ -41,7 +42,11 @@ class Game extends Component {
       Matter.Body.setVelocity(this.player.body, {x: 0, y: store.forceUp});
       // Matter.Body.setVelocity(this.props.store.enemies[0].body, {x: 0, y: store.forceUp});
       // store.moveBackgroundUp();
-      this.props.store.goingUp()
+      if (store.forceUp < 0){
+        this.props.store.changeAnimation('UP')
+      } else {
+        this.props.store.changeAnimation('DOWN')
+      }
     } else {
 
       this.props.store.falling()
@@ -53,7 +58,7 @@ class Game extends Component {
     updateEnemies(store);
   }
   onCollision(e){
-    // console.log('COLLIDED', e.pairs[0].bodyA.id, 'WITH', e.pairs[0].bodyB.id)
+    console.log('COLLIDED', e.pairs[0].bodyA.id, 'WITH', e.pairs[0].bodyB.id)
     const bodyA = e.pairs[0].bodyA.id
     const bodyB = e.pairs[0].bodyB.id
     if(bodyA == 1){
@@ -82,19 +87,32 @@ class Game extends Component {
         onCollision={this.onCollision}
         gravity={{ x: 0, y: this.props.gravity, scale: 0.0005 }}
         >
-        <TouchableWithoutFeedback
-          onPressIn={() => this.props.store.pressScreen()}
-          onPressOut={() => this.props.store.releaseScreen()}
-          style={styles.container}
-          >
-          <View style={styles.container}>
-            <Background store={store}/>
+        <View style={{flex: 1}}>
+          <Background store={store}/>
+          <View style={styles.buttons}>
+            <TouchableOpacity
+              onPressIn={() => this.props.store.pressScreen('UP')}
+              onPressOut={() => this.props.store.releaseScreen()}
+              style={styles.leftButton}
+              >
+              <View></View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPressIn={() => this.props.store.pressScreen('DOWN')}
+              onPressOut={() => this.props.store.releaseScreen()}
+              style={styles.rightButton}
+              >
+              <View></View>
+            </TouchableOpacity>
+          </View>
+
             <Body
               shape="rectangle"
-              args={[this.props.store.player.position.x, this.props.store.player.position.y, 75, 75]}
+              args={[this.props.store.player.position.x, this.props.store.player.position.y, this.props.store.player.height, this.props.store.player.width]}
               friction={0}
               frictionStatic={0}
               restitution={0}
+              mass={GLOBALS.playerMass}
               frictionAir={this.props.airFriction}
               ref={(b) => { this.player = b; }}
               >
@@ -114,7 +132,9 @@ class Game extends Component {
                 <Text style={styles.distanceText}>123 Shells</Text>
               </View>
               <View style={styles.healthBar}>
-                <Text style={styles.distanceText}>Health Bar</Text>
+                <HealthBar
+                  isActive={false}
+                  />
               </View>
 
               <TouchableOpacity
@@ -131,7 +151,7 @@ class Game extends Component {
               <Text>Bottom</Text>
             </View>
           </View>
-        </TouchableWithoutFeedback>
+
       </World>
     );
   }
@@ -212,7 +232,28 @@ const styles = StyleSheet.create({
     margin: 3,
     backgroundColor: 'white',
     width: 100
-  }
+  },
+  buttons: {
+    position: 'absolute',
+    top:0,
+    left: 0,
+    width: GLOBALS.dimensions.width,
+    height: GLOBALS.dimensions.height
+  },
+  leftButton: {
+    position: 'absolute',
+    top:0,
+    left: 0,
+    height: GLOBALS.dimensions.height,
+    width: (GLOBALS.dimensions.width/2)
+  },
+  rightButton: {
+    position: 'absolute',
+    top:0,
+    right: 0,
+    height: GLOBALS.dimensions.height,
+    width: (GLOBALS.dimensions.width/2)
+  },
 });
 
 module.exports = Game;

@@ -19,24 +19,46 @@ class ObservableListStore {
   @observable gamePlay = false
   @observable navigationState = 'HOME'
   @observable forceUp = 0
+  @observable shells = [
+    {
+      type: 'SHELL'
+    }
+  ];
   @observable player = {
     position: {
       x: GLOBALS.initCharacterPosition.x,
       y: GLOBALS.initCharacterPosition.y
     },
-    angle: 0,
-    animationState: 'Falling'
+    width: this.scale * GLOBALS.tileHeight,
+    height: this.scale * GLOBALS.tileWidth,
+    angle: 90,
+    animationState: 1
   };
-
+ @observable scale = .5
   @observable backgroundX = 0;
   falling(){
-    if(this.player.animationState != 'Falling'){
-      this.player.animationState = 'Falling'
+    if(this.player.animationState != 2){
+      this.player.animationState = 2
+      this.player.angle = 100
     }
   }
-  goingUp(){
-    if(this.player.animationState != 'Going Up'){
-      this.player.animationState = 'Going Up'
+  changeAnimation(direction){
+    if(direction == 'UP'){
+      if(this.player.animationState != 3){
+        this.player.animationState = 3
+        this.player.angle = 80
+      }
+    } else if (direction == 'DOWN'){
+      if(this.player.animationState != 4){
+        this.player.animationState = 4
+        this.player.angle = 100
+      }
+    }
+  }
+  goingDown(){
+    if(this.player.animationState != 4){
+      this.player.animationState = 4
+      this.player.angle = 80
     }
   }
   setPositions(position, backgroundX) {
@@ -53,11 +75,18 @@ class ObservableListStore {
       this.background.position.y = this.background.position.y-(1.5*GLOBALS.gameSpeed.vertical)
     }
   }
-  pressScreen () {
+  pressScreen (upOrDown) {
     // console.log('pressed');
     // this.player.position.y = tis.player.position.y - GLOBALS.jumpConstant;
     if(this.gamePlay){
-      this.forceUp = -5
+      switch(upOrDown){
+        case 'UP':
+          this.forceUp = -5
+          break;
+        case 'DOWN':
+          this.forceUp = 5
+          break;
+      }
     }
   }
   releaseScreen () {
@@ -80,6 +109,9 @@ class ObservableListStore {
   }
   die() {
     this.navigationState = 'DEAD'
+  }
+  onCollision() {
+
   }
 }
 
