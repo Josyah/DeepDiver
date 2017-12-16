@@ -4,15 +4,17 @@ import {
   Text,
   View,
   TouchableWithoutFeedback,
-  TouchableOpacity
+  TouchableOpacity,
+  Animated,
+  PanResponder
 } from 'react-native';
-import {World, Body} from 'react-game-kit/native';
+import {World, Body, Stage, Loop} from 'react-game-kit/native';
 import PropTypes from 'prop-types';
 import Player from './player';
 import Enemies from './enemies';
 import {generateEnemies} from '../utils/generateEnemies';
 import {observer} from 'mobx-react/native';
-import {physicsInit, updateEnemies} from '../utils/physics';
+import {physicsInit} from '../utils/physics';
 import Matter from 'matter-js';
 import Enemy from './enemy'
 import IonIcons from 'react-native-vector-icons/Ionicons';
@@ -28,9 +30,38 @@ class Game extends Component {
     store = this.props.store;
     this.callback = this.callback.bind(this);
   }
+  componentWillMount() {
+  this._panResponder = PanResponder.create({
+    onMoveShouldSetResponderCapture: () => true,
+    onMoveShouldSetPanResponderCapture: () => true,
+
+    onPanResponderGrant: (e, gestureState) => {
+      console.log(gestureState.x0)
+      var touchCoords = gestureState.x0
+      if(touchCoords < (GLOBALS.dimensions.width/2)){
+        this.props.store.pressScreen('UP') //up
+      } else {
+        this.props.store.pressScreen('DOWN') //down
+
+      }
+      // onPressIn={() => this.props.store.pressScreen('DOWN')}
+      // onPressOut={() => this.props.store.releaseScreen()}
+      // style={styles.rightButton}
+    },
+
+    onPanResponderMove: Animated.event([
+    ]),
+
+    onPanResponderRelease: (e, {vx, vy}) => {
+      console.log('RELEASE')
+      this.props.store.releaseScreen()
+    }
+  });
+}
   componentDidMount(){
     this.props.store.gamePlay = true
     // Matter.Body.setStatic(this.props.store.enemies[0].body, true)
+    console.log('MOUNTED')
   }
   componentWillUnmount(){
     this.props.store.gamePlay = false
@@ -52,11 +83,34 @@ class Game extends Component {
       this.props.store.falling()
     }
 
-    // Matter.Body.setPosition(this.props.store.enemies[0].body, {x: store.enemy.position.x, y: store.enemy.position.y});
     store.moveBackground();
     store.checkPlayerPosition();
-    updateEnemies(store);
   }
+  physicsInit = (engine) => {
+
+    const ground = Matter.Bodies.rectangle(
+      GLOBALS.dimensions.width / 2,  // distance from left
+      (GLOBALS.dimensions.height+20)-(GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter), // distance from top
+      GLOBALS.dimensions.width, // width
+      40, // height
+      {
+        isStatic: true,
+        restitution: 0
+      },
+    );
+    const ceiling = Matter.Bodies.rectangle(
+      GLOBALS.dimensions.width / 2,  // distance from left
+      -7, // distance from top
+      GLOBALS.dimensions.width, // width
+      15, // height
+      {
+        isStatic: true,
+        restitution: 0
+      },
+    );
+
+  Matter.World.add(engine.world, [ceiling, ground]);
+}
   onCollision(e){
     console.log('COLLIDED', e.pairs[0].bodyA.id, 'WITH', e.pairs[0].bodyB.id)
     const bodyA = e.pairs[0].bodyA.id
@@ -68,7 +122,6 @@ class Game extends Component {
     }
   }
   callback(enemyBodies){
-    console.log(enemyBodies.length)
     for(let i = 0; i < enemyBodies.length ; i++){
       enemyBodies[i].position.x -= 5
       console.log(enemyBodies[0].position.x)
@@ -76,83 +129,76 @@ class Game extends Component {
   }
   render() {
     return (
-      <World
-        onInit={(engine) => physicsInit({
-          engine,
-          store,
-          enemies: this.enemyPositions,
-          callback: this.callback
-        })}
-        onUpdate={this.handleUpdate}
-        onCollision={this.onCollision}
-        gravity={{ x: 0, y: this.props.gravity, scale: 0.0005 }}
-        >
-        <View style={{flex: 1}}>
-          <Background store={store}/>
-          <View style={styles.buttons}>
-            <TouchableOpacity
-              onPressIn={() => this.props.store.pressScreen('UP')}
-              onPressOut={() => this.props.store.releaseScreen()}
-              style={styles.leftButton}
-              >
-              <View></View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPressIn={() => this.props.store.pressScreen('DOWN')}
-              onPressOut={() => this.props.store.releaseScreen()}
-              style={styles.rightButton}
-              >
-              <View></View>
-            </TouchableOpacity>
-          </View>
+      <Loop>
+        <Stage>
+          <World
+            onInit={this.physicsInit}
+            onUpdate={this.handleUpdate}
+            onCollision={this.onCollision}
+            gravity={{ x: 0, y: this.props.gravity, scale: 0.0005 }}
+            >
+            <View style={{flex: 1}}>
+              <Background store={store}/>
+              <View style={styles.buttons}>
+                  <View {...this._panResponder.panHandlers} style={styles.leftButton}>
+                    <Text></Text>
+                  </View>
+                  <View {...this._panResponder.panHandlers} style={styles.rightButton}>
+                    <Text></Text>
+                  </View>
 
-            <Body
-              shape="rectangle"
-              args={[this.props.store.player.position.x, this.props.store.player.position.y, this.props.store.player.height, this.props.store.player.width]}
-              friction={0}
-              frictionStatic={0}
-              restitution={0}
-              mass={GLOBALS.playerMass}
-              frictionAir={this.props.airFriction}
-              ref={(b) => { this.player = b; }}
-              >
-              <Player
-                store={store}
-                left={300}
-                bottom={300}
-                index={0}
-                />
-            </Body>
-            <View style={styles.topBar}>
 
-              <View style={styles.distance}>
-                <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
-              </View>
-              <View style={styles.shells}>
-                <Text style={styles.distanceText}>123 Shells</Text>
-              </View>
-              <View style={styles.healthBar}>
-                <HealthBar
-                  isActive={false}
-                  />
+
               </View>
 
-              <TouchableOpacity
-                onPress={() => this.props.store.navigationState = 'PAUSED'}
-                style={styles.pauseButton}
-                >
-                <IonIcons
-                  name={'ios-pause'}
-                  size={20}
-                  />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.bottomBar}>
-              <Text>Bottom</Text>
-            </View>
-          </View>
+                <Body
+                  shape="rectangle"
+                  args={[this.props.store.player.position.x, this.props.store.player.position.y, this.props.store.player.height, this.props.store.player.width]}
+                  friction={0}
+                  frictionStatic={0}
+                  restitution={0}
+                  mass={GLOBALS.playerMass}
+                  frictionAir={this.props.airFriction}
+                  ref={(b) => { this.player = b; }}
+                  >
+                  <Player
+                    store={store}
+                    left={300}
+                    bottom={300}
+                    index={0}
+                    />
+                </Body>
+                <View style={styles.topBar}>
 
-      </World>
+                  <View style={styles.distance}>
+                    <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
+                  </View>
+                  <View style={styles.shells}>
+                    <Text style={styles.distanceText}>123 Shells</Text>
+                  </View>
+                  <View style={styles.healthBar}>
+                    <HealthBar
+                      isActive={false}
+                      />
+                  </View>
+
+                  <TouchableOpacity
+                    onPress={() => this.props.store.navigationState = 'PAUSED'}
+                    style={styles.pauseButton}
+                    >
+                    <IonIcons
+                      name={'ios-pause'}
+                      size={20}
+                      />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.bottomBar}>
+                  <Text>Bottom</Text>
+                </View>
+              </View>
+          </World>
+        </Stage>
+      </Loop>
     );
   }
 }

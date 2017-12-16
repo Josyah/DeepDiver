@@ -15,6 +15,7 @@ import Background from './components/background';
 import {GLOBALS} from './globals'
 import Home from './screens/Home';
 import Navigation from './screens';
+import store from './store';
 export default class App extends Component<{}> {
   state = {
     appState: AppState.currentState
@@ -29,20 +30,18 @@ export default class App extends Component<{}> {
 
   _handleAppStateChange = (nextAppState) => {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-      console.log('App has come to the foreground!')
+      store.active()
     } else {
-      console.log('BACKGROUND')
+      store.pause()
     }
     this.setState({appState: nextAppState});
   }
 
   render() {
     return (
-      <Loop>
-        <Stage>
-          <Navigation/>
-        </Stage>
-      </Loop>
+
+          <Navigation store={store}/>
+
     );
   }
 }

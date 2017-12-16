@@ -7,10 +7,9 @@ var Engine = Matter.Engine,
     Bodies = Matter.Bodies;
 var enemyBodies = []
 var randomEnemies = []
-exports.physicsInit = (options) => {
-
-  let {engine, store, enemies, callback} = options
-  randomEnemies = enemies;
+exports.physicsInit = (engine) => {
+  console.log('PHYSICS')
+  // let {engine} = options
   const ground = Matter.Bodies.rectangle(
     GLOBALS.dimensions.width / 2,  // distance from left
     (GLOBALS.dimensions.height+20)-(GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter), // distance from top
@@ -50,11 +49,11 @@ exports.physicsInit = (options) => {
   Matter.World.add(engine.world, [ground, ceiling]);
 }
 
-exports.updateEnemies = (store) => {
-  // for(let i = 0; i< enemyBodies.length; i++){
-  //   enemyBodies[i].position.x += store.background.position.x
-  //   // enemyBodies[i].position.y = 0
-  //   Matter.Body.setPosition(enemyBodies[i], enemyBodies[i].position)
-  //   console.log(enemyBodies[0].position.x, enemyBodies[0].position.y)
-  // }
-}
+// exports.updateEnemies = (store) => {
+//   // for(let i = 0; i< enemyBodies.length; i++){
+//   //   enemyBodies[i].position.x += store.background.position.x
+//   //   // enemyBodies[i].position.y = 0
+//   //   Matter.Body.setPosition(enemyBodies[i], enemyBodies[i].position)
+//   //   console.log(enemyBodies[0].position.x, enemyBodies[0].position.y)
+//   // }
+// }

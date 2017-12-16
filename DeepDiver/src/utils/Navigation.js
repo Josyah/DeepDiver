@@ -7,7 +7,6 @@ import {
 import Home from '../screens/Home';
 import Loading from '../screens/Loading';
 import {observer} from 'mobx-react';
-import store from '../store';
 import LevelSelect from '../screens/StoryMode/LevelsLayout'
 import CharSelect from '../screens/StoryMode/CharacterSelect';
 import Level from '../components/Level';
@@ -16,8 +15,9 @@ import Paused from '../screens/Paused';
 
 @observer
 class Navigation extends Component {
-  render() {
 
+  render() {
+    var store = this.props.store
     switch(store.navigationState){
       case 'HOME':
         return(

@@ -36,6 +36,16 @@ class ObservableListStore {
   };
  @observable scale = .5
   @observable backgroundX = 0;
+  reset(){
+    this.player.position = GLOBALS.initCharacterPosition,
+    this.background.position = GLOBALS.initBackgroundPosition
+  }
+  pause(){
+    this.navigationState = 'PAUSED'
+  }
+  active(){
+
+  }
   falling(){
     if(this.player.animationState != 2){
       this.player.animationState = 2
@@ -94,6 +104,7 @@ class ObservableListStore {
     // this.player.position.y = tis.player.position.y - GLOBALS.jumpConstant;
     if(this.gamePlay){
       this.forceUp = 0
+      this.player.angle = 90
     }
 
   }

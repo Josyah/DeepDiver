@@ -10,12 +10,18 @@ class Paused extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => this.props.store.navigationState = 'HOME'}>
+        <TouchableOpacity onPress={() => {
+            this.props.store.navigationState = 'HOME'
+            this.props.store.reset()
+          }}>
           <Text style={styles.text}>
             Quit
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.store.navigationState = 'LEVEL_SELECT'}>
+        <TouchableOpacity onPress={() => {
+            this.props.store.navigationState = 'LEVEL'
+            this.props.store.reset()
+          }}>
           <Text style={styles.text}>
             Retry
           </Text>

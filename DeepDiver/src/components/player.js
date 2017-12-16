@@ -27,7 +27,7 @@ class Player extends Component {
 
   getPlayerStyles() {
     var angle = this.props.store.player.angle;
-    console.log('${this.props.store.player.angle}')
+    // console.log('${this.props.store.player.angle}')
     return {
       position: 'absolute',
       top: 0,
@@ -35,17 +35,18 @@ class Player extends Component {
       transform: [
         { translateX: this.props.store.player.position.x },
         { translateY: this.props.store.player.position.y },
-        { rotate: (this.props.store.player.angle+'deg') }
+        { rotate: (this.props.store.player.angle+'deg') },
+        { scaleX: this.props.store.scale },
+        { scaleY: this.props.store.scale },
       ],
+
     };
   }
   render() {
     return (
-      <View style={this.getPlayerStyles()}>
-
         <Sprite
           repeat={true}
-          src={require('../images/SeaLord.png')}
+          src={require("../images/SeaLord.png")}
           tileHeight={GLOBALS.tileHeight}
           tileWidth={GLOBALS.tileWidth}
           steps={[1, 6, 10, 5, 5, 4]}
@@ -53,8 +54,8 @@ class Player extends Component {
           scale={this.props.store.scale}
           offset={[0, 0]}
           ticksPerFrame={10}
+          style={this.getPlayerStyles()}
           />
-      </View>
     );
   }
 }
