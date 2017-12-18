@@ -46,7 +46,7 @@ class Player extends Component {
     return (
         <Sprite
           repeat={true}
-          src={require("../images/SeaLord.png")}
+          src={require('../images/SeaLord.png')}
           tileHeight={GLOBALS.tileHeight}
           tileWidth={GLOBALS.tileWidth}
           steps={[1, 6, 10, 5, 5, 4]}

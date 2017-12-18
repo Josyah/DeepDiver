@@ -36,7 +36,7 @@ class Game extends Component {
     onMoveShouldSetPanResponderCapture: () => true,
 
     onPanResponderGrant: (e, gestureState) => {
-      console.log(gestureState.x0)
+      // console.log(gestureState.x0)
       var touchCoords = gestureState.x0
       if(touchCoords < (GLOBALS.dimensions.width/2)){
         this.props.store.pressScreen('UP') //up
@@ -53,7 +53,7 @@ class Game extends Component {
     ]),
 
     onPanResponderRelease: (e, {vx, vy}) => {
-      console.log('RELEASE')
+      // console.log('RELEASE')
       this.props.store.releaseScreen()
     }
   });
@@ -82,7 +82,11 @@ class Game extends Component {
 
       this.props.store.falling()
     }
-
+    // if(this.props.store.player.isStatic == true){
+    //   Matter.Body.setStatic(this.player.body, true)
+    // } else{
+    //   Matter.Body.setStatic(this.player.body, false)
+    // }
     store.moveBackground();
     store.checkPlayerPosition();
   }
@@ -168,6 +172,10 @@ class Game extends Component {
                     index={0}
                     />
                 </Body>
+                <Enemies
+                  store={store}
+                  enmies={this.enemyPositions}
+                  />
                 <View style={styles.topBar}>
 
                   <View style={styles.distance}>

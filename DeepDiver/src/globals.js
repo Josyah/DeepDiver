@@ -13,9 +13,10 @@ exports.GLOBALS = {
     y: 0,
   },
   gameSpeed: {
-    horiziontal: 10,
+    horiziontal: 5,
     vertical: 3
   },
+  forceUp: 5,
   tileHeight: 200,
   tileWidth: 150,
   jumpConstant: 40,

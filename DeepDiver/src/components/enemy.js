@@ -14,17 +14,17 @@ class Enemy extends Component {
   constructor(props){
     super(props)
     this.state = {
-      x: 0,
-      y: 0,
       index: this.props.index,
       doneLoading: false
     }
   }
   getPosition() {
-
+    // console.log('POSs',this.props.position.x)
       return {
-        left: this.state.doneLoading ? this.props.store.enemies[this.props.index].x : 0,
-        top: this.state.doneLoading ? this.props.store.enemies[this.props.index].y : 0,
+        left: this.props.position.x,
+        bottom: this.props.position.y,
+        height: this.props.dimensions.height,
+        width: this.props.dimensions.width,
       }
 
   }
@@ -36,32 +36,9 @@ class Enemy extends Component {
     // this.props.store.enemy.position.y = this.props.bottom + this.props.store.background.position.y
     // this.props.store.enemies.length = this.props.index+1;
     // this.props.store.enemies[this.props.index] = this.enemy.body.position;
-    var bodyX = this.props.left + this.props.store.background.position.x
-    var bodyY = -this.props.store.background.position.y
-    var trying = false;
-      trying = true
-      while(trying){
-        try{
-          if(this.props.store.enemies.length != 0){
-            // console.log('there')
-            this.props.store.enemies[this.props.index].x -= 4
-            this.props.store.enemies[this.props.index].y = (this.props.store.background.position.y)
-          } else{
-            // console.log('not there')
-            this.props.store.enemies.push({
-              x: this.props.position.left,
-              y: this.props.position.top
-            })
-            console.log(this.props.store.enemies[this.props.index].x)
-            this.setState({
-              doneLoading: true
-            })
-          }
-          trying = false
-        } catch(e) {
-          trying = true
-        }
-      }
+    // var bodyX = this.props.left + this.props.store.background.position.x
+    // var bodyY = -this.props.store.background.position.y
+
 
 }
   componentDidMount() {
@@ -85,8 +62,7 @@ class Enemy extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 50,
-    width: 75,
+
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
@@ -94,8 +70,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'red',
     position: 'absolute',
-    backgroundColor: 'white',
-    zIndex: 1
+    backgroundColor: 'red',
+    zIndex: 4
   },
 });
 
