@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  TouchableOpacity
 } from 'react-native';
 
 class GameOver extends Component {
@@ -12,6 +13,15 @@ class GameOver extends Component {
         <Text style={styles.text}>
           GameOver Component
         </Text>
+        <TouchableOpacity onPress={() => {
+            this.props.store.reset()
+            this.props.store.navigationState = 'LEVEL'
+          }}>
+
+          <Text style={styles.retry}>
+            Retry
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -27,6 +37,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 50,
     color: 'white'
+  },
+  retry: {
+    fontSize: 20,
+    color: 'white',
+    margin: 10
   }
 });
 

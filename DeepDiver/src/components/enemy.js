@@ -21,10 +21,10 @@ class Enemy extends Component {
   getPosition() {
     // console.log('POSs',this.props.position.x)
       return {
-        left: this.props.position.x,
-        bottom: this.props.position.y,
-        height: this.props.dimensions.height,
-        width: this.props.dimensions.width,
+        left: this.props.store.enemies[this.props.index].position.x,
+        bottom: this.props.store.enemies[this.props.index].position.y,
+        height: this.props.store.enemies[this.props.index].dimensions.height,
+        width: this.props.store.enemies[this.props.index].dimensions.width,
       }
 
   }

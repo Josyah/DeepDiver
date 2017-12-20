@@ -10,16 +10,12 @@ class ObservableListStore {
       x: GLOBALS.initBackgroundPosition.x,
       y: GLOBALS.initBackgroundPosition.y
     }
-  }
+  };
   @observable enemies = []
   @observable gamePlay = false
   @observable navigationState = 'HOME'
   @observable forceUp = 0
-  @observable shells = [
-    {
-      type: 'SHELL'
-    }
-  ];
+  @observable repeat = true
   @observable player = {
     position: {
       x: GLOBALS.initCharacterPosition.x,
@@ -31,17 +27,16 @@ class ObservableListStore {
     animationState: 1,
     isStatic: false
   };
- @observable scale = .5
-  @observable backgroundX = 0;
+  @observable scale = .5;
   reset(){
     this.player.position = GLOBALS.initCharacterPosition,
-    this.background.position = GLOBALS.initBackgroundPosition
+    this.background.position = GLOBALS.initBackgroundPosition,
+    this.enemies = []
   }
   pause(){
     this.navigationState = 'PAUSED'
   }
   active(){
-
   }
   falling(){
     if(this.player.animationState != 2){
@@ -53,19 +48,13 @@ class ObservableListStore {
     if(direction == 'UP'){
       if(this.player.animationState != 3){
         this.player.animationState = 3
-        this.player.angle = 80
+        this.player.angle = 100
       }
     } else if (direction == 'DOWN'){
       if(this.player.animationState != 4){
         this.player.animationState = 4
-        this.player.angle = 100
+        this.player.angle = 80
       }
-    }
-  }
-  goingDown(){
-    if(this.player.animationState != 4){
-      this.player.animationState = 4
-      this.player.angle = 80
     }
   }
   setPositions(position, backgroundX) {
@@ -80,11 +69,7 @@ class ObservableListStore {
         // console.log('moved'+this.enemies[i].position.x)
       }
     }
-    if(add){
-      this.addEnemy('DEFAULT')
-      add = false
-    }
-    if(this.enemies[0].position.x){
+    if(this.enemies.length != 0){
 
       if(this.enemies[0].position.x < -300){
         if(count){
@@ -96,9 +81,20 @@ class ObservableListStore {
     }
     // console.log('move background')
   }
-  moveBackgroundUp () {
+  moveBackgroundDown() {
     if(this.gamePlay){
-      this.background.position.y = this.background.position.y-(1.5*GLOBALS.gameSpeed.vertical)
+      this.background.position.y -= (1.5*GLOBALS.gameSpeed.vertical)
+      for(var i = 0; i < this.enemies.length; i++){
+        this.enemies[i].position.y -=(1.5*GLOBALS.gameSpeed.vertical)
+      }
+    }
+  }
+  moveBackgroundUp() {
+    if(this.gamePlay){
+      this.background.position.y += (1.5*GLOBALS.gameSpeed.vertical)
+      for(var i = 0; i < this.enemies.length; i++){
+        this.enemies[i].position.y +=(1.5*GLOBALS.gameSpeed.vertical)
+      }
     }
   }
   pressScreen (upOrDown) {
@@ -107,10 +103,10 @@ class ObservableListStore {
     if(this.gamePlay){
       switch(upOrDown){
         case 'UP':
-          this.forceUp = -GLOBALS.forceUp
+          this.forceUp = GLOBALS.forceUp
           break;
         case 'DOWN':
-          this.forceUp = GLOBALS.forceUp
+          this.forceUp = -GLOBALS.forceUp
           break;
       }
     }
@@ -170,10 +166,12 @@ class ObservableListStore {
       if(this.enemies[i].position.x - this.player.position.x < this.enemies[i].dimensions.width){
         if(this.enemies[i].position.x>0){
           // if(this.player.position.x - this.enemies[i].position.x)
-          var here = ifBetween(this.player.position.y, this.enemies[i].position.y - (this.enemies[i].dimensions.height/2), this.enemies[i].position.y + (this.enemies[i].dimensions.height/2))
-          // console.log(here)
-          if(here){
+          console.log('MIN',this.enemies[i].position.y - (this.enemies[i].dimensions.height))
+          console.log('MAX',this.enemies[i].position.y)
+          console.log('PLAYER',this.player.position.y)
 
+          var here = ifBetween(this.player.position.y, this.enemies[i].position.y - (this.enemies[i].dimensions.height), this.enemies[i].position.y)
+          if(here){
             this.onCollision()
           }
         }
@@ -181,13 +179,15 @@ class ObservableListStore {
     }
     if(this.player.position.y < GLOBALS.topBoundary){
       // console.log('MOVE SCREEN UP BREH')
-      this.background.position.y = this.background.position.y-(1.5*GLOBALS.gameSpeed.vertical)
+      this.moveBackgroundUp()
+      // this.background.position.y = this.background.position.y+(1.5*GLOBALS.gameSpeed.vertical)
       // GLOBALS.forceUp = 1
       this.player.isStatic = true
     }
     else if(this.player.position.y > (GLOBALS.dimensions.height-GLOBALS.bottomBoundary)){
       // console.log('MOVE SCREEN DOWN BREH')
-      this.background.position.y = this.background.position.y+(1.5*GLOBALS.gameSpeed.vertical)
+      this.moveBackgroundDown()
+      // this.background.position.y = this.background.position.y-(1.5*GLOBALS.gameSpeed.vertical)
       this.player.isStatic = true
     }
     else {
@@ -202,7 +202,10 @@ class ObservableListStore {
   }
   onCollision() {
     console.log('COLLIDED')
-    this.navigationState = 'DEAD'
+    if(this.navigationState == 'LEVEL'){
+
+      this.navigationState = 'DEAD'
+    }
   }
 }
 

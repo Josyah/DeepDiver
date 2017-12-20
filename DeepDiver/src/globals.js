@@ -6,7 +6,7 @@ exports.GLOBALS = {
   },
   initCharacterPosition: {
     x: 50,
-    y: Dimensions.get('window').height*.2,
+    y: Dimensions.get('window').height*.5,
   },
   initBackgroundPosition: {
     x: 0,
@@ -14,15 +14,15 @@ exports.GLOBALS = {
   },
   gameSpeed: {
     horiziontal: 5,
-    vertical: 3
+    vertical: 4
   },
   forceUp: 5,
   tileHeight: 200,
   tileWidth: 150,
   jumpConstant: 40,
   pxToMeters: 10,
-  topBoundary: 75,
-  bottomBoundary: 125,
+  topBoundary: 40,
+  bottomBoundary: 200,
   defaultEnemyHeight: 75,
   defaultEnemyWidth: 75,
   playerHeightInMeters: 1.8796,

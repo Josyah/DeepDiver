@@ -62,6 +62,7 @@ class Game extends Component {
     this.props.store.gamePlay = true
     // Matter.Body.setStatic(this.props.store.enemies[0].body, true)
     console.log('MOUNTED')
+    this.props.store.addEnemy('DEFAULT')
   }
   componentWillUnmount(){
     this.props.store.gamePlay = false
@@ -139,7 +140,7 @@ class Game extends Component {
             onInit={this.physicsInit}
             onUpdate={this.handleUpdate}
             onCollision={this.onCollision}
-            gravity={{ x: 0, y: this.props.gravity, scale: 0.0005 }}
+            gravity={{ x: 0, y: -this.props.gravity, scale: 0.0005 }}
             >
             <View style={{flex: 1}}>
               <Background store={store}/>
@@ -174,7 +175,6 @@ class Game extends Component {
                 </Body>
                 <Enemies
                   store={store}
-                  enmies={this.enemyPositions}
                   />
                 <View style={styles.topBar}>
 

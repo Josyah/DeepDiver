@@ -8,7 +8,9 @@ import {
 import {observer} from 'mobx-react/native';
 import { Body , Sprite} from 'react-game-kit/native';
 import Matter from 'matter-js';
+import {topToBottom} from '../utils/converter'
 import {GLOBALS} from '../globals'
+var imgSrc = '../images/SeaLord.png'
 @observer
 class Player extends Component {
   constructor(props) {
@@ -23,18 +25,21 @@ class Player extends Component {
       playerAngle: 0,
     };
   }
-
+  componentWillUnmount(){
+    this.props.store.player.repeat = false
+  }
+  componentWillMount(){
+    this.props.store.player.repeat = true
+  }
 
   getPlayerStyles() {
     var angle = this.props.store.player.angle;
     // console.log('${this.props.store.player.angle}')
     return {
       position: 'absolute',
-      top: 0,
-      left: 50,
+      bottom: this.props.store.player.position.y,
+      left: this.props.store.player.position.x,
       transform: [
-        { translateX: this.props.store.player.position.x },
-        { translateY: this.props.store.player.position.y },
         { rotate: (this.props.store.player.angle+'deg') },
         { scaleX: this.props.store.scale },
         { scaleY: this.props.store.scale },
@@ -45,8 +50,8 @@ class Player extends Component {
   render() {
     return (
         <Sprite
-          repeat={true}
-          src={require('../images/SeaLord.png')}
+          repeat={this.props.store.player.repeat}
+          src={require('../images/Sea-Lord.png')}
           tileHeight={GLOBALS.tileHeight}
           tileWidth={GLOBALS.tileWidth}
           steps={[1, 6, 10, 5, 5, 4]}
