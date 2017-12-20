@@ -10,18 +10,22 @@ class ObservableListStore {
     position: {
       x: GLOBALS.initBackgroundPosition.x,
       y: GLOBALS.initBackgroundPosition.y
+    },
+    dimensions: {
+      height: GLOBALS.initBackgroundHeight,
+      width: GLOBALS.initBackgroundWidth,
     }
   };
   @observable enemies = []
   @observable hearts = [
     {
-      fill: 100
+      animationState: 0
     },
     {
-      fill: 100
+      animationState: 0
     },
     {
-      fill: 100
+      animationState: 0
     },
   ]
   @observable gamePlay = false
@@ -54,6 +58,17 @@ class ObservableListStore {
     this.background.position = GLOBALS.initBackgroundPosition,
     this.enemies = []
     lastLife = 0;
+    this.hearts = [
+      {
+        animationState: 0
+      },
+      {
+        animationState: 0
+      },
+      {
+        animationState: 0
+      },
+    ]
   }
   pause(){
     this.navigationState = 'PAUSED'
@@ -66,13 +81,13 @@ class ObservableListStore {
   }
   changeAnimation(direction){
     if(direction == 'UP'){
-      if(this.player.animationState != 3){
-        this.player.animationState = 3
+      if(this.player.animationState != 4){
+        this.player.animationState = 4
         this.player.angle = 100
       }
     } else if (direction == 'DOWN'){
-      if(this.player.animationState != 4){
-        this.player.animationState = 4
+      if(this.player.animationState != 3){
+        this.player.animationState = 3
         this.player.angle = 80
       }
     }
@@ -137,9 +152,10 @@ class ObservableListStore {
             y: 100
           },
           dimensions: {
-            height: 75,
-            width: 75
-          }
+            height: 50,
+            width: 50
+          },
+          collided: false
         })
         console.log('ADDED DEFAULT')
       case 'SHARK':
@@ -179,7 +195,7 @@ class ObservableListStore {
 
           var here = ifBetween(this.player.position.y, this.enemies[i].position.y - (this.enemies[i].dimensions.height), this.enemies[i].position.y)
           if(here){
-            this.onCollision(i+1)
+            this.onCollision(i)
           }
         }
       }
@@ -206,9 +222,9 @@ class ObservableListStore {
 
   onCollision(id) {
     console.log(id)
-    if(id != (lastId)){
+    if(this.enemies[id].collided == false){
+      this.enemies[id].collided = true
       this.loseLife(1)
-      lastId = id;
     }
   }
 }

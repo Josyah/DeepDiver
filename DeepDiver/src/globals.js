@@ -1,4 +1,5 @@
 import {Dimensions} from 'react-native';
+
 exports.GLOBALS = {
   dimensions: {
     width: Dimensions.get('window').width,
@@ -10,15 +11,25 @@ exports.GLOBALS = {
   },
   initBackgroundPosition: {
     x: 0,
-    y: 0,
+    y: -1000,
+  },
+  initBackgroundDimensions: {
+    width: 2000,
+    height: 2000,
   },
   gameSpeed: {
     horiziontal: 5,
     vertical: 4
   },
   forceUp: 5,
-  tileHeight: 200,
-  tileWidth: 150,
+  SeaLord: {
+    tileHeight: 200,
+    tileWidth: 150,
+  },
+  Aquaria: {
+    tileHeight: 219.5,
+    tileWidth: 113.6,
+  },
   jumpConstant: 40,
   pxToMeters: 10,
   topBoundary: 40,

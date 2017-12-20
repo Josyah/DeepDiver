@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   mainBg: {
-    height: GLOBALS.dimensions.height*10,
-    width: GLOBALS.dimensions.width*10,
+    height: GLOBALS.initBackgroundDimensions.height,
+    width: GLOBALS.initBackgroundDimensions.width,
     zIndex: -1
   },
   seaWeed: {

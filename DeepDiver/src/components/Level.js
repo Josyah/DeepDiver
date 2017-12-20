@@ -44,13 +44,7 @@ class Game extends Component {
         this.props.store.pressScreen('DOWN') //down
 
       }
-      // onPressIn={() => this.props.store.pressScreen('DOWN')}
-      // onPressOut={() => this.props.store.releaseScreen()}
-      // style={styles.rightButton}
     },
-
-    onPanResponderMove: Animated.event([
-    ]),
 
     onPanResponderRelease: (e, {vx, vy}) => {
       // console.log('RELEASE')
@@ -80,19 +74,13 @@ class Game extends Component {
         this.props.store.changeAnimation('DOWN')
       }
     } else {
-
       this.props.store.falling()
     }
-    // if(this.props.store.player.isStatic == true){
-    //   Matter.Body.setStatic(this.player.body, true)
-    // } else{
-    //   Matter.Body.setStatic(this.player.body, false)
-    // }
     store.moveBackground();
     store.checkPlayerPosition();
   }
   physicsInit = (engine) => {
-
+    console.log('PHYSICS')
     const ground = Matter.Bodies.rectangle(
       GLOBALS.dimensions.width / 2,  // distance from left
       (GLOBALS.dimensions.height+20)-(GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter), // distance from top
@@ -137,7 +125,7 @@ class Game extends Component {
       <Loop>
         <Stage>
           <World
-            onInit={this.physicsInit}
+            onInit={physicsInit}
             onUpdate={this.handleUpdate}
             onCollision={this.onCollision}
             gravity={{ x: 0, y: -this.props.gravity, scale: 0.0005 }}
@@ -176,10 +164,9 @@ class Game extends Component {
                 <Enemies
                   store={store}
                   />
-                <View style={styles.topBar}>
 
                   <View style={styles.distance}>
-                    <Text style={styles.distanceText}>{-this.props.store.background.position.x/10} m</Text>
+                    <Text style={styles.distanceText}>{-this.props.store.background.position.x/GLOBALS.pixelsInAMeter} m</Text>
                   </View>
                   <View style={styles.shells}>
                     <Text style={styles.distanceText}>123 Shells</Text>
@@ -200,10 +187,6 @@ class Game extends Component {
                       size={20}
                       />
                   </TouchableOpacity>
-                </View>
-                <View style={styles.bottomBar}>
-                  <Text>Bottom</Text>
-                </View>
               </View>
           </World>
         </Stage>

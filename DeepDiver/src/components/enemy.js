@@ -52,7 +52,7 @@ class Enemy extends Component {
       return (
         <View style={[this.getPosition(), styles.container]}>
           <Text>
-            Enemyy
+            Fish
           </Text>
         </View>
       );
