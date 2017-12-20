@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  Image
 } from 'react-native';
 import {observer} from 'mobx-react/native';
 import {Body} from 'react-game-kit/native';
@@ -28,33 +29,12 @@ class Enemy extends Component {
       }
 
   }
-  static contextTypes = {
-    loop: PropTypes.object,
-  };
-  update = () => {
-    // this.props.store.enemy.position.x = this.props.bottom + this.props.store.background.position.x
-    // this.props.store.enemy.position.y = this.props.bottom + this.props.store.background.position.y
-    // this.props.store.enemies.length = this.props.index+1;
-    // this.props.store.enemies[this.props.index] = this.enemy.body.position;
-    // var bodyX = this.props.left + this.props.store.background.position.x
-    // var bodyY = -this.props.store.background.position.y
-
-
-}
-  componentDidMount() {
-    this.context.loop.subscribe(this.update);
-  }
-
-  componentWillUnmount() {
-    this.context.loop.unsubscribe(this.update);
-  }
   render() {
       return (
-        <View style={[this.getPosition(), styles.container]}>
-          <Text>
-            Fish
-          </Text>
-        </View>
+          <Image
+            source={require('../images/PiranaCropped.png')}
+            style={[this.getPosition()]}
+            />
       );
     }
 

@@ -20,12 +20,38 @@ class Background extends Component {
       ]
     }
   }
+  backgroundPosition(){
+    return{
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      transform: [
+        {translateX: this.props.store.background.position.x},
+        {translateY: -this.props.store.background.position.y},
+      ]
+    }
+  }
+  secondaryBackgroundPosition(){
+    return{
+      position: 'absolute',
+      left: GLOBALS.initBackgroundDimensions.width,
+      bottom: 0,
+      transform: [
+        {translateX: this.props.store.background.position.x},
+        {translateY: -this.props.store.background.position.y},
+      ]
+    }
+  }
   render() {
     return (
       <View style={styles.container}>
         <Image
           source={require('../utils/water.jpg')}
-          style={[styles.mainBg, this.getPosition(0,0)]}
+          style={[styles.mainBg, this.secondaryBackgroundPosition()]}
+          />
+        <Image
+          source={require('../utils/water.jpg')}
+          style={[styles.mainBg, this.backgroundPosition()]}
           />
         <Image
           source={require('../utils/kali-kolberg-final-seaweed-animation.gif')}
@@ -43,7 +69,7 @@ const styles = StyleSheet.create({
   mainBg: {
     height: GLOBALS.initBackgroundDimensions.height,
     width: GLOBALS.initBackgroundDimensions.width,
-    zIndex: -1
+    zIndex: -1,
   },
   seaWeed: {
     height: 300,

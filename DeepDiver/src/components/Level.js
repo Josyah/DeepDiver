@@ -56,7 +56,7 @@ class Game extends Component {
     this.props.store.gamePlay = true
     // Matter.Body.setStatic(this.props.store.enemies[0].body, true)
     console.log('MOUNTED')
-    this.props.store.addEnemy('DEFAULT')
+    // this.props.store.addEnemy('DEFAULT')
   }
   componentWillUnmount(){
     this.props.store.gamePlay = false

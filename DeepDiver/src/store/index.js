@@ -14,9 +14,28 @@ class ObservableListStore {
     dimensions: {
       height: GLOBALS.initBackgroundHeight,
       width: GLOBALS.initBackgroundWidth,
+    },
+    secondary: {
+      position: {
+        x: GLOBALS.initBackgroundWidth+10,
+        y: GLOBALS.initBackgroundPosition.y
+      }
     }
   };
-  @observable enemies = []
+  @observable enemies = [{
+
+    type: 'DEFAULT',
+    position: {
+      x: 1000,
+      y: 100
+    },
+    dimensions: {
+      height: 50,
+      width: 50
+    },
+    collided: false
+  }
+  ]
   @observable hearts = [
     {
       animationState: 0
@@ -44,18 +63,33 @@ class ObservableListStore {
     isStatic: false
   };
   @observable scale = .5;
-  loseLife(number){
+  loseLife(){
     if(this.hearts.length != 0){
-      if (index > -1) {
-        this.hearts.splice(0, 1);
-        console.log('DELETED', this.hearts.length)
-      }
+      this.hearts.splice(0, 1);
+
     }
+    // if(this.enemies.length != 0){
+    //   console.log('DELETED', this.enemies.length)
+    //   // this.enemies.splice(0, 1);
+    //   // console.log('DELETED', this.enemies.length)
+    // }
   }
   reset(){
     this.player.position = GLOBALS.initCharacterPosition,
     this.background.position = GLOBALS.initBackgroundPosition,
-    this.enemies = []
+    this.enemies = [{
+
+      type: 'DEFAULT',
+      position: {
+        x: 1000,
+        y: 100
+      },
+      dimensions: {
+        height: 50,
+        width: 50
+      },
+      collided: false
+    }]
     lastLife = 0;
     this.hearts = [
       {
@@ -68,6 +102,7 @@ class ObservableListStore {
         animationState: 0
       },
     ]
+    this.enemies = []
   }
   pause(){
     this.navigationState = 'PAUSED'
@@ -103,6 +138,7 @@ class ObservableListStore {
       if(this.enemies[x].position.x < -300){
         if(count){
           this.addEnemy('DEFAULT')
+          this.deleteEnemy(0)
           count = false
         }
       }
@@ -144,6 +180,7 @@ class ObservableListStore {
     }
   }
   addEnemy(type, position, dimensions) {
+    count = true;
     switch(type){
       case 'DEFAULT':
         this.enemies.push({
@@ -157,20 +194,6 @@ class ObservableListStore {
             width: 50
           },
           collided: false
-        })
-        console.log('ADDED DEFAULT')
-      case 'SHARK':
-        this.enemies.push({
-          type: 'SHARK',
-          position: {
-            x: 1000,
-            y: 100
-          },
-          dimensions: {
-            height: 75,
-            width: 75
-          }
-
         })
         console.log('ADDED DEFAULT')
 
@@ -215,17 +238,20 @@ class ObservableListStore {
       GLOBALS.forceUp = 5
       this.player.isStatic = false
     }
-
+    if(this.background.secondary.position.x < (GLOBALS.initBackgroundDimensions.width+(GLOBALS.dimensions.width/2))){
+      this.background.position.x = (this.background.secondary.position.x+GLOBALS.initBackgroundDimensions.width)
+    }
   }
   die() {
     this.navigationState = 'DEAD'
   }
 
   onCollision(id) {
-    console.log(id)
-    if(this.enemies[id].collided == false){
-      this.enemies[id].collided = true
-      this.loseLife(1)
+    if(this.enemies.length!=0){
+      if(this.enemies[id].collided == false){
+        this.enemies[id].collided = true
+        this.loseLife()
+      }
     }
   }
 }
