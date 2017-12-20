@@ -36,7 +36,7 @@ class StoryMode extends Component {
           <SelectorButton
             goTo={'LEVEL_SELECT'}
             store={this.props.store}
-            buttonText={'Character 2'}
+            buttonText={'Aquaria'}
           />
           <SelectorButton
             goTo={'LEVEL_SELECT'}

@@ -3,6 +3,7 @@ import {GLOBALS} from '../globals';
 let index = 0
 let add = true
 let count = true
+var lastId = 0
 import {ifBetween} from '../utils/ifBetween'
 class ObservableListStore {
   @observable background = {
@@ -12,6 +13,17 @@ class ObservableListStore {
     }
   };
   @observable enemies = []
+  @observable hearts = [
+    {
+      fill: 100
+    },
+    {
+      fill: 100
+    },
+    {
+      fill: 100
+    },
+  ]
   @observable gamePlay = false
   @observable navigationState = 'HOME'
   @observable forceUp = 0
@@ -28,15 +40,23 @@ class ObservableListStore {
     isStatic: false
   };
   @observable scale = .5;
+  loseLife(number){
+    if(this.hearts.length != 0){
+
+      if (index > -1) {
+        this.hearts.splice(0, 1);
+        console.log('DELETED', this.hearts.length)
+      }
+    }
+  }
   reset(){
     this.player.position = GLOBALS.initCharacterPosition,
     this.background.position = GLOBALS.initBackgroundPosition,
     this.enemies = []
+    lastLife = 0;
   }
   pause(){
     this.navigationState = 'PAUSED'
-  }
-  active(){
   }
   falling(){
     if(this.player.animationState != 2){
@@ -57,29 +77,21 @@ class ObservableListStore {
       }
     }
   }
-  setPositions(position, backgroundX) {
-    this.character.position = position;
-    this.backgroundX = backgroundX;
-  }
   moveBackground () {
     if(this.gamePlay){
       this.background.position.x -= (1.5*GLOBALS.gameSpeed.horiziontal)
       for(var i = 0; i < this.enemies.length; i++){
         this.enemies[i].position.x -= (1.5*GLOBALS.gameSpeed.horiziontal)
-        // console.log('moved'+this.enemies[i].position.x)
       }
     }
     if(this.enemies.length != 0){
-
       if(this.enemies[0].position.x < -300){
         if(count){
-
           this.addEnemy('DEFAULT')
           count = false
         }
       }
     }
-    // console.log('move background')
   }
   moveBackgroundDown() {
     if(this.gamePlay){
@@ -98,8 +110,6 @@ class ObservableListStore {
     }
   }
   pressScreen (upOrDown) {
-    // console.log('pressed');
-    // this.player.position.y = tis.player.position.y - GLOBALS.jumpConstant;
     if(this.gamePlay){
       switch(upOrDown){
         case 'UP':
@@ -112,13 +122,10 @@ class ObservableListStore {
     }
   }
   releaseScreen () {
-    // console.log('released');
-    // this.player.position.y = tis.player.position.y - GLOBALS.jumpConstant;
     if(this.gamePlay){
       this.forceUp = 0
       this.player.angle = 90
     }
-
   }
   addEnemy(type, position, dimensions) {
     switch(type){
@@ -166,13 +173,13 @@ class ObservableListStore {
       if(this.enemies[i].position.x - this.player.position.x < this.enemies[i].dimensions.width){
         if(this.enemies[i].position.x>0){
           // if(this.player.position.x - this.enemies[i].position.x)
-          console.log('MIN',this.enemies[i].position.y - (this.enemies[i].dimensions.height))
-          console.log('MAX',this.enemies[i].position.y)
-          console.log('PLAYER',this.player.position.y)
+          // console.log('MIN',this.enemies[i].position.y - (this.enemies[i].dimensions.height))
+          // console.log('MAX',this.enemies[i].position.y)
+          // console.log('PLAYER',this.player.position.y)
 
           var here = ifBetween(this.player.position.y, this.enemies[i].position.y - (this.enemies[i].dimensions.height), this.enemies[i].position.y)
           if(here){
-            this.onCollision()
+            this.onCollision(i+1)
           }
         }
       }
@@ -180,19 +187,15 @@ class ObservableListStore {
     if(this.player.position.y < GLOBALS.topBoundary){
       // console.log('MOVE SCREEN UP BREH')
       this.moveBackgroundUp()
-      // this.background.position.y = this.background.position.y+(1.5*GLOBALS.gameSpeed.vertical)
-      // GLOBALS.forceUp = 1
       this.player.isStatic = true
     }
     else if(this.player.position.y > (GLOBALS.dimensions.height-GLOBALS.bottomBoundary)){
       // console.log('MOVE SCREEN DOWN BREH')
       this.moveBackgroundDown()
-      // this.background.position.y = this.background.position.y-(1.5*GLOBALS.gameSpeed.vertical)
       this.player.isStatic = true
     }
     else {
       GLOBALS.forceUp = 5
-      // console.log('false')
       this.player.isStatic = false
     }
 
@@ -200,11 +203,12 @@ class ObservableListStore {
   die() {
     this.navigationState = 'DEAD'
   }
-  onCollision() {
-    console.log('COLLIDED')
-    if(this.navigationState == 'LEVEL'){
 
-      this.navigationState = 'DEAD'
+  onCollision(id) {
+    console.log(id)
+    if(id != (lastId)){
+      this.loseLife(1)
+      lastId = id;
     }
   }
 }

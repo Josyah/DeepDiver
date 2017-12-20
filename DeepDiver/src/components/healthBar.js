@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  Image
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 
@@ -17,13 +18,16 @@ class HealthBar extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Entypo
-          name={'heart'}
-          size={20}
-          style={{
-            color: this.props.isActive ? 'red' : 'black'
-          }}
-          />
+        {
+          this.props.store.hearts.map((fill, index) => {
+            return(
+
+              <Image
+                source={require('../images/Heart-stuff.png')}
+                />
+            )
+          })
+        }
       </View>
     );
   }
@@ -34,6 +38,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row'
   },
   text: {
     fontSize: 15

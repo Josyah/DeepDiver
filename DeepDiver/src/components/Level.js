@@ -187,6 +187,7 @@ class Game extends Component {
                   <View style={styles.healthBar}>
                     <HealthBar
                       isActive={false}
+                      store={this.props.store}
                       />
                   </View>
 
