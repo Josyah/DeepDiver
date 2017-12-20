@@ -166,7 +166,7 @@ class Game extends Component {
                   />
 
                   <View style={styles.distance}>
-                    <Text style={styles.distanceText}>{-this.props.store.background.position.x/GLOBALS.pixelsInAMeter} m</Text>
+                    <Text style={styles.distanceText}>{Math.round(-this.props.store.background.position.x/GLOBALS.pixelsInAMeter)} m</Text>
                   </View>
                   <View style={styles.shells}>
                     <Text style={styles.distanceText}>123 Shells</Text>
@@ -184,7 +184,7 @@ class Game extends Component {
                     >
                     <IonIcons
                       name={'ios-pause'}
-                      size={20}
+                      size={30}
                       />
                   </TouchableOpacity>
               </View>
@@ -208,24 +208,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 3,
+    marginTop: 5,
     backgroundColor: 'white',
-    padding: 3,
-    paddingLeft: 5,
-    paddingRight: 5,
-    borderRadius: 3
-  },
-  distance: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    justifyContent: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'black',
     padding: 5,
-    margin: 3,
-    backgroundColor: 'white',
-    width: 100
+    borderRadius: 3
   },
   shells: {
     position: 'absolute',
@@ -237,11 +223,25 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     padding: 5,
     margin: 3,
-    backgroundColor: 'white',
+    width: 100
+  },
+  distance: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    justifyContent: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 5,
+    margin: 3,
     width: 100
   },
   distanceText: {
-    fontSize: 15
+    fontSize: 30,
+    color: 'white',
+    backgroundColor: 'transparent',
+    borderRadius: 5
   },
   topBar: {
     height: 35,

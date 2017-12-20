@@ -46,7 +46,6 @@ class ObservableListStore {
   @observable scale = .5;
   loseLife(number){
     if(this.hearts.length != 0){
-
       if (index > -1) {
         this.hearts.splice(0, 1);
         console.log('DELETED', this.hearts.length)
@@ -99,13 +98,15 @@ class ObservableListStore {
         this.enemies[i].position.x -= (1.5*GLOBALS.gameSpeed.horiziontal)
       }
     }
-    if(this.enemies.length != 0){
-      if(this.enemies[0].position.x < -300){
+    for(var x = 0; x < this.enemies.length ; x++){
+
+      if(this.enemies[x].position.x < -300){
         if(count){
           this.addEnemy('DEFAULT')
           count = false
         }
       }
+
     }
   }
   moveBackgroundDown() {

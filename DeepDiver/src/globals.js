@@ -13,6 +13,12 @@ exports.GLOBALS = {
     x: 0,
     y: -1000,
   },
+  region: {
+    one: {
+      top: 1000,
+      bottom: 500
+    }
+  },
   initBackgroundDimensions: {
     width: 2000,
     height: 2000,
