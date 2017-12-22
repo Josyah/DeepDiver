@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native';
 
 class Home extends Component {
@@ -14,18 +15,11 @@ class Home extends Component {
           Sea Swimmer
         </Text>
         <TouchableOpacity onPress={() => this.props.store.navigationState = 'CHAR_SELECT'}>
-          <Text style={styles.linkToPage}>
-            Story Mode
-          </Text>
+
+          <Image
+            source={require('../../images/Start.png')}
+            />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.props.store.navigationState = 'LEVEL'}>
-          <Text style={styles.linkToPage}>
-            Arcade
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.multiplayerPage}>
-          Multiplayer
-        </Text>
       </View>
     );
   }

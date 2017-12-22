@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native';
 import {GLOBALS} from '../globals';
 
@@ -12,11 +13,12 @@ class SelectorButton extends Component {
     return (
       <TouchableOpacity
         style={styles.characterContainer}
-        onPress={() => this.props.store.navigationState = this.props.goTo }
+        onPress={() => {
+          this.props.store.navigationState = this.props.goTo
+          this.props.store.player.type = this.props.playerSelected
+        }}
         >
-          <Text>
-            {this.props.buttonText}
-          </Text>
+        <Text>{this.props.buttonText}</Text>
       </TouchableOpacity>
     );
   }

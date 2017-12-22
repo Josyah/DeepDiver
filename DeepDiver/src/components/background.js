@@ -16,18 +16,21 @@ class Background extends Component {
       bottom: startY,
       transform: [
         {translateX: this.props.store.background.position.x},
-        {translateY: -this.props.store.background.position.y},
+        {translateY: this.props.store.background.position.y},
       ]
     }
   }
   backgroundPosition(){
     return{
       position: 'absolute',
-      left: 0,
-      bottom: 0,
+      left: GLOBALS.initBackgroundPosition.x,
+      bottom: GLOBALS.initBackgroundPosition.y,
+      height: GLOBALS.initBackgroundDimensions.height,
+      width: GLOBALS.initBackgroundDimensions.width,
       transform: [
         {translateX: this.props.store.background.position.x},
-        {translateY: -this.props.store.background.position.y},
+        {translateY: this.props.store.background.position.y},
+        {rotate: '180deg'}
       ]
     }
   }
@@ -35,27 +38,31 @@ class Background extends Component {
     return{
       position: 'absolute',
       left: GLOBALS.initBackgroundDimensions.width,
-      bottom: 0,
+      bottom: GLOBALS.initBackgroundPosition.y,
+      height: GLOBALS.initBackgroundDimensions.height,
+      width: GLOBALS.initBackgroundDimensions.width,
       transform: [
         {translateX: this.props.store.background.position.x},
-        {translateY: -this.props.store.background.position.y},
+        {translateY: this.props.store.background.position.y},
+        {rotate: '180deg'}
       ]
     }
+  }
+  onLoadEnd(x){
+    // console.log('LOADING BACKGROUND'+ x +' FINISHED')
   }
   render() {
     return (
       <View style={styles.container}>
         <Image
-          source={require('../utils/water.jpg')}
+          source={require('../images/Ocean.png')}
           style={[styles.mainBg, this.secondaryBackgroundPosition()]}
+          onLoadEnd={this.onLoadEnd(1)}
           />
         <Image
-          source={require('../utils/water.jpg')}
+          source={require('../images/Ocean.png')}
           style={[styles.mainBg, this.backgroundPosition()]}
-          />
-        <Image
-          source={require('../utils/kali-kolberg-final-seaweed-animation.gif')}
-          style={[styles.seaWeed, this.getPosition(1000, 0)]}
+          onLoadEnd={this.onLoadEnd(2)}
           />
       </View>
     );

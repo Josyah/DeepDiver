@@ -31,7 +31,9 @@ class StoryMode extends Component {
           <SelectorButton
             goTo={'LEVEL_SELECT'}
             store={this.props.store}
-            buttonText={'Sea Dude'}
+            buttonText={'Commander Turtle'}
+            playerSelected={'COMMANDER_TURTLE'}
+            uri={'../../images/SeaLord.png'}
           />
           <SelectorButton
             goTo={'LEVEL_SELECT'}

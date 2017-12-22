@@ -24,6 +24,7 @@ class HealthBar extends Component {
 
               <Image
                 source={require('../images/Heart-stuff.png')}
+                key={index}
                 />
             )
           })

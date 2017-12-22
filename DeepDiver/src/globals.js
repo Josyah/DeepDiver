@@ -2,16 +2,16 @@ import {Dimensions} from 'react-native';
 
 exports.GLOBALS = {
   dimensions: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height
   },
   initCharacterPosition: {
     x: 50,
-    y: Dimensions.get('window').height*.5,
+    y: Dimensions.get('window').height*.3,
   },
   initBackgroundPosition: {
     x: 0,
-    y: -1000,
+    y: -6000,
   },
   region: {
     one: {
@@ -20,31 +20,58 @@ exports.GLOBALS = {
     }
   },
   initBackgroundDimensions: {
-    width: 2000,
-    height: 2000,
+    width: 3312,
+    height: 6624,
   },
   gameSpeed: {
     horiziontal: 5,
     vertical: 4
   },
   forceUp: 5,
+  forceLeft: 5,
   SeaLord: {
     tileHeight: 200,
     tileWidth: 150,
+    steps: [1, 6, 10, 5, 5, 4],
+    fallingAnimation: 2,
+    upAnimation: 3,
+    downAnimation: 4
   },
   Aquaria: {
     tileHeight: 219.5,
     tileWidth: 113.6,
   },
+  HammerHead: {
+    tileWidth: 200.25,
+    tileHeight: 100,
+    steps: [3, 1]
+  },
+  Piranha: {
+    tileWidth: 200.25,
+    tileHeight: 100,
+    steps: [0]
+  },
+  JellyFish: {
+    tileWidth: 125,
+    tileHeight: 125,
+    steps: [4, 1]
+  },
+  CommanderTurtle: {
+    tileHeight: 400,
+    tileWidth: 300,
+    steps: [0, 1, 3, 3, 3, 3, 3, 3, 3],
+    fallingAnimation: 3,
+    upAnimation: 2,
+    downAnimation: 3,
+    heightInMeters: 2
+  },
   jumpConstant: 40,
-  pxToMeters: 10,
-  topBoundary: 40,
-  bottomBoundary: 200,
   defaultEnemyHeight: 75,
   defaultEnemyWidth: 75,
   playerHeightInMeters: 1.8796,
   playerWidthInMeters: 0.3048,
-  pixelsInAMeter: 40,
+  pixelsInAMeter: 50,
   playerMass: 95.2544,
-  seaWeedDistance: 50
+  seaWeedDistance: 50,
+  visibilityInMeters: 100
 }

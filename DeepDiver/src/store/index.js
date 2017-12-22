@@ -2,8 +2,9 @@ import {observable} from 'mobx';
 import {GLOBALS} from '../globals';
 let index = 0
 let add = true
-let count = true
 var lastId = 0
+var count = 1
+var range = 5000000000
 import {ifBetween} from '../utils/ifBetween'
 class ObservableListStore {
   @observable background = {
@@ -22,19 +23,8 @@ class ObservableListStore {
       }
     }
   };
-  @observable enemies = [{
-
-    type: 'DEFAULT',
-    position: {
-      x: 1000,
-      y: 100
-    },
-    dimensions: {
-      height: 50,
-      width: 50
-    },
-    collided: false
-  }
+  @observable enemies = [
+    this.initialEnemies('HAMMERHEAD')
   ]
   @observable hearts = [
     {
@@ -47,49 +37,59 @@ class ObservableListStore {
       animationState: 0
     },
   ]
-  @observable gamePlay = false
   @observable navigationState = 'HOME'
   @observable forceUp = 0
+  @observable forceLeft = 2
   @observable repeat = true
+  @observable unPausing = false
+  @observable paused = false
   @observable player = {
-    position: {
-      x: GLOBALS.initCharacterPosition.x,
-      y: GLOBALS.initCharacterPosition.y
-    },
-    width: this.scale * GLOBALS.tileHeight,
-    height: this.scale * GLOBALS.tileWidth,
+    width: this.scale * GLOBALS.tileWidth,
+    height: this.scale * GLOBALS.tileHeight,
     angle: 90,
-    animationState: 1,
-    isStatic: false
+    animationState: 2,
+    isStatic: false,
+    type: 'SEA_LORD',
+    animate: {
+      falling: GLOBALS.SeaLord.fallingAnimation,
+      goingUp: GLOBALS.SeaLord.upAnimation,
+      goingDown: GLOBALS.SeaLord.downAnimation,
+    }
   };
   @observable scale = .5;
-  loseLife(){
-    if(this.hearts.length != 0){
-      this.hearts.splice(0, 1);
-
-    }
-    // if(this.enemies.length != 0){
-    //   console.log('DELETED', this.enemies.length)
-    //   // this.enemies.splice(0, 1);
-    //   // console.log('DELETED', this.enemies.length)
-    // }
-  }
-  reset(){
-    this.player.position = GLOBALS.initCharacterPosition,
-    this.background.position = GLOBALS.initBackgroundPosition,
-    this.enemies = [{
-
-      type: 'DEFAULT',
+  initialEnemies(enemyType){
+    return {
+      enemyType,
       position: {
         x: 1000,
-        y: 100
+        y: 100,
+        x0: 1000,
+        y0: 100,
       },
       dimensions: {
         height: 50,
         width: 50
       },
-      collided: false
-    }]
+      collided: false,
+      speed: 7,
+      path: {
+        type: 'WAVE',
+        frequency: 200,
+        wavelength: 200
+      },
+      angle: 0
+    }
+
+  }
+  loseLife(){
+    if(this.hearts.length != 0){
+      this.hearts.splice(0, 1);
+
+    }
+  }
+  reset(){
+    this.background.position = GLOBALS.initBackgroundPosition,
+    this.enemies = [this.initialEnemies('HAMMERHEAD')]
     lastLife = 0;
     this.hearts = [
       {
@@ -102,144 +102,123 @@ class ObservableListStore {
         animationState: 0
       },
     ]
-    this.enemies = []
   }
   pause(){
     this.navigationState = 'PAUSED'
   }
-  falling(){
-    if(this.player.animationState != 2){
-      this.player.animationState = 2
-      this.player.angle = 90
-    }
+  active(){
+    //coming into foreground
   }
-  changeAnimation(direction){
-    if(direction == 'UP'){
-      if(this.player.animationState != 4){
-        this.player.animationState = 4
-        this.player.angle = 100
-      }
-    } else if (direction == 'DOWN'){
-      if(this.player.animationState != 3){
-        this.player.animationState = 3
-        this.player.angle = 80
-      }
+  inactive(){
+    this.navigationState = 'PAUSED'
+    //going into background
+  }
+  falling(){
+    if(this.player.animationState != this.player.animate.falling){
+      this.player.animationState = this.player.animate.falling
+      this.player.angle = 90
     }
   }
   moveBackground () {
-    if(this.gamePlay){
-      this.background.position.x -= (1.5*GLOBALS.gameSpeed.horiziontal)
-      for(var i = 0; i < this.enemies.length; i++){
-        this.enemies[i].position.x -= (1.5*GLOBALS.gameSpeed.horiziontal)
-      }
-    }
+    this.forceLeft = -GLOBALS.forceLeft
+  }
+  moveEnemies(){
     for(var x = 0; x < this.enemies.length ; x++){
-
-      if(this.enemies[x].position.x < -300){
-        if(count){
-          this.addEnemy('DEFAULT')
-          this.deleteEnemy(0)
-          count = false
-        }
-      }
-
+      // console.log(this.enemies.length, this.enemies[x].position.x)
+      this.enemies[x].position.x -= this.enemies[x].speed
+      this.checkEnemyPosition(x)
+      this.moveInWave(x, 100, 200)
+      this.enemyPath(x)
     }
   }
-  moveBackgroundDown() {
-    if(this.gamePlay){
-      this.background.position.y -= (1.5*GLOBALS.gameSpeed.vertical)
-      for(var i = 0; i < this.enemies.length; i++){
-        this.enemies[i].position.y -=(1.5*GLOBALS.gameSpeed.vertical)
-      }
+  checkEnemyPosition(x){
+    if(this.enemies[x].position.x < -300){
+        this.addEnemy('HAMMERHEAD')
+        this.deleteEnemy(0)
+    }
+
+  }
+  randomlyGenerateEnemies(){
+
+    // randomCount = (Math.random() * (range)) + count
+
+    // // console.log(randomCount, count)
+    // if(randomCount == count){
+    //   this.addEnemy('HAMMERHEAD')
+    //   count = 0
+    //   range = 10000
+    // }
+    // range = range*(7/8)
+    // count++;
+  }
+  enemyPath(index){
+    var type = this.enemies[index].path.type
+    switch(type){
+      case 'WAVE':
+        this.moveInWave(index)
     }
   }
-  moveBackgroundUp() {
-    if(this.gamePlay){
-      this.background.position.y += (1.5*GLOBALS.gameSpeed.vertical)
-      for(var i = 0; i < this.enemies.length; i++){
-        this.enemies[i].position.y +=(1.5*GLOBALS.gameSpeed.vertical)
-      }
-    }
+  moveInWave(index){
+    let {y0, y, x, path} = this.enemies[index].position
+    let {frequency, wavelength} = this.enemies[index].path
+
+    this.enemies[index].position.y = y0 + frequency* Math.sin(x / wavelength)
+    // (wavelength / frequency) *Math.cos(x/wavelength)
+    //arctan (slope of tangent line of enemy)
+    var angle = Math.atan((frequency/wavelength) *Math.cos(x/wavelength))
+    // console.log(angle* (180/Math.PI))
+    this.enemies[index].angle = angle* (180/Math.PI)
+
   }
   pressScreen (upOrDown) {
-    if(this.gamePlay){
-      switch(upOrDown){
-        case 'UP':
-          this.forceUp = GLOBALS.forceUp
-          break;
-        case 'DOWN':
-          this.forceUp = -GLOBALS.forceUp
-          break;
-      }
+    if(upOrDown == 'UP'){
+      this.forceUp = GLOBALS.forceUp
+        this.player.animationState = this.player.animate.goingUp
+        this.player.angle = 80
+
+    } else {
+      this.forceUp = -GLOBALS.forceUp
+        this.player.animationState = this.player.animate.goingDown
+        this.player.angle = 100
+
     }
   }
   releaseScreen () {
-    if(this.gamePlay){
       this.forceUp = 0
       this.player.angle = 90
-    }
   }
-  addEnemy(type, position, dimensions) {
-    count = true;
-    switch(type){
-      case 'DEFAULT':
-        this.enemies.push({
-          type: 'DEFAULT',
-          position: {
-            x: 1000,
-            y: 100
-          },
-          dimensions: {
-            height: 50,
-            width: 50
-          },
-          collided: false
-        })
-        console.log('ADDED DEFAULT')
+  addEnemy(enemyType) {
 
-    }
+      this.enemies.push(this.initialEnemies(enemyType))
+      // console.log('ADDED ENEMY')
+
   }
   deleteEnemy(index){
     if(this.enemies.length != 0){
 
       if (index > -1) {
         this.enemies.splice(0, 1);
-        console.log('DELETED', this.enemies.length)
+        // console.log('DELETED', this.enemies.length)
       }
     }
   }
-  checkPlayerPosition() {
+  checkForCollisions() {
     for(var i = 0; i < this.enemies.length; i++){
-      if(this.enemies[i].position.x - this.player.position.x < this.enemies[i].dimensions.width){
-        if(this.enemies[i].position.x>0){
-          // if(this.player.position.x - this.enemies[i].position.x)
-          // console.log('MIN',this.enemies[i].position.y - (this.enemies[i].dimensions.height))
-          // console.log('MAX',this.enemies[i].position.y)
-          // console.log('PLAYER',this.player.position.y)
+      // console.log(i)
+      // CHECK IF IT IS IN RANGE OF X
+      if(this.enemies[i].position.x < 200 ){
+          // console.log(GLOBALS.initCharacterPosition.y, this.enemies[i].position.y-this.background.position.y)
+        var here = ifBetween(GLOBALS.initCharacterPosition.y, this.enemies[i].position.y - (this.enemies[i].dimensions.height) -this.background.position.y, this.enemies[i].position.y-this.background.position.y)
+        if(this.enemies[i].position.x > 0){
 
-          var here = ifBetween(this.player.position.y, this.enemies[i].position.y - (this.enemies[i].dimensions.height), this.enemies[i].position.y)
           if(here){
             this.onCollision(i)
           }
         }
       }
     }
-    if(this.player.position.y < GLOBALS.topBoundary){
-      // console.log('MOVE SCREEN UP BREH')
-      this.moveBackgroundUp()
-      this.player.isStatic = true
-    }
-    else if(this.player.position.y > (GLOBALS.dimensions.height-GLOBALS.bottomBoundary)){
-      // console.log('MOVE SCREEN DOWN BREH')
-      this.moveBackgroundDown()
-      this.player.isStatic = true
-    }
-    else {
-      GLOBALS.forceUp = 5
-      this.player.isStatic = false
-    }
-    if(this.background.secondary.position.x < (GLOBALS.initBackgroundDimensions.width+(GLOBALS.dimensions.width/2))){
-      this.background.position.x = (this.background.secondary.position.x+GLOBALS.initBackgroundDimensions.width)
+    if(this.background.position.x < -(GLOBALS.initBackgroundDimensions.width+(GLOBALS.dimensions.width/2))){
+        // this.background.position.x = 0
     }
   }
   die() {
@@ -247,9 +226,11 @@ class ObservableListStore {
   }
 
   onCollision(id) {
+    console.log('COLLISION')
     if(this.enemies.length!=0){
       if(this.enemies[id].collided == false){
         this.enemies[id].collided = true
+        // this.deleteEnemy(id)
         this.loseLife()
       }
     }

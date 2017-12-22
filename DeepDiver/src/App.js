@@ -32,7 +32,7 @@ export default class App extends Component<{}> {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
       store.active()
     } else {
-      store.pause()
+      store.inactive()
     }
     this.setState({appState: nextAppState});
   }

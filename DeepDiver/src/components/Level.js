@@ -6,78 +6,63 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Animated,
-  PanResponder
+  PanResponder,
+  Dimensions
 } from 'react-native';
 import {World, Body, Stage, Loop} from 'react-game-kit/native';
 import PropTypes from 'prop-types';
 import Player from './player';
-import Enemies from './enemies';
+import Enemies from './mapEnemies';
 import {generateEnemies} from '../utils/generateEnemies';
 import {observer} from 'mobx-react/native';
 import {physicsInit} from '../utils/physics';
 import Matter from 'matter-js';
-import Enemy from './enemy'
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import Background from './background';
 import HealthBar from './healthBar'
+import HandleTouch from './HandleTouch';
+import Paused from '../screens/Paused'
+import Overlay from './overlay'
 import {GLOBALS} from '../globals'
+import Counter from './Counter'
 @observer
-class Game extends Component {
+class Level extends Component {
   constructor(props) {
     super(props);
 
     this.enemyPositions = generateEnemies();
     store = this.props.store;
-    this.callback = this.callback.bind(this);
-  }
-  componentWillMount() {
-  this._panResponder = PanResponder.create({
-    onMoveShouldSetResponderCapture: () => true,
-    onMoveShouldSetPanResponderCapture: () => true,
-
-    onPanResponderGrant: (e, gestureState) => {
-      // console.log(gestureState.x0)
-      var touchCoords = gestureState.x0
-      if(touchCoords < (GLOBALS.dimensions.width/2)){
-        this.props.store.pressScreen('UP') //up
-      } else {
-        this.props.store.pressScreen('DOWN') //down
-
-      }
-    },
-
-    onPanResponderRelease: (e, {vx, vy}) => {
-      // console.log('RELEASE')
-      this.props.store.releaseScreen()
+    this.state ={
+      count: 3
     }
-  });
-}
+  }
+
   componentDidMount(){
-    this.props.store.gamePlay = true
-    // Matter.Body.setStatic(this.props.store.enemies[0].body, true)
-    console.log('MOUNTED')
-    // this.props.store.addEnemy('DEFAULT')
   }
   componentWillUnmount(){
-    this.props.store.gamePlay = false
   }
+  // basically a while loop
   handleUpdate = (engine) => {
-    store.player.position = this.player.body.position;
-    // store.enemy.position = this.props.store.enemies[0].body.position;
-    if(store.forceUp!=0){
-      Matter.Body.setVelocity(this.player.body, {x: 0, y: store.forceUp});
-      // Matter.Body.setVelocity(this.props.store.enemies[0].body, {x: 0, y: store.forceUp});
-      // store.moveBackgroundUp();
-      if (store.forceUp < 0){
-        this.props.store.changeAnimation('UP')
-      } else {
-        this.props.store.changeAnimation('DOWN')
+    // set global value to local physics value -- Everything moves based on this value
+    if(this.props.store.paused != true){
+      if(this.props.store.unPausing != true ){
+
+        this.props.store.background.position = this.background.body.position;
+
+        // if the player presses one of the buttons
+        //set the velocity of the background in the y direction to whatever value it is
+        if(store.forceUp == 0) {
+          this.props.store.falling()
+        }
+        Matter.Body.setVelocity(this.background.body, {x: store.forceLeft, y: store.forceUp});
+        if(this.props.store.enemies.length != 0){
+          store.checkForCollisions();
+        }
+        store.moveBackground();
+        store.moveEnemies();
+        store.randomlyGenerateEnemies()
       }
-    } else {
-      this.props.store.falling()
     }
-    store.moveBackground();
-    store.checkPlayerPosition();
   }
   physicsInit = (engine) => {
     console.log('PHYSICS')
@@ -104,89 +89,88 @@ class Game extends Component {
 
   Matter.World.add(engine.world, [ceiling, ground]);
 }
-  onCollision(e){
-    console.log('COLLIDED', e.pairs[0].bodyA.id, 'WITH', e.pairs[0].bodyB.id)
-    const bodyA = e.pairs[0].bodyA.id
-    const bodyB = e.pairs[0].bodyB.id
-    if(bodyA == 1){
-      if(bodyB == 2){
-        // store.die()
+  render() {
+    var renderCountdown = () => {
+      if(this.props.store.unPausing == true){
+        return(
+          <Counter store={this.props.store}/>
+        )
       }
     }
-  }
-  callback(enemyBodies){
-    for(let i = 0; i < enemyBodies.length ; i++){
-      enemyBodies[i].position.x -= 5
-      console.log(enemyBodies[0].position.x)
+    var renderOverlay = () => {
+      if(this.props.store.paused == true){
+        return(
+          <Overlay store ={this.props.store}>
+            <Paused store ={this.props.store}/>
+          </Overlay>
+        )
+      }
     }
-  }
-  render() {
     return (
       <Loop>
-        <Stage>
+        <Stage
+          height={GLOBALS.dimensions.height}
+          width={GLOBALS.dimensions.width}
+        >
           <World
             onInit={physicsInit}
             onUpdate={this.handleUpdate}
             onCollision={this.onCollision}
-            gravity={{ x: 0, y: -this.props.gravity, scale: 0.0005 }}
+            gravity={{ x: 0, y: -2, scale: 0.0005 }}
             >
-            <View style={{flex: 1}}>
-              <Background store={store}/>
-              <View style={styles.buttons}>
-                  <View {...this._panResponder.panHandlers} style={styles.leftButton}>
-                    <Text></Text>
-                  </View>
-                  <View {...this._panResponder.panHandlers} style={styles.rightButton}>
-                    <Text></Text>
-                  </View>
+            <View style={styles.container}>
+
+              <Body
+              shape="rectangle"
+              args={[0, 0, this.props.store.player.height, this.props.store.player.width]}
+              friction={0}
+              frictionStatic={0}
+              restitution={0}
+              mass={GLOBALS.playerMass}
+              frictionAir={this.props.airFriction}
+              ref={(b) => { this.background = b; }}
+              >
+                <Background store={store}/>
+              </Body>
+              <HandleTouch store={store}/>
 
 
-
+              <Player
+              store={store}
+              left={300}
+              bottom={300}
+              index={0}
+              />
+              <Enemies
+                store={store}
+                />
+              <View style={styles.distance}>
+                <Text style={styles.distanceText}>{Math.round(-this.props.store.background.position.x/GLOBALS.pixelsInAMeter)} m</Text>
               </View>
-
-                <Body
-                  shape="rectangle"
-                  args={[this.props.store.player.position.x, this.props.store.player.position.y, this.props.store.player.height, this.props.store.player.width]}
-                  friction={0}
-                  frictionStatic={0}
-                  restitution={0}
-                  mass={GLOBALS.playerMass}
-                  frictionAir={this.props.airFriction}
-                  ref={(b) => { this.player = b; }}
-                  >
-                  <Player
-                    store={store}
-                    left={300}
-                    bottom={300}
-                    index={0}
-                    />
-                </Body>
-                <Enemies
-                  store={store}
+              <View style={styles.shells}>
+                <Text style={styles.distanceText}>123 Shells</Text>
+              </View>
+              <View style={styles.healthBar}>
+                <HealthBar
+                  isActive={false}
+                  store={this.props.store}
                   />
-
-                  <View style={styles.distance}>
-                    <Text style={styles.distanceText}>{Math.round(-this.props.store.background.position.x/GLOBALS.pixelsInAMeter)} m</Text>
-                  </View>
-                  <View style={styles.shells}>
-                    <Text style={styles.distanceText}>123 Shells</Text>
-                  </View>
-                  <View style={styles.healthBar}>
-                    <HealthBar
-                      isActive={false}
-                      store={this.props.store}
-                      />
-                  </View>
-
-                  <TouchableOpacity
-                    onPress={() => this.props.store.navigationState = 'PAUSED'}
-                    style={styles.pauseButton}
-                    >
-                    <IonIcons
-                      name={'ios-pause'}
-                      size={30}
-                      />
-                  </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                onPress={() => this.props.store.paused = true}
+                style={styles.pauseButton}
+                >
+                <IonIcons
+                  name={'ios-pause'}
+                  size={30}
+                  />
+              </TouchableOpacity>
+              {
+                renderCountdown()
+              }
+              {
+                renderOverlay()
+              }
               </View>
           </World>
         </Stage>
@@ -197,9 +181,8 @@ class Game extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: GLOBALS.dimensions.height,
+    width: GLOBALS.dimensions.width,
   },
   pauseButton: {
     position: 'absolute',
@@ -212,6 +195,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 5,
     borderRadius: 3
+  },
+  countDown: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
   shells: {
     position: 'absolute',
@@ -271,27 +259,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: 100
   },
-  buttons: {
-    position: 'absolute',
-    top:0,
-    left: 0,
-    width: GLOBALS.dimensions.width,
-    height: GLOBALS.dimensions.height
-  },
-  leftButton: {
-    position: 'absolute',
-    top:0,
-    left: 0,
-    height: GLOBALS.dimensions.height,
-    width: (GLOBALS.dimensions.width/2)
-  },
-  rightButton: {
-    position: 'absolute',
-    top:0,
-    right: 0,
-    height: GLOBALS.dimensions.height,
-    width: (GLOBALS.dimensions.width/2)
-  },
+
 });
 
-module.exports = Game;
+module.exports = Level;

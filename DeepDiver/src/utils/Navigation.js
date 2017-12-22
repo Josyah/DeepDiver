@@ -35,8 +35,8 @@ class Navigation extends Component {
         return(
           <Level
             store={store}
-            gravity={2}
-            airFriction={0.1}
+            gravity={.5}
+            airFriction={0.2}
             />
         )
       case 'GAME':
