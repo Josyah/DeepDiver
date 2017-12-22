@@ -40,9 +40,18 @@ class ObservableListStore {
   @observable navigationState = 'HOME'
   @observable forceUp = 0
   @observable forceLeft = 2
+  @observable gravity = {x: 0, y: -2, scale: 0.0005 }
   @observable repeat = true
   @observable unPausing = false
   @observable paused = false
+  @observable coins = 0;
+  @observable coinArray = [{
+    position: {
+      x: 1000,
+      y: 100
+    },
+    speed: 3
+  }];
   @observable player = {
     width: this.scale * GLOBALS.tileWidth,
     height: this.scale * GLOBALS.tileHeight,
@@ -131,6 +140,13 @@ class ObservableListStore {
       this.enemyPath(x)
     }
   }
+  moveCoins(){
+    for(var x = 0; x < this.coinArray.length ; x++){
+      // console.log(this.enemies.length, this.enemies[x].position.x)
+      this.coinArray[x].position.x -= this.coinArray[x].speed
+      //this.checkEnemyPosition(x)
+    }
+  }
   checkEnemyPosition(x){
     if(this.enemies[x].position.x < -300){
         this.addEnemy('HAMMERHEAD')
@@ -141,7 +157,7 @@ class ObservableListStore {
   randomlyGenerateEnemies(){
 
     // randomCount = (Math.random() * (range)) + count
-
+    //
     // // console.log(randomCount, count)
     // if(randomCount == count){
     //   this.addEnemy('HAMMERHEAD')

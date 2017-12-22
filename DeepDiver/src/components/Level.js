@@ -13,9 +13,7 @@ import {World, Body, Stage, Loop} from 'react-game-kit/native';
 import PropTypes from 'prop-types';
 import Player from './player';
 import Enemies from './mapEnemies';
-import {generateEnemies} from '../utils/generateEnemies';
 import {observer} from 'mobx-react/native';
-import {physicsInit} from '../utils/physics';
 import Matter from 'matter-js';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import Background from './background';
@@ -25,12 +23,12 @@ import Paused from '../screens/Paused'
 import Overlay from './overlay'
 import {GLOBALS} from '../globals'
 import Counter from './Counter'
+import Coins from './mapCoins'
 @observer
 class Level extends Component {
   constructor(props) {
     super(props);
 
-    this.enemyPositions = generateEnemies();
     store = this.props.store;
     this.state ={
       count: 3
@@ -60,6 +58,7 @@ class Level extends Component {
         }
         store.moveBackground();
         store.moveEnemies();
+        store.moveCoins();
         store.randomlyGenerateEnemies()
       }
     }
@@ -113,10 +112,10 @@ class Level extends Component {
           width={GLOBALS.dimensions.width}
         >
           <World
-            onInit={physicsInit}
+            onInit={this.physicsInit}
             onUpdate={this.handleUpdate}
             onCollision={this.onCollision}
-            gravity={{ x: 0, y: -2, scale: 0.0005 }}
+            gravity={store.gravity}
             >
             <View style={styles.container}>
 
@@ -132,7 +131,6 @@ class Level extends Component {
               >
                 <Background store={store}/>
               </Body>
-              <HandleTouch store={store}/>
 
 
               <Player
@@ -144,11 +142,14 @@ class Level extends Component {
               <Enemies
                 store={store}
                 />
+              <Coins
+                store={store}
+                />
               <View style={styles.distance}>
                 <Text style={styles.distanceText}>{Math.round(-this.props.store.background.position.x/GLOBALS.pixelsInAMeter)} m</Text>
               </View>
               <View style={styles.shells}>
-                <Text style={styles.distanceText}>123 Shells</Text>
+                <Text style={styles.distanceText}>{this.props.store.coins}</Text>
               </View>
               <View style={styles.healthBar}>
                 <HealthBar
@@ -156,6 +157,7 @@ class Level extends Component {
                   store={this.props.store}
                   />
               </View>
+              <HandleTouch store={store}/>
               <TouchableOpacity
                 onPress={() => this.props.store.paused = true}
                 style={styles.pauseButton}
