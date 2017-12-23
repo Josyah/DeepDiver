@@ -13,11 +13,40 @@ exports.GLOBALS = {
     x: 0,
     y: -6000,
   },
-  region: {
-    one: {
-      top: 1000,
-      bottom: 500
-    }
+  regions: {
+    beach: {
+      start: 6624,
+      enemies: [
+        {
+          type: 'PIRANHA'
+        },
+        {
+          type: 'HAMMERHEAD'
+        }
+      ]
+    },
+    midsea: {
+      start: 5374,
+      enemies: [
+        {
+          type: 'STINGRAY'
+        },
+        {
+          type: 'PUFFER'
+        }
+      ]
+    },
+    midnight: {
+      start: 3000,
+      enemies: [
+        {
+          type: 'ELECTRICEEL'
+        },
+        {
+          type: 'JELLYFISH'
+        }
+      ]
+    },
   },
   initBackgroundDimensions: {
     width: 3312,
@@ -55,6 +84,21 @@ exports.GLOBALS = {
     tileWidth: 125,
     tileHeight: 125,
     steps: [4, 1]
+  },
+  ElectricEel: {
+    tileWidth: 175.5,
+    tileHeight: 50,
+    steps: [1, 1]
+  },
+  StingRay: {
+    tileWidth: 100,
+    tileHeight: 100,
+    steps: [3, 1]
+  },
+  Puffer: {
+    tileWidth: 100,
+    tileHeight: 100,
+    steps: [3, 1]
   },
   CommanderTurtle: {
     tileHeight: 400,

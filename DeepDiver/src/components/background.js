@@ -23,8 +23,8 @@ class Background extends Component {
   backgroundPosition(){
     return{
       position: 'absolute',
-      left: GLOBALS.initBackgroundPosition.x,
-      bottom: GLOBALS.initBackgroundPosition.y,
+      left: this.props.store.background.offset.x,
+      bottom: this.props.store.background.offset.y,
       height: GLOBALS.initBackgroundDimensions.height,
       width: GLOBALS.initBackgroundDimensions.width,
       transform: [
@@ -37,8 +37,8 @@ class Background extends Component {
   secondaryBackgroundPosition(){
     return{
       position: 'absolute',
-      left: GLOBALS.initBackgroundDimensions.width,
-      bottom: GLOBALS.initBackgroundPosition.y,
+      left: this.props.store.background.secondary.offset.x,
+      bottom: this.props.store.background.secondary.offset.y,
       height: GLOBALS.initBackgroundDimensions.height,
       width: GLOBALS.initBackgroundDimensions.width,
       transform: [
@@ -56,12 +56,12 @@ class Background extends Component {
       <View style={styles.container}>
         <Image
           source={require('../images/Ocean.png')}
-          style={[styles.mainBg, this.secondaryBackgroundPosition()]}
+          style={[this.secondaryBackgroundPosition()]}
           onLoadEnd={this.onLoadEnd(1)}
           />
         <Image
           source={require('../images/Ocean.png')}
-          style={[styles.mainBg, this.backgroundPosition()]}
+          style={[this.backgroundPosition()]}
           onLoadEnd={this.onLoadEnd(2)}
           />
       </View>
@@ -71,12 +71,6 @@ class Background extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  },
-  mainBg: {
-    height: GLOBALS.initBackgroundDimensions.height,
-    width: GLOBALS.initBackgroundDimensions.width,
-    zIndex: -1,
   },
   seaWeed: {
     height: 300,

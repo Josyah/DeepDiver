@@ -29,14 +29,15 @@ class Coin extends Component {
   }
   getPosition() {
       // console.log('Position',this.props.position.x)
+      // if((1000+this.props.position.x*50)< 200){
+      //
+      //   this.props.store.checkCollision(this.props.position.y*50, 25, 25)
+      // }
       return {
-        left: 1000+this.props.position.x*4,
-        bottom: this.props.position.y,
+        position: 'absolute',
+        left: 1000+this.props.position.x*50,
+        bottom: this.props.position.y*50,
         opacity: this.state.opacity,
-        transform: [
-          {translateY: this.props.store.background.position.y},
-          {translateX: this.props.store.background.position.x},
-        ],
         height: 25,
         width: 25,
         backgroundColor: (this.state.collided ? 'red' : 'transparent'),

@@ -59,8 +59,13 @@ class Level extends Component {
         store.moveBackground();
         store.moveEnemies();
         store.moveCoins();
-        store.randomlyGenerateEnemies()
+        store.checkRegion();
+        store.gravity.y = -4
+      } else {
+        store.gravity.y = 0
       }
+    } else {
+      store.gravity.y = 0
     }
   }
   physicsInit = (engine) => {
@@ -112,7 +117,6 @@ class Level extends Component {
           width={GLOBALS.dimensions.width}
         >
           <World
-            onInit={this.physicsInit}
             onUpdate={this.handleUpdate}
             onCollision={this.onCollision}
             gravity={store.gravity}
@@ -131,18 +135,16 @@ class Level extends Component {
               >
                 <Background store={store}/>
               </Body>
-
-
-              <Player
-              store={store}
-              left={300}
-              bottom={300}
-              index={0}
-              />
-              <Enemies
+              <Coins
                 store={store}
                 />
-              <Coins
+              <Player
+                store={store}
+                left={300}
+                bottom={300}
+                index={0}
+                />
+              <Enemies
                 store={store}
                 />
               <View style={styles.distance}>

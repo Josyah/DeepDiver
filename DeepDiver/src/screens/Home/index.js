@@ -20,6 +20,16 @@ class Home extends Component {
             source={require('../../images/Start.png')}
             />
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.props.store.navigationState = 'STORE'}
+          style={styles.storeButton}>
+          <Text style={styles.linkToPage}>Store</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.props.store.navigationState = 'SETTINGS'}
+          style={styles.settingsButton}>
+          <Text style={styles.linkToPage}>Settings</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -51,7 +61,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderRadius: 5
-  }
+  },
+  storeButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10
+  },
+
 });
 
 module.exports = Home;

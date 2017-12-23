@@ -12,11 +12,22 @@ import Coin from './Coin';
 import {coinLayouts} from '../utils/coinLayout'
 @observer
 class CoinLayout extends Component {
+  getPosition() {
+    // console.log('Position',this.props.position.x)
+    return {
+      position: 'absolute',
+      left: this.props.position.x,
+      bottom: this.props.position.y,
+      transform: [
+        {translateY: this.props.store.background.position.y},
+      ],
+    }
+  }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.getPosition()]}>
         {
-          coinLayouts.MicahLayout.map((eachCoin, index) => {
+          coinLayouts.SquareLayout.map((eachCoin, index) => {
 
             return (
               <Coin
@@ -24,7 +35,7 @@ class CoinLayout extends Component {
               index={index}
               position={eachCoin}
               store={this.props.store}
-              distanceAway={15}
+              distanceAway={30}
               />
             );
 
@@ -38,6 +49,7 @@ class CoinLayout extends Component {
 
 const styles = StyleSheet.create({
   container: {
+
   },
 });
 

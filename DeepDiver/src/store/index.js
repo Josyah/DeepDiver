@@ -20,11 +20,18 @@ class ObservableListStore {
       position: {
         x: GLOBALS.initBackgroundWidth+10,
         y: GLOBALS.initBackgroundPosition.y
+      },
+      offset: {
+        x: 0,
+        y: 0
       }
+    },
+    offset: {
+      x: GLOBALS.initBackgroundPosition.x,
+      y: GLOBALS.initBackgroundPosition.y
     }
   };
-  @observable enemies = [
-    this.initialEnemies('HAMMERHEAD')
+  @observable enemies = [this.initialEnemies('HAMMERHEAD')
   ]
   @observable hearts = [
     {
@@ -45,6 +52,7 @@ class ObservableListStore {
   @observable unPausing = false
   @observable paused = false
   @observable coins = 0;
+  @observable region = 'Beach Zone'
   @observable coinArray = [{
     position: {
       x: 1000,
@@ -91,9 +99,10 @@ class ObservableListStore {
 
   }
   loseLife(){
-    if(this.hearts.length != 0){
+    if(this.hearts.length != 1){
       this.hearts.splice(0, 1);
-
+    } else{
+      this.die()
     }
   }
   reset(){
@@ -130,6 +139,13 @@ class ObservableListStore {
   }
   moveBackground () {
     this.forceLeft = -GLOBALS.forceLeft
+    if((this.background.position.x + this.background.offset.x) < -(GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)){
+      this.background.offset.x += (GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)
+      console.log('MOVED BACKGROUND')
+    } else if((this.background.secondary.position.x + this.background.secondary.offset.x) < -(GLOBALS.initBackgroundDimensions.width+100)){
+      console.log('MOVED SECOND BACKGROUND')
+      this.background.secondary.offset.x += 2*GLOBALS.initBackgroundDimensions.width
+    }
   }
   moveEnemies(){
     for(var x = 0; x < this.enemies.length ; x++){
@@ -149,13 +165,23 @@ class ObservableListStore {
   }
   checkEnemyPosition(x){
     if(this.enemies[x].position.x < -300){
-        this.addEnemy('HAMMERHEAD')
+        this.randomlyGenerateEnemy()
         this.deleteEnemy(0)
     }
 
   }
-  randomlyGenerateEnemies(){
-
+  randomlyGenerateEnemy(){
+    switch(this.region){
+      case 'BEACH':
+        this.addEnemy(GLOBALS.regions.beach.enemies[Math.round(Math.random() *  (GLOBALS.regions.beach.enemies.length-1))])
+        break;
+      case 'MIDSEA':
+        this.addEnemy(GLOBALS.regions.midsea.enemies[Math.round(Math.random() *  (GLOBALS.regions.midsea.enemies.length-1))])
+        break;
+      case 'MIDNIGHT':
+        this.addEnemy(GLOBALS.regions.midnight.enemies[Math.round(Math.random() *  (GLOBALS.regions.midnight.enemies.length-1))])
+        break;
+    }
     // randomCount = (Math.random() * (range)) + count
     //
     // // console.log(randomCount, count)
@@ -175,15 +201,18 @@ class ObservableListStore {
     }
   }
   moveInWave(index){
-    let {y0, y, x, path} = this.enemies[index].position
-    let {frequency, wavelength} = this.enemies[index].path
+    if(this.enemies[index]){
 
-    this.enemies[index].position.y = y0 + frequency* Math.sin(x / wavelength)
-    // (wavelength / frequency) *Math.cos(x/wavelength)
-    //arctan (slope of tangent line of enemy)
-    var angle = Math.atan((frequency/wavelength) *Math.cos(x/wavelength))
-    // console.log(angle* (180/Math.PI))
-    this.enemies[index].angle = angle* (180/Math.PI)
+      let {y0, y, x, path} = this.enemies[index].position
+      let {frequency, wavelength} = this.enemies[index].path
+
+      this.enemies[index].position.y = y0 + frequency* Math.sin(x / wavelength)
+      // (wavelength / frequency) *Math.cos(x/wavelength)
+      //arctan (slope of tangent line of enemy)
+      var angle = Math.atan((frequency/wavelength) *Math.cos(x/wavelength))
+      // console.log(angle* (180/Math.PI))
+      this.enemies[index].angle = angle* (180/Math.PI)
+    }
 
   }
   pressScreen (upOrDown) {
@@ -205,8 +234,8 @@ class ObservableListStore {
   }
   addEnemy(enemyType) {
 
-      this.enemies.push(this.initialEnemies(enemyType))
-      // console.log('ADDED ENEMY')
+      this.enemies.push(this.initialEnemies(enemyType.type))
+      // console.log(enemyType.type)
 
   }
   deleteEnemy(index){
@@ -218,6 +247,17 @@ class ObservableListStore {
       }
     }
   }
+  // checkCollisions(index, y, width, height){
+  //       // console.log(GLOBALS.initCharacterPosition.y, this.enemies[i].position.y-this.background.position.y)
+  //   var here = ifBetween(GLOBALS.initCharacterPosition.y, (y - height )-this.background.position.y, y-this.background.position.y)
+  //
+  //
+  //     if(here){
+  //       this.deleteCoin(index)
+  //     }
+  //
+  //
+  // }
   checkForCollisions() {
     for(var i = 0; i < this.enemies.length; i++){
       // console.log(i)
@@ -233,14 +273,22 @@ class ObservableListStore {
         }
       }
     }
-    if(this.background.position.x < -(GLOBALS.initBackgroundDimensions.width+(GLOBALS.dimensions.width/2))){
-        // this.background.position.x = 0
-    }
+
   }
   die() {
     this.navigationState = 'DEAD'
   }
-
+  checkRegion(){
+    // console.log(this.background.position.y-GLOBALS.initBackgroundPosition.y)
+    var pos = this.background.position.y-GLOBALS.initBackgroundPosition.y
+    if((pos < GLOBALS.regions.beach.start) && (pos > GLOBALS.regions.midsea.start)){
+      this.region = 'BEACH'
+    } else if((pos < GLOBALS.regions.midsea.start) && (pos > GLOBALS.regions.midnight.start)){
+      this.region = 'MIDSEA'
+    } else if((pos < GLOBALS.regions.midnight.start) && (pos > 0)){
+      this.region = 'MIDNIGHT'
+    }
+  }
   onCollision(id) {
     console.log('COLLISION')
     if(this.enemies.length!=0){

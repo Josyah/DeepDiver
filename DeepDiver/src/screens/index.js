@@ -13,6 +13,8 @@ import CharSelect from './StoryMode/CharacterSelect';
 import Level from '../components/Level';
 import GameOver from './GameOver';
 import Paused from './Paused';
+import Store from './StoryMode/Store';
+import Settings from '../utils/Settings'
 @observer
 class Navigation extends Component {
   render() {
@@ -49,6 +51,14 @@ class Navigation extends Component {
       case 'PAUSED':
         return(
           <Paused store={store}/>
+        )
+      case 'STORE':
+        return(
+          <Store store={store}/>
+        )
+      case 'SETTINGS':
+        return(
+          <Settings store={store}/>
         )
       default:
         return (
