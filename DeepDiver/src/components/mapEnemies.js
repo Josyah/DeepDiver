@@ -16,6 +16,8 @@ class Enemies extends Component {
     return (
       <View style={styles.container}>
         {
+          // "map" means for each item in an array, return whatever
+          // this returns an enemy for every item in the array
           this.props.store.enemies.map((eachEnemy, index) => {
             if(this.props.store.enemies.length != 0){
 
@@ -103,7 +105,7 @@ class Enemies extends Component {
                       position={this.props.store.enemies[index].position}
                       store={this.props.store}
                       distanceAway={25}
-                      background={this.props.store.background} 
+                      background={this.props.store.background}
                       tileHeight={GLOBALS.Puffer.tileHeight}
                       tileWidth={GLOBALS.Puffer.tileWidth}
                       steps={GLOBALS.Puffer.steps}

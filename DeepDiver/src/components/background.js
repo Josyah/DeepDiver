@@ -56,11 +56,6 @@ class Background extends Component {
       <View style={styles.container}>
         <Image
           source={require('../images/Ocean.png')}
-          style={[this.secondaryBackgroundPosition()]}
-          onLoadEnd={this.onLoadEnd(1)}
-          />
-        <Image
-          source={require('../images/Ocean.png')}
           style={[this.backgroundPosition()]}
           onLoadEnd={this.onLoadEnd(2)}
           />
@@ -71,6 +66,7 @@ class Background extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1
   },
   seaWeed: {
     height: 300,

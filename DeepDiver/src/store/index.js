@@ -108,7 +108,6 @@ class ObservableListStore {
   reset(){
     this.background.position = GLOBALS.initBackgroundPosition,
     this.enemies = [this.initialEnemies('HAMMERHEAD')]
-    lastLife = 0;
     this.hearts = [
       {
         animationState: 0
@@ -146,6 +145,7 @@ class ObservableListStore {
       console.log('MOVED SECOND BACKGROUND')
       this.background.secondary.offset.x += 2*GLOBALS.initBackgroundDimensions.width
     }
+    // console.log('BACKGROUND',this.background.position.y -GLOBALS.initBackgroundPosition.y)
   }
   moveEnemies(){
     for(var x = 0; x < this.enemies.length ; x++){

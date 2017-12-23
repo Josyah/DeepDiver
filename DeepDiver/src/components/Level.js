@@ -24,6 +24,24 @@ import Overlay from './overlay'
 import {GLOBALS} from '../globals'
 import Counter from './Counter'
 import Coins from './mapCoins'
+
+/*
+* this is Level.js, where the game's code starts
+* so basically, MOBX-REACT is a library that controlls the
+* state of the game. The state of the game is held in
+* store/index.js
+* this tag @observer basically "subscribes" the file
+* to the store, meaning that any time a variable in the
+* store updates, the file basically refreshes with it,
+* keeping everything in sync.
+* We are also using the library "react-game-kit/native"
+* to use physics in our game. Loop is the loop for Sprites
+* Stage is basically the div that contains the game, and
+* World contains all the physics
+* GLOBALS are the global variables that are in every file
+* they are held in src/globals.js
+*
+*/
 @observer
 class Level extends Component {
   constructor(props) {
@@ -42,9 +60,10 @@ class Level extends Component {
   // basically a while loop
   handleUpdate = (engine) => {
     // set global value to local physics value -- Everything moves based on this value
+    // if the game isn't paused -- meaning that everything stops when the game is paused
     if(this.props.store.paused != true){
       if(this.props.store.unPausing != true ){
-
+        // gives the position of the physics body a global reach to the store
         this.props.store.background.position = this.background.body.position;
 
         // if the player presses one of the buttons
@@ -62,12 +81,13 @@ class Level extends Component {
         store.checkRegion();
         store.gravity.y = -4
       } else {
-        store.gravity.y = 0
+        store.gravity.y = 0 //if pausing stop gravity
       }
     } else {
-      store.gravity.y = 0
+      store.gravity.y = 0 // if paused stop gravity
     }
   }
+  //ignore this -- it is a work in progress for boundaries
   physicsInit = (engine) => {
     console.log('PHYSICS')
     const ground = Matter.Bodies.rectangle(
@@ -110,6 +130,19 @@ class Level extends Component {
         )
       }
     }
+    /*
+    * creates a physics body at (0, 0) with dimensions of the player
+    * Background is imported. ref is the reference to the body
+    * where you can change its physics or get its position at any time
+    */
+    /*
+    * pausebutton -- the layout for all components is actually dependant
+    * on theorder that you place them. The pause button is rendered after
+    * the Touches for a reason. You wouldn't be able to press it
+    * if it was under it
+    */
+    // this is HandleTouch, where the screen is divided into two
+    // and handles the main gameplay controls
     return (
       <Loop>
         <Stage
@@ -122,7 +155,6 @@ class Level extends Component {
             gravity={store.gravity}
             >
             <View style={styles.container}>
-
               <Body
               shape="rectangle"
               args={[0, 0, this.props.store.player.height, this.props.store.player.width]}
@@ -140,9 +172,6 @@ class Level extends Component {
                 />
               <Player
                 store={store}
-                left={300}
-                bottom={300}
-                index={0}
                 />
               <Enemies
                 store={store}
@@ -170,6 +199,7 @@ class Level extends Component {
                   />
               </TouchableOpacity>
               {
+                // these just call functions that render when variables are true
                 renderCountdown()
               }
               {
