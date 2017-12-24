@@ -33,6 +33,7 @@ local.properties
 # node.js
 #
 node_modules/
+src/images/
 npm-debug.log
 yarn-error.log
 
@@ -51,5 +52,3 @@ buck-out/
 */fastlane/report.xml
 */fastlane/Preview.html
 */fastlane/screenshots
-
-/src/images/
