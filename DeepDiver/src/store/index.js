@@ -33,6 +33,7 @@ class ObservableListStore {
   };
   @observable enemies = [this.initialEnemies('HAMMERHEAD')
   ]
+  @observable alerts = []
   @observable hearts = [
     {
       animationState: 0
@@ -171,6 +172,7 @@ class ObservableListStore {
 
   }
   randomlyGenerateEnemy(){
+    this.region = 'MIDNIGHT'
     switch(this.region){
       case 'BEACH':
         this.addEnemy(GLOBALS.regions.beach.enemies[Math.round(Math.random() *  (GLOBALS.regions.beach.enemies.length-1))])
@@ -258,6 +260,11 @@ class ObservableListStore {
   //
   //
   // }
+  createAlert(text){
+    this.alerts.push({
+      text
+    })
+  }
   checkForCollisions() {
     for(var i = 0; i < this.enemies.length; i++){
       // console.log(i)
