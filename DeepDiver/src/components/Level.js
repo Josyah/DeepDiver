@@ -25,94 +25,39 @@ import {GLOBALS} from '../globals'
 import Counter from './Counter'
 import Coins from './mapCoins'
 
-/*
-* this is Level.js, where the game's code starts
-* so basically, MOBX-REACT is a library that controlls the
-* state of the game. The state of the game is held in
-* store/index.js
-* this tag @observer basically "subscribes" the file
-* to the store, meaning that any time a variable in the
-* store updates, the file basically refreshes with it,
-* keeping everything in sync.
-* We are also using the library "react-game-kit/native"
-* to use physics in our game. Loop is the loop for Sprites
-* Stage is basically the div that contains the game, and
-* World contains all the physics
-* GLOBALS are the global variables that are in every file
-* they are held in src/globals.js
-*
-*/
 @observer
 class Level extends Component {
   constructor(props) {
     super(props);
-
     store = this.props.store;
-    this.state ={
-      count: 3
+    this.state = {
+      resetGravity: true
     }
   }
-
-  componentDidMount(){
-  }
-  componentWillUnmount(){
-  }
-  // basically a while loop
   handleUpdate = (engine) => {
-    // set global value to local physics value -- Everything moves based on this value
-    // if the game isn't paused -- meaning that everything stops when the game is paused
-    if(this.props.store.paused != true){
-      if(this.props.store.unPausing != true ){
-        // gives the position of the physics body a global reach to the store
+    if(this.props.store.paused != true && this.props.store.unPausing != true ){
+        this.state.setToZero = true;
         this.props.store.background.position = this.background.body.position;
-
-        // if the player presses one of the buttons
-        //set the velocity of the background in the y direction to whatever value it is
         if(store.forceUp == 0) {
           this.props.store.falling()
         }
         Matter.Body.setVelocity(this.background.body, {x: store.forceLeft, y: store.forceUp});
-        if(this.props.store.enemies.length != 0){
-          store.checkForCollisions();
-        }
         store.moveBackground();
         store.moveEnemies();
-        store.moveCoins();
+        store.checkCollisions();
         store.checkRegion();
-        store.gravity.y = -4
-      } else {
-        store.gravity.y = 0 //if pausing stop gravity
-      }
+        if(this.state.resetGravity){
+          store.gravity.y = -4;
+          this.state.resetGravity = false;
+        }
     } else {
-      store.gravity.y = 0 // if paused stop gravity
+      this.state.resetGravity = true
+      if(this.state.setToZero){
+        store.gravity.y = 0;
+        this.state.setToZero = false;
+      }
     }
   }
-  //ignore this -- it is a work in progress for boundaries
-  physicsInit = (engine) => {
-    console.log('PHYSICS')
-    const ground = Matter.Bodies.rectangle(
-      GLOBALS.dimensions.width / 2,  // distance from left
-      (GLOBALS.dimensions.height+20)-(GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter), // distance from top
-      GLOBALS.dimensions.width, // width
-      40, // height
-      {
-        isStatic: true,
-        restitution: 0
-      },
-    );
-    const ceiling = Matter.Bodies.rectangle(
-      GLOBALS.dimensions.width / 2,  // distance from left
-      -7, // distance from top
-      GLOBALS.dimensions.width, // width
-      15, // height
-      {
-        isStatic: true,
-        restitution: 0
-      },
-    );
-
-  Matter.World.add(engine.world, [ceiling, ground]);
-}
   render() {
     var renderCountdown = () => {
       if(this.props.store.unPausing == true){
@@ -130,19 +75,6 @@ class Level extends Component {
         )
       }
     }
-    /*
-    * creates a physics body at (0, 0) with dimensions of the player
-    * Background is imported. ref is the reference to the body
-    * where you can change its physics or get its position at any time
-    */
-    /*
-    * pausebutton -- the layout for all components is actually dependant
-    * on theorder that you place them. The pause button is rendered after
-    * the Touches for a reason. You wouldn't be able to press it
-    * if it was under it
-    */
-    // this is HandleTouch, where the screen is divided into two
-    // and handles the main gameplay controls
     return (
       <Loop>
         <Stage
@@ -156,30 +88,30 @@ class Level extends Component {
             >
             <View style={styles.container}>
               <Body
-              shape="rectangle"
-              args={[0, 0, this.props.store.player.height, this.props.store.player.width]}
-              friction={0}
-              frictionStatic={0}
-              restitution={0}
-              mass={GLOBALS.playerMass}
-              frictionAir={this.props.airFriction}
-              ref={(b) => { this.background = b; }}
-              >
+                shape="rectangle"
+                args={[0, 0, this.props.store.player.height, this.props.store.player.width]}
+                friction={0}
+                frictionStatic={0}
+                restitution={0}
+                mass={GLOBALS.playerMass}
+                frictionAir={this.props.airFriction}
+                ref={(b) => { this.background = b; }}
+                >
                 <Background store={store}/>
               </Body>
               <Coins
                 store={store}
                 />
-              <Player
+              <Enemies
                 store={store}
                 />
-              <Enemies
+              <Player
                 store={store}
                 />
               <View style={styles.distance}>
                 <Text style={styles.distanceText}>{Math.round(-this.props.store.background.position.x/GLOBALS.pixelsInAMeter)} m</Text>
               </View>
-              <View style={styles.shells}>
+              <View style={styles.numCoins}>
                 <Text style={styles.distanceText}>{this.props.store.coins}</Text>
               </View>
               <View style={styles.healthBar}>
@@ -199,7 +131,6 @@ class Level extends Component {
                   />
               </TouchableOpacity>
               {
-                // these just call functions that render when variables are true
                 renderCountdown()
               }
               {
@@ -230,12 +161,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 3
   },
-  countDown: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-  shells: {
+  numCoins: {
     position: 'absolute',
     top: 0,
     left: 125,
@@ -265,22 +191,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: 5
   },
-  topBar: {
-    height: 35,
-    width: GLOBALS.dimensions.width,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    backgroundColor: 'red'
-  },
-  bottomBar: {
-    height: 35,
-    width: GLOBALS.dimensions.width,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    backgroundColor: 'red'
-  },
   healthBar: {
     position: 'absolute',
     top: 0,
@@ -293,7 +203,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: 100
   },
-
 });
 
 module.exports = Level;

@@ -59,16 +59,78 @@ exports.GLOBALS = {
   forceUp: 5,
   forceLeft: 5,
   SeaLord: {
-    tileHeight: 200,
-    tileWidth: 150,
     steps: [1, 6, 10, 5, 5, 4],
     fallingAnimation: 2,
     upAnimation: 3,
-    downAnimation: 4
+    downAnimation: 4,
+    tiles: [
+      {
+        tileWidth: 150,
+        tileHeight: 200,
+      },
+      {
+        tileWidth: 150,
+        tileHeight: 200,
+      },
+      {
+        tileWidth: 100,
+        tileHeight: 200
+      },
+      {
+        tileWidth: 100,
+        tileHeight: 200,
+      },
+      {
+        tileWidth: 100,
+        tileHeight: 200,
+      },
+      {
+        tileHeight: 200,
+        tileWidth: 255
+      },
+
+    ],
   },
   Aquaria: {
-    tileHeight: 219.5,
-    tileWidth: 113.6,
+    steps: [0, 3, 4, 4, 4, 1, 1, 2],
+    fallingAnimation: 2,
+    upAnimation: 3,
+    downAnimation: 4,
+    tiles: [
+      {
+        tileWidth: 100,
+        tileHeight: 200,
+      },
+      {
+        tileWidth: 100,
+        tileHeight: 200,
+      },
+      {
+        tileWidth: 100,
+        tileHeight: 200
+      },
+      {
+        tileWidth: 100,
+        tileHeight: 200,
+      },
+      {
+        tileWidth: 100,
+        tileHeight: 200,
+      },
+      {
+        tileHeight: 100,
+        tileWidth: 200
+      },
+      {
+        tileHeight: 100,
+        tileWidth: 200
+      },
+      {
+        tileHeight: 100,
+        tileWidth: 200
+      },
+
+    ],
   },
   HammerHead: {
     tileWidth: 200.25,
@@ -108,6 +170,9 @@ exports.GLOBALS = {
     upAnimation: 2,
     downAnimation: 3,
     heightInMeters: 2
+  },
+  player: {
+    type: 'AQUARIA'
   },
   jumpConstant: 40,
   defaultEnemyHeight: 75,

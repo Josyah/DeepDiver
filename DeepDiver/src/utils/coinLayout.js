@@ -34,22 +34,21 @@ exports.coinLayouts = {
     {x: 85, y: 50}
   ],
   SquareLayout: [
-    {x: 0, y: 0},
-    {x: 0, y: 1},
-    {x: 0, y: 2},
-    {x: 0, y: 3},
-    {x: 1, y: 0},
-    {x: 1, y: 1},
-    {x: 1, y: 2},
-    {x: 1, y: 3},
-    {x: 2, y: 0},
-    {x: 2, y: 1},
-    {x: 2, y: 2},
-    {x: 2, y: 3},
-    {x: 3, y: 0},
-    {x: 3, y: 1},
-    {x: 3, y: 2},
-    {x: 3, y: 3},
-
+    {x: 0, y: 0, collided: false},
+    {x: 0, y: 1, collided: false},
+    {x: 0, y: 2, collided: false},
+    {x: 0, y: 3, collided: false},
+    {x: 1, y: 0, collided: false},
+    {x: 1, y: 1, collided: false},
+    {x: 1, y: 2, collided: false},
+    {x: 1, y: 3, collided: false},
+    {x: 2, y: 0, collided: false},
+    {x: 2, y: 1, collided: false},
+    {x: 2, y: 2, collided: false},
+    {x: 2, y: 3, collided: false},
+    {x: 3, y: 0, collided: false},
+    {x: 3, y: 1, collided: false},
+    {x: 3, y: 2, collided: false},
+    {x: 3, y: 3, collided: false}
   ]
 }

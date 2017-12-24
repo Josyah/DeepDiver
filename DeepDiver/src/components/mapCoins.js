@@ -15,18 +15,17 @@ class MapCoins extends Component {
     return (
       <View style={styles.container}>
         {
-          this.props.store.coinArray.map((eachEnemy, index) => {
-            if(this.props.store.coinArray.length != 0){
-
+          this.props.store.coinLayoutArray.map((eachEnemy, index) => {
+            if(this.props.store.coinLayoutArray.length != 0){
                 return (
                   <CoinLayout
-                  key={index}
-                  index={index}
-                  position={this.props.store.coinArray[index].position}
-                  store={this.props.store}
-                  distanceAway={15}
-                  background={this.props.store.background}
-                  />
+                    key={index}
+                    index={index}
+                    position={this.props.store.coinLayoutArray[index].position}
+                    store={this.props.store}
+                    distanceAway={15}
+                    background={this.props.store.background}
+                    />
                 );
 
             }

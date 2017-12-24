@@ -13,7 +13,7 @@ import CharSelect from './StoryMode/CharacterSelect';
 import Level from '../components/Level';
 import GameOver from './GameOver';
 import Paused from './Paused';
-import Store from './StoryMode/Store';
+import Shop from './StoryMode/Shop';
 import Settings from '../utils/Settings'
 @observer
 class Navigation extends Component {
@@ -52,9 +52,9 @@ class Navigation extends Component {
         return(
           <Paused store={store}/>
         )
-      case 'STORE':
+      case 'SHOP':
         return(
-          <Store store={store}/>
+          <Shop store={store}/>
         )
       case 'SETTINGS':
         return(

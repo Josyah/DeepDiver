@@ -21,7 +21,6 @@ class HealthBar extends Component {
         {
           this.props.store.hearts.map((fill, index) => {
             return(
-
               <Image
                 source={require('../images/Heart-stuff.png')}
                 key={index}

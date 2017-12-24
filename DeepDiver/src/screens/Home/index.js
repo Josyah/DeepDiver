@@ -15,13 +15,12 @@ class Home extends Component {
           Sea Swimmer
         </Text>
         <TouchableOpacity onPress={() => this.props.store.navigationState = 'CHAR_SELECT'}>
-
           <Image
             source={require('../../images/Start.png')}
             />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => this.props.store.navigationState = 'STORE'}
+          onPress={() => this.props.store.navigationState = 'SHOP'}
           style={styles.storeButton}>
           <Text style={styles.linkToPage}>Store</Text>
         </TouchableOpacity>

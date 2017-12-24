@@ -15,7 +15,7 @@ class SelectorButton extends Component {
         style={styles.characterContainer}
         onPress={() => {
           this.props.store.navigationState = this.props.goTo
-          this.props.store.player.type = this.props.playerSelected
+          GLOBALS.player.type = this.props.playerSelected
         }}
         >
         <Text>{this.props.buttonText}</Text>

@@ -10,7 +10,8 @@ import {GLOBALS} from '../../globals';
 import PropTypes from 'prop-types';
 import Matter from 'matter-js'
 import {Sprite} from 'react-game-kit/native';
-import {getOpacity} from '../../utils/getOpacity'
+import {getOpacity} from '../../utils/getOpacity';
+import {ifBetween} from '../../utils/ifBetween';
 @observer
 class Enemy extends Component {
   constructor(props){
@@ -34,7 +35,6 @@ class Enemy extends Component {
     this.setState({mounted: true})
   }
   getPosition() {
-      // console.log('Position',this.props.store.enemies[this.props.index].angle)
       return {
         left: this.props.store.enemies[this.props.index].position.x,
         bottom: this.props.store.enemies[this.props.index].position.y,

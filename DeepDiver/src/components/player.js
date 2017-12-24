@@ -17,11 +17,17 @@ import {GLOBALS} from '../globals'
 class Player extends Component {
   render() {
     {
-      console.log('Type'+this.props.store.player.type)
-      switch(this.props.store.player.type){
+      console.log(GLOBALS.player.type)
+      switch(GLOBALS.player.type){
         case 'SEA_LORD':
           return (
             <SeaLord
+              store={this.props.store}
+              />
+          )
+        case 'AQUARIA':
+          return (
+            <Aquaria
               store={this.props.store}
               />
           )
@@ -33,7 +39,7 @@ class Player extends Component {
           )
         default:
           return (
-            <SeaLord
+            <Aquaria
               store={this.props.store}
               />
           )
@@ -41,11 +47,5 @@ class Player extends Component {
     }
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-
-  },
-});
 
 module.exports = Player;

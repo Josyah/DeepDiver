@@ -17,9 +17,6 @@ class SeaLord extends Component {
     }
   }
   getPlayerStyles() {
-    // var angle = this.props.store.player.angle;
-    // // console.log('${this.props.store.player.angle}')
-    // var angleInRads = angle * Math.PI / 180
     return {
       position: 'absolute',
       bottom: GLOBALS.initCharacterPosition.y,
@@ -34,29 +31,28 @@ class SeaLord extends Component {
   }
 
   getScale(){
-    var neededHeight = GLOBALS.playerHeightInMeters * GLOBALS.pixelsInAMeter
-    var currentHeight = GLOBALS.SeaLord.tileHeight
-    var scale = (neededHeight/currentHeight)
+    var currentHeight = GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileHeight;
+    var neededHeight = GLOBALS.playerHeightInMeters * GLOBALS.pixelsInAMeter;
+    var scale = (neededHeight/currentHeight);
     this.setState({
       scale
     })
     return scale
   }
   onLoadEnd(){
-    console.log('LOADING SEA LORD FINISHED')
   }
   render() {
     return (
         <Sprite
           repeat={true}
           src={require('../../images/SeaLord.png')}
-          tileHeight={GLOBALS.SeaLord.tileHeight}
-          tileWidth={GLOBALS.SeaLord.tileWidth}
+          tileHeight={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileHeight}
+          tileWidth={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileWidth}
           steps={GLOBALS.SeaLord.steps}
           state={this.props.store.player.animationState}
           scale={this.state.scale}
-          offset={[0, 0]}
-          ticksPerFrame={7}
+          offset={[0, 64]}
+          ticksPerFrame={3}
           style={this.getPlayerStyles()}
           onLoadEnd={this.onLoadEnd()}
           />
