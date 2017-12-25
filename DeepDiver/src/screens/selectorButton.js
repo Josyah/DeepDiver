@@ -18,7 +18,10 @@ class SelectorButton extends Component {
           GLOBALS.player.type = this.props.playerSelected
         }}
         >
-        <Text>{this.props.buttonText}</Text>
+          <Text style={styles.characterName}>{this.props.name}</Text>
+          <Image
+            source={this.props.source}
+            />
       </TouchableOpacity>
     );
   }
@@ -33,10 +36,16 @@ const styles = StyleSheet.create({
   characterContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    height: GLOBALS.dimensions.height*.8,
-    width: GLOBALS.dimensions.width*.25,
+    height: GLOBALS.dimensions.height,
+    width: GLOBALS.dimensions.width/2,
     margin: 10
+  },
+  characterName: {
+    fontSize: 35,
+    margin: 5,
+    padding: 10,
+    fontFamily: GLOBALS.font,
+    color: 'white'
   }
 });
 

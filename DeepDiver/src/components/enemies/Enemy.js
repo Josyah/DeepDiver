@@ -38,27 +38,30 @@ class Enemy extends Component {
       return {
         left: this.props.store.enemies[this.props.index].position.x,
         bottom: this.props.store.enemies[this.props.index].position.y,
-        opacity: this.state.opacity,
+        opacity: this.props.store.enemies[this.props.index].opacity,
         transform: [
           {translateY: this.state.mounted ? this.state.background.position.y : 0},
           {rotate: (-this.props.store.enemies[this.props.index].angle+'deg') },
         ],
-        backgroundColor: this.state.collided ? 'red' : 'transparent'
       }
+  }
+  onLoadEnd(){
+    this.props.store.enemies[this.props.index].loaded = true
   }
   render() {
     return (
       <Sprite
-        repeat={this.props.store.paused ? true : false}
+        repeat={true}
         src={this.props.src}
         tileHeight={this.props.tileHeight}
         tileWidth={this.props.tileWidth}
         steps={this.props.steps}
-        state={0}
+        state={(this.props.store.enemies[this.props.index].health <= 0) ? 1 : 0}
         scale={1}
         offset={[0, 0]}
         ticksPerFrame={5}
         style={this.state.mounted ? this.getPosition() : console.log('false')}
+        onLoadEnd={this.onLoadEnd()}
         />
     );
   }

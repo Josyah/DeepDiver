@@ -39,7 +39,7 @@ class Player extends Component {
           )
         default:
           return (
-            <Aquaria
+            <SeaLord
               store={this.props.store}
               />
           )

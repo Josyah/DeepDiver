@@ -28,6 +28,7 @@ class HandleTouch extends Component {
 
         } else {
           this.props.store.pressScreen('DOWN') //when button is pressed, it calls function pressScreen()
+          this.props.store.addProjectile()
         }
       },
       onPanResponderMove: (evt, gestureState) => {
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
     left: 0,
     height: GLOBALS.dimensions.height,
     width: GLOBALS.dimensions.width,
+    backgroundColor: 'transparent'
   },
   leftButton: {
     position: 'absolute',

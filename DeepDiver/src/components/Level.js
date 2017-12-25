@@ -17,14 +17,15 @@ import {observer} from 'mobx-react/native';
 import Matter from 'matter-js';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import Background from './background';
-import HealthBar from './healthBar'
+import HealthBar from './healthBar';
 import HandleTouch from './HandleTouch';
-import Paused from '../screens/Paused'
-import Overlay from './overlay'
-import {GLOBALS} from '../globals'
-import Counter from './Counter'
-import Coins from './mapCoins'
-
+import Paused from '../screens/Paused';
+import Overlay from './overlay';
+import {GLOBALS} from '../globals';
+import Counter from './Counter';
+import Coins from './mapCoins';
+import Projectile from './Projectile';
+import Alerts from './Alert'
 @observer
 class Level extends Component {
   constructor(props) {
@@ -35,15 +36,16 @@ class Level extends Component {
     }
   }
   handleUpdate = (engine) => {
-    if(this.props.store.paused != true && this.props.store.unPausing != true ){
+    if((this.props.store.paused != true && this.props.store.unPausing != true) && this.props.store.background.loaded){
         this.state.setToZero = true;
         this.props.store.background.position = this.background.body.position;
         if(store.forceUp == 0) {
-          this.props.store.falling()
+          this.props.store.falling();
         }
         Matter.Body.setVelocity(this.background.body, {x: store.forceLeft, y: store.forceUp});
         store.moveBackground();
         store.moveEnemies();
+        store.moveProjectiles();
         store.checkCollisions();
         store.checkRegion();
         if(this.state.resetGravity){
@@ -66,6 +68,13 @@ class Level extends Component {
         )
       }
     }
+    var renderAlerts = () => {
+      // if(this.props.store.alerts.length != 0){
+        return(
+          <Alerts store={store}/>
+        )
+      // }
+    }
     var renderOverlay = () => {
       if(this.props.store.paused == true){
         return(
@@ -83,7 +92,6 @@ class Level extends Component {
         >
           <World
             onUpdate={this.handleUpdate}
-            onCollision={this.onCollision}
             gravity={store.gravity}
             >
             <View style={styles.container}>
@@ -108,18 +116,15 @@ class Level extends Component {
               <Player
                 store={store}
                 />
+              <Projectile store={store}/>
               <View style={styles.distance}>
-                <Text style={styles.distanceText}>{Math.round(-this.props.store.background.position.x/GLOBALS.pixelsInAMeter)} m</Text>
+                <Text style={styles.distanceText}>{Math.round(-this.props.store.background.position.x/GLOBALS.pixelsInAMeter)}</Text>
+                <Text style={styles.coinText}>{this.props.store.coins} Coins</Text>
               </View>
-              <View style={styles.numCoins}>
-                <Text style={styles.distanceText}>{this.props.store.coins}</Text>
-              </View>
-              <View style={styles.healthBar}>
-                <HealthBar
-                  isActive={false}
-                  store={this.props.store}
-                  />
-              </View>
+              <HealthBar
+                isActive={false}
+                store={this.props.store}
+                />
               <HandleTouch store={store}/>
               <TouchableOpacity
                 onPress={() => this.props.store.paused = true}
@@ -127,7 +132,8 @@ class Level extends Component {
                 >
                 <IonIcons
                   name={'ios-pause'}
-                  size={30}
+                  size={40}
+                  color={'white'}
                   />
               </TouchableOpacity>
               {
@@ -135,6 +141,9 @@ class Level extends Component {
               }
               {
                 renderOverlay()
+              }
+              {
+                renderAlerts()
               }
               </View>
           </World>
@@ -157,52 +166,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 3,
     marginTop: 5,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     padding: 5,
-    borderRadius: 3
+    borderRadius: 3,
+    opacity: .8
   },
   numCoins: {
     position: 'absolute',
     top: 0,
-    left: 125,
+    left: 200,
     justifyContent: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'black',
     padding: 5,
     margin: 3,
-    width: 100
   },
   distance: {
     position: 'absolute',
     top: 0,
     left: 0,
-    justifyContent: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'black',
-    padding: 5,
-    margin: 3,
-    width: 100
+    margin: 6,
+    opacity: .8
   },
   distanceText: {
+    fontSize: 42,
+    color: 'white',
+    backgroundColor: 'transparent',
+    fontFamily: GLOBALS.font
+  },
+  coinText: {
     fontSize: 30,
     color: 'white',
     backgroundColor: 'transparent',
-    borderRadius: 5
+    fontFamily: GLOBALS.font
   },
-  healthBar: {
-    position: 'absolute',
-    top: 0,
-    right: 125,
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'black',
-    padding: 5,
-    margin: 3,
-    backgroundColor: 'white',
-    width: 100
-  },
+
 });
 
 module.exports = Level;

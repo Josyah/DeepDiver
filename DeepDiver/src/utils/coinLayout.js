@@ -49,6 +49,14 @@ exports.coinLayouts = {
     {x: 3, y: 0, collided: false},
     {x: 3, y: 1, collided: false},
     {x: 3, y: 2, collided: false},
-    {x: 3, y: 3, collided: false}
+    {x: 3, y: 3, collided: false},
+    {x: 4, y: 0, collided: false},
+    {x: 4, y: 1, collided: false},
+    {x: 4, y: 2, collided: false},
+    {x: 4, y: 3, collided: false},
+    {x: 5, y: 0, collided: false},
+    {x: 5, y: 1, collided: false},
+    {x: 5, y: 2, collided: false},
+    {x: 5, y: 3, collided: false}
   ]
 }

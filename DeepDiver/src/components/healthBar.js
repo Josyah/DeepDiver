@@ -14,20 +14,17 @@ class HealthBar extends Component {
       active: true
     }
   }
-
+  getLength(){
+    return {
+      width: this.props.store.player.health*2
+    }
+  }
   render() {
     return (
       <View style={styles.container}>
-        {
-          this.props.store.hearts.map((fill, index) => {
-            return(
-              <Image
-                source={require('../images/Heart-stuff.png')}
-                key={index}
-                />
-            )
-          })
-        }
+        <View style={this.getLength()}>
+          <Text></Text>
+        </View>
       </View>
     );
   }
@@ -35,13 +32,16 @@ class HealthBar extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    top: 12,
+    opacity: .8,
+    right: 100,
     justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  text: {
-    fontSize: 15
+    borderWidth: 1,
+    borderColor: 'white',
+    padding: 3,
+    margin: 4,
+    width: 210
   },
 });
 

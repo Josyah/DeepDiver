@@ -23,11 +23,11 @@ class Coin extends Component {
   getPosition() {
     return {
       position: 'absolute',
-      left: this.props.store.coinArray[this.props.index].x*50,
-      bottom: this.props.store.coinArray[this.props.index].y*50,
+      left: this.props.store.coinArray[this.props.index].x*GLOBALS.coins.multiplier,
+      bottom: this.props.store.coinArray[this.props.index].y*GLOBALS.coins.multiplier,
       opacity: this.state.opacity,
-      height: 25,
-      width: 25,
+      height: GLOBALS.coins.height,
+      width: GLOBALS.coins.width,
     }
   }
   render() {

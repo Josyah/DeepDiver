@@ -20,27 +20,26 @@ class StoryMode extends Component {
           <IonIcons
             size={30}
             name={'md-arrow-back'}
+            color={'white'}
             />
         </TouchableOpacity>
-        <Text>
-          Character Select
-        </Text>
         <ScrollView
           horizontal={true}
+          contentContainerStyle={styles.scrollview}
           >
           <SelectorButton
-            goTo={'LEVEL_SELECT'}
+            goTo={'LEVEL'}
             store={this.props.store}
-            buttonText={'Sea Lord'}
+            name={'Sea Lord'}
             playerSelected={'SEA_LORD'}
-            uri={'../../images/SeaLord.png'}
+            source={require('../../images/SeaLordStatic.png')}
           />
           <SelectorButton
-            goTo={'LEVEL_SELECT'}
+            goTo={'LEVEL'}
             store={this.props.store}
-            buttonText={'Aquaria'}
+            name={'Aquaria'}
             playerSelected={'AQUARIA'}
-            uri={'../../images/SeaLord.png'}
+            source={require('../../images/AquariaStatic.png')}
           />
         </ScrollView>
       </View>
@@ -66,6 +65,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  scrollview: {
+    justifyContent: 'center',
+    alignItems: 'center',
+
+  }
 });
 
 module.exports = StoryMode;

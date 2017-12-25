@@ -4,9 +4,6 @@ import {
   Text,
   View
 } from 'react-native';
-import HammerHead from './enemies/HammerHead';
-import Piranha from './enemies/Piranha';
-import JellyFish from './enemies/JellyFish';
 import {observer} from 'mobx-react/native';
 import CoinLayout from './CoinLayout';
 @observer

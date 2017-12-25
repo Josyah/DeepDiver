@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Water Wars</string>
+	<string>Water Warfare</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -36,7 +36,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -50,6 +50,15 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>m04.TTF</string>
+		<string>m04b.TTF</string>
+		<string>Mario-Kart-DS.ttf</string>
+		<string>Noise Machine.otf</string>
+		<string>Noise Machine.ttf</string>
+		<string>Pixeled.ttf</string>
+		<string>Heroes Legend Hollow.ttf</string>
+		<string>Heroes Legend.ttf</string>
+		<string>Wild Font.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

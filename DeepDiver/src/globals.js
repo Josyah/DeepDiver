@@ -1,6 +1,7 @@
 import {Dimensions} from 'react-native';
 
 exports.GLOBALS = {
+  font: 'Noise Machine',
   dimensions: {
     width: Dimensions.get('screen').width,
     height: Dimensions.get('screen').height
@@ -13,15 +14,25 @@ exports.GLOBALS = {
     x: 0,
     y: -6000,
   },
+  projectiles: {
+    harpoon: {
+      speed: 15
+    }
+  },
+  coins: {
+    multiplier: 22,
+    height: 17,
+    width: 17,
+  },
   regions: {
     beach: {
       start: 6624,
       enemies: [
         {
-          type: 'PIRANHA'
+          type: 'HAMMERHEADe'
         },
         {
-          type: 'HAMMERHEAD'
+          type: 'STINGRAY'
         }
       ]
     },

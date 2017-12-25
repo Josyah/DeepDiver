@@ -88,7 +88,9 @@ const styles = StyleSheet.create({
   },
   text: {
     margin: 10,
-    fontSize: 20
+    fontSize: 35,
+    fontFamily: GLOBALS.font,
+    color: '#3a9bdc'
   }
 });
 

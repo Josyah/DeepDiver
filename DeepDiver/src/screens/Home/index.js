@@ -6,18 +6,19 @@ import {
   TouchableOpacity,
   Image
 } from 'react-native';
-
+import {GLOBALS} from '../../globals';
 class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>
-          Sea Swimmer
+          Water Wars
         </Text>
-        <TouchableOpacity onPress={() => this.props.store.navigationState = 'CHAR_SELECT'}>
-          <Image
-            source={require('../../images/Start.png')}
-            />
+        <TouchableOpacity
+          onPress={() => this.props.store.navigationState = 'CHAR_SELECT'}
+          style={styles.start}
+          >
+          <Text style={styles.startText}>Start</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => this.props.store.navigationState = 'SHOP'}
@@ -43,15 +44,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#3a9bdc'
   },
   title: {
-    fontSize: 50,
-    marginBottom: 15
+    fontSize: 100,
+    marginBottom: 15,
+    fontFamily: GLOBALS.font,
+    color: 'white'
+  },
+  start: {
+
+  },
+  startText: {
+    fontSize: 60,
+    margin: 5,
+    padding: 10,
+    fontFamily: GLOBALS.font,
+    color: 'black'
   },
   linkToPage: {
-    fontSize: 24,
+    fontSize: 35,
     margin: 5,
-    borderWidth: 1,
     padding: 10,
-    borderRadius: 5,
+    fontFamily: GLOBALS.font,
+    color: 'white'
   },
   multiplayerPage: {
     fontSize: 24,
@@ -63,12 +76,12 @@ const styles = StyleSheet.create({
   },
   storeButton: {
     position: 'absolute',
-    top: 10,
+    bottom: 10,
     left: 10
   },
   settingsButton: {
     position: 'absolute',
-    top: 10,
+    bottom: 10,
     right: 10
   },
 

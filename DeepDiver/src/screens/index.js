@@ -8,13 +8,13 @@ import Home from './Home';
 import Loading from './Loading';
 import {observer} from 'mobx-react';
 import store from '../store';
-import LevelSelect from './StoryMode/LevelsLayout'
 import CharSelect from './StoryMode/CharacterSelect';
 import Level from '../components/Level';
 import GameOver from './GameOver';
 import Paused from './Paused';
 import Shop from './StoryMode/Shop';
-import Settings from '../utils/Settings'
+import Settings from '../utils/Settings';
+import Overlay from '../components/overlay';
 @observer
 class Navigation extends Component {
   render() {
@@ -50,7 +50,9 @@ class Navigation extends Component {
         )
       case 'PAUSED':
         return(
-          <Paused store={store}/>
+          <Overlay store={store}>
+            <Paused store={store}/>
+          </Overlay>
         )
       case 'SHOP':
         return(
