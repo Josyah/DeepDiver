@@ -12,13 +12,12 @@ class Background extends Component {
   backgroundPosition(){
     return{
       position: 'absolute',
-      left: this.props.store.background.offset.x,
-      bottom: this.props.store.background.offset.y,
+      left: this.props.store.background.position.x,
+      bottom: -this.props.store.background.position.y,
       height: GLOBALS.initBackgroundDimensions.height,
       width: GLOBALS.initBackgroundDimensions.width,
       transform: [
-        {translateX: this.props.store.background.position.x},
-        {translateY: this.props.store.background.position.y},
+        {translateX: this.props.store.background.offset.x},
         {rotate: '180deg'}
       ]
     }
@@ -30,7 +29,6 @@ class Background extends Component {
     return (
       <View
         style={styles.container}
-        shouldRasterizeIOS ={true}
         >
         <Image
           source={require('../images/Ocean.png')}

@@ -41,7 +41,6 @@ class Paused extends Component {
         <TouchableOpacity onPress={() => {
             this.props.store.paused = false
             this.props.store.navigationState = 'HOME'
-            this.props.store.reset()
           }}>
           <Text style={styles.text}>
             Quit
@@ -49,7 +48,6 @@ class Paused extends Component {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
             this.props.store.paused = false
-            this.props.store.reset()
           }}>
           <Text style={styles.text}>
             Retry

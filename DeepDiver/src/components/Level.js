@@ -12,7 +12,7 @@ import {
 import {World, Body, Stage, Loop} from 'react-game-kit/native';
 import PropTypes from 'prop-types';
 import Player from './player';
-import Enemies from './mapEnemies';
+import Enemies from './enemies';
 import {observer} from 'mobx-react/native';
 import Matter from 'matter-js';
 import IonIcons from 'react-native-vector-icons/Ionicons';
@@ -23,9 +23,9 @@ import Paused from '../screens/Paused';
 import Overlay from './overlay';
 import {GLOBALS} from '../globals';
 import Counter from './Counter';
-import Coins from './mapCoins';
+import Coins from './coins';
 import Projectile from './Projectile';
-import Alerts from './Alert'
+import Alert from './Alert'
 @observer
 class Level extends Component {
   constructor(props) {
@@ -38,26 +38,12 @@ class Level extends Component {
   handleUpdate = (engine) => {
     if((this.props.store.paused != true && this.props.store.unPausing != true) && this.props.store.background.loaded){
         this.state.setToZero = true;
-        this.props.store.background.position = this.background.body.position;
-        if(store.forceUp == 0) {
-          this.props.store.falling();
-        }
-        Matter.Body.setVelocity(this.background.body, {x: store.forceLeft, y: store.forceUp});
+        this.props.store.background.position.y += store.forceUp
         store.moveBackground();
         store.moveEnemies();
         store.moveProjectiles();
         store.checkCollisions();
         store.checkRegion();
-        if(this.state.resetGravity){
-          store.gravity.y = -4;
-          this.state.resetGravity = false;
-        }
-    } else {
-      this.state.resetGravity = true
-      if(this.state.setToZero){
-        store.gravity.y = 0;
-        this.state.setToZero = false;
-      }
     }
   }
   render() {
@@ -69,11 +55,10 @@ class Level extends Component {
       }
     }
     var renderAlerts = () => {
-      // if(this.props.store.alerts.length != 0){
+      if(this.props.store.alert != "")
         return(
-          <Alerts store={store}/>
+          <Alert store={store}/>
         )
-      // }
     }
     var renderOverlay = () => {
       if(this.props.store.paused == true){
@@ -95,18 +80,7 @@ class Level extends Component {
             gravity={store.gravity}
             >
             <View style={styles.container}>
-              <Body
-                shape="rectangle"
-                args={[0, 0, this.props.store.player.height, this.props.store.player.width]}
-                friction={0}
-                frictionStatic={0}
-                restitution={0}
-                mass={GLOBALS.playerMass}
-                frictionAir={this.props.airFriction}
-                ref={(b) => { this.background = b; }}
-                >
-                <Background store={store}/>
-              </Body>
+              <Background store={store}/>
               <Coins
                 store={store}
                 />

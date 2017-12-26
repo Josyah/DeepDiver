@@ -12,7 +12,15 @@ exports.GLOBALS = {
   },
   initBackgroundPosition: {
     x: 0,
-    y: -6000,
+    y: 6000,
+  },
+  initBackgroundDimensions: {
+    width: 3312,
+    height: 6624,
+  },
+  initBackgroundDimensions: {
+    width: 3312,
+    height: 6624,
   },
   projectiles: {
     harpoon: {
@@ -29,7 +37,7 @@ exports.GLOBALS = {
       start: 6624,
       enemies: [
         {
-          type: 'HAMMERHEADe'
+          type: 'HAMMERHEAD'
         },
         {
           type: 'STINGRAY'
@@ -59,10 +67,7 @@ exports.GLOBALS = {
       ]
     },
   },
-  initBackgroundDimensions: {
-    width: 3312,
-    height: 6624,
-  },
+
   gameSpeed: {
     horiziontal: 5,
     vertical: 4
@@ -70,10 +75,11 @@ exports.GLOBALS = {
   forceUp: 5,
   forceLeft: 5,
   SeaLord: {
-    steps: [1, 6, 10, 5, 5, 4],
-    fallingAnimation: 2,
-    upAnimation: 3,
-    downAnimation: 4,
+    steps: [0, 5, 16, 16, 15, 16],
+    fallingAnimation: 3,
+    upAnimation: 4,
+    downAnimation: 5,
+    offsetY: 80,
     tiles: [
       {
         tileWidth: 150,
@@ -84,21 +90,30 @@ exports.GLOBALS = {
         tileHeight: 200,
       },
       {
-        tileWidth: 100,
+        tileWidth: 150,
         tileHeight: 200
       },
       {
-        tileWidth: 100,
+        tileWidth: 150,
         tileHeight: 200,
       },
       {
-        tileWidth: 100,
+        tileWidth: 150,
         tileHeight: 200,
       },
       {
+        tileWidth: 150,
         tileHeight: 200,
-        tileWidth: 255
       },
+      {
+        tileWidth: 150,
+        tileHeight: 200,
+      },
+      {
+        tileWidth: 150,
+        tileHeight: 200,
+      },
+
 
     ],
   },
@@ -109,11 +124,11 @@ exports.GLOBALS = {
     downAnimation: 4,
     tiles: [
       {
-        tileWidth: 100,
+        tileWidth: 150,
         tileHeight: 200,
       },
       {
-        tileWidth: 100,
+        tileWidth: 150,
         tileHeight: 200,
       },
       {

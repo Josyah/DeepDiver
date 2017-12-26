@@ -31,10 +31,12 @@ class Enemy extends Component {
     this.setState({mounted: false})
   }
 
-  componentWillMount(){
+  componentDidMount(){
     this.setState({mounted: true})
   }
   getPosition() {
+    if(this.state.mounted){
+
       return {
         left: this.props.store.enemies[this.props.index].position.x,
         bottom: this.props.store.enemies[this.props.index].position.y,
@@ -44,6 +46,18 @@ class Enemy extends Component {
           {rotate: (-this.props.store.enemies[this.props.index].angle+'deg') },
         ],
       }
+    } else {
+      return {
+      }
+
+    }
+  }
+  getState(){
+    if(this.props.store.enemies[this.props.index].health <= 0 && this.state.mounted){
+      return 1
+    } else {
+      return 0
+    }
   }
   onLoadEnd(){
     this.props.store.enemies[this.props.index].loaded = true
@@ -56,7 +70,7 @@ class Enemy extends Component {
         tileHeight={this.props.tileHeight}
         tileWidth={this.props.tileWidth}
         steps={this.props.steps}
-        state={(this.props.store.enemies[this.props.index].health <= 0) ? 1 : 0}
+        state={this.getState()}
         scale={1}
         offset={[0, 0]}
         ticksPerFrame={5}
