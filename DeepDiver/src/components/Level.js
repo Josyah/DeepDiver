@@ -71,12 +71,11 @@ class Level extends Component {
           height={GLOBALS.dimensions.height}
           width={GLOBALS.dimensions.width}
         >
+
           <Game store={store}>
+
             <View style={styles.container}>
               <Background store={store}/>
-              <Coins
-                store={store}
-                />
               <Enemies
                 store={store}
                 />
@@ -124,6 +123,7 @@ const styles = StyleSheet.create({
   container: {
     height: GLOBALS.dimensions.height,
     width: GLOBALS.dimensions.width,
+    backgroundColor: 'black'
   },
   pauseButton: {
     position: 'absolute',

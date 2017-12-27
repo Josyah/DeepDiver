@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import {observer} from 'mobx-react/native';
 import Coin from './Coin';
-import {coinLayouts} from '../utils/coinLayout';
+import {coinLayouts} from '../../utils/coinLayout';
 
 @observer
 class CoinLayout extends Component {
@@ -25,17 +25,21 @@ class CoinLayout extends Component {
     return (
       <View style={this.getPosition()}>
         {
-          this.props.store.coinArray.map((eachCoin, index) => {
-            return (
-              <Coin
-                key={index}
-                index={index}
-                position={eachCoin}
-                store={this.props.store}
-                distanceAway={30}
-                />
-            );
-        })}
+
+            this.props.store.coinArray.slice().map((eachCoin, index) => {
+              if(this.props.store.coinArray.length != 0){
+                return (
+                  <Coin
+                    key={index}
+                    index={index}
+                    position={eachCoin}
+                    store={this.props.store}
+                    distanceAway={30}
+                    />
+                );
+              }
+            })
+      }
       </View>
     );
   }

@@ -15,6 +15,7 @@ import Paused from './Paused';
 import Shop from './StoryMode/Shop';
 import Settings from '../utils/Settings';
 import Overlay from '../components/overlay';
+import Sprite from '../components/sprite'
 @observer
 class Navigation extends Component {
   render() {
@@ -40,10 +41,6 @@ class Navigation extends Component {
             airFriction={0.1}
             />
         )
-      case 'GAME':
-        return(
-          <Game store={store}/>
-        )
       case 'DEAD':
         return(
           <Overlay store={store}>
@@ -64,6 +61,12 @@ class Navigation extends Component {
         return(
           <Settings store={store}/>
         )
+      case 'SPRITE': {
+        return (
+          <Sprite store={store}/>
+
+        )
+      }
       default:
         return (
           <Loading store={store}/>
@@ -72,13 +75,5 @@ class Navigation extends Component {
   }
 
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 module.exports = Navigation;

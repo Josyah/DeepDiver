@@ -16,7 +16,8 @@ class HealthBar extends Component {
   }
   getLength(){
     return {
-      width: this.props.store.player.health*2
+      width: this.props.store.player.health*2,
+      backgroundColor:'white'
     }
   }
   render() {

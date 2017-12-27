@@ -198,7 +198,7 @@ exports.GLOBALS = {
     heightInMeters: 2
   },
   player: {
-    type: 'AQUARIA'
+    type: 'SEA_LORD'
   },
   jumpConstant: 40,
   defaultEnemyHeight: 75,

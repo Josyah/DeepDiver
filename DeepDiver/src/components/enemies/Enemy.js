@@ -33,6 +33,7 @@ class Enemy extends Component {
   getPosition() {
     if(this.state.mounted){
       return {
+        position: 'absolute',
         left: this.props.store.enemies[this.props.index].position.x,
         bottom: this.props.store.enemies[this.props.index].position.y,
         opacity: this.props.store.enemies[this.props.index].opacity,
@@ -71,13 +72,5 @@ class Enemy extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 module.exports = Enemy;

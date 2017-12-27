@@ -28,9 +28,9 @@ class ObservableListStore {
     type: 'HAMMERHEAD',
     position: {
       x: 1000,
-      y: this.background.position.y,
+      y: 6000,
       x0: 1000,
-      y0: this.background.position.y
+      y0: 6000
     },
     dimensions: {
       height: 50,
@@ -48,7 +48,7 @@ class ObservableListStore {
     loaded: false
   }]
   @observable alert = '';
-  @observable navigationState = 'HOME';
+  @observable navigationState = 'LEVEL';
   @observable forceUp = 0;
   @observable forceLeft = 2;
   @observable gravity = {x: 0, y: -2, scale: 0.0005 };
@@ -61,7 +61,7 @@ class ObservableListStore {
   @observable coinLayoutArray = [{
     position: {
       x: 1000,
-      y: 100
+      y: 6000
     },
     speed: 3
   }];
@@ -92,9 +92,6 @@ class ObservableListStore {
     health: 100
   };
   @observable scale = .5;
-
-
-
   loseHeart(){
     if(this.player.health > 0){
       this.player.health -= 20
@@ -141,7 +138,6 @@ class ObservableListStore {
 
           this.enemies[x].position.x -= this.enemies[x].speed;
           this.checkEnemyPosition(x);
-          // this.moveInWave(x)
         }
       }
     }
@@ -171,29 +167,9 @@ class ObservableListStore {
     }
   }
   checkEnemyPosition(x){
-    if(this.enemies[x].position.x < 300){
-      this.randomlyGenerateEnemy();
+    if(this.enemies[x].position.x < -300){
+      this.addEnemy()
       this.enemies.splice(x, 1);
-    }
-  }
-  randomlyGenerateEnemy(){
-    var randomStart;
-    switch(this.region){
-      case 'BEACH':
-        // randomStart = (Math.random() * (GLOBALS.regions.beach.start-GLOBALS.regions.midsea.start)) + GLOBALS.regions.midsea.start
-        randomStart = 6000
-        this.addEnemy(GLOBALS.regions.beach.enemies[Math.round(Math.random() *  (GLOBALS.regions.beach.enemies.length-1))], randomStart)
-        break;
-      case 'MIDSEA':
-        // randomStart = (Math.random() * GLOBALS.regions.midsea.start-GLOBALS.regions.midnight.start) + GLOBALS.regions.midnight.start
-        randomStart = 6000
-        this.addEnemy(GLOBALS.regions.midsea.enemies[Math.round(Math.random() *  (GLOBALS.regions.midsea.enemies.length-1))], randomStart)
-        break;
-      case 'MIDNIGHT':
-        // randomStart = (Math.random() * GLOBALS.regions.midnight.start)
-        randomStart = (Math.random() * 500)
-        this.addEnemy(GLOBALS.regions.midnight.enemies[Math.round(Math.random() * (GLOBALS.regions.midnight.enemies.length-1))], randomStart)
-        break;
     }
   }
   moveInWave(index){
@@ -211,14 +187,15 @@ class ObservableListStore {
     this.player.animationState = this.player.animate.falling
     this.player.angle = 0
   }
-  addEnemy(type, position) {
+  addEnemy() {
+    console.log('ADDED ENEMY')
     this.enemies.push({
-      type,
+      type: 'HAMMERHEAD',
       position: {
         x: 1000,
-        y: this.background.position.y,
+        y: 6000,
         x0: 1000,
-        y0: this.background.position.y
+        y0: 6000
       },
       dimensions: {
         height: 50,

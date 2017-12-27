@@ -12,7 +12,7 @@ class MapCoins extends Component {
     return (
       <View style={styles.container}>
         {
-          this.props.store.coinLayoutArray.map((eachEnemy, index) => {
+          this.props.store.coinLayoutArray.slice().map((eachEnemy, index) => {
             if(this.props.store.coinLayoutArray.length != 0){
                 return (
                   <CoinLayout
