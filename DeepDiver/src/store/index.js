@@ -100,6 +100,7 @@ class ObservableListStore {
     }
   }
   movePlayer(distanceBetween){
+    console.log(this.background.position.y, GLOBALS.regions.beach.start)
     this.player.angle = (distanceBetween/(5/4))
     this.forceUp = -(distanceBetween/5)
     this.background.speed = (Math.abs((Math.abs(distanceBetween))/(50/4) - 10))
@@ -212,11 +213,6 @@ class ObservableListStore {
       health: 1,
       loaded: false
     })
-  }
-  deleteEnemy(index){
-    if(this.enemies.length != 0 && index > -1){
-      this.enemies.remove(index);
-    }
   }
   checkCollisions(){
     if(this.checkLength(this.enemies.length)){

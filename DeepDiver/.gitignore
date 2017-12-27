@@ -33,7 +33,6 @@ local.properties
 # node.js
 #
 node_modules/
-src/images/
 npm-debug.log
 yarn-error.log
 
