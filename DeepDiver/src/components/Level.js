@@ -11,40 +11,36 @@ import {
 } from 'react-native';
 import {World, Body, Stage, Loop} from 'react-game-kit/native';
 import PropTypes from 'prop-types';
-import Player from './player';
+import Player from './players';
 import Enemies from './enemies';
 import {observer} from 'mobx-react/native';
 import Matter from 'matter-js';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import Background from './background';
 import HealthBar from './healthBar';
-import HandleTouch from './HandleTouch';
+import HandleTouch from '../controls/planeControls';
 import Paused from '../screens/Paused';
 import Overlay from './overlay';
 import {GLOBALS} from '../globals';
 import Counter from './Counter';
 import Coins from './coins';
-import Projectile from './Projectile';
-import Alert from './Alert'
+import Projectile from './projectiles';
+import Alert from './Alert';
+import Game from './Game'
 @observer
 class Level extends Component {
   constructor(props) {
     super(props);
     store = this.props.store;
     this.state = {
-      resetGravity: true
+      mounted: false
     }
   }
-  handleUpdate = (engine) => {
-    if((this.props.store.paused != true && this.props.store.unPausing != true) && this.props.store.background.loaded){
-        this.state.setToZero = true;
-        this.props.store.background.position.y += store.forceUp
-        store.moveBackground();
-        store.moveEnemies();
-        store.moveProjectiles();
-        store.checkCollisions();
-        store.checkRegion();
-    }
+  componentWillUnmount(){
+    this.setState({mounted: false})
+  }
+  componentDidMount(){
+    this.setState({mounted: true})
   }
   render() {
     var renderCountdown = () => {
@@ -75,10 +71,7 @@ class Level extends Component {
           height={GLOBALS.dimensions.height}
           width={GLOBALS.dimensions.width}
         >
-          <World
-            onUpdate={this.handleUpdate}
-            gravity={store.gravity}
-            >
+          <Game store={store}>
             <View style={styles.container}>
               <Background store={store}/>
               <Coins
@@ -120,7 +113,7 @@ class Level extends Component {
                 renderAlerts()
               }
               </View>
-          </World>
+            </Game>
         </Stage>
       </Loop>
     );

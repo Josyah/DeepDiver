@@ -9,21 +9,36 @@ import {observer} from 'mobx-react/native';
 import {GLOBALS} from '../globals'
 @observer
 class Background extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      mounted: false,
+    }
+  }
   backgroundPosition(){
-    return{
-      position: 'absolute',
-      left: this.props.store.background.position.x,
-      bottom: -this.props.store.background.position.y,
-      height: GLOBALS.initBackgroundDimensions.height,
-      width: GLOBALS.initBackgroundDimensions.width,
-      transform: [
-        {translateX: this.props.store.background.offset.x},
-        {rotate: '180deg'}
-      ]
+    if(this.state.mounted){
+      return{
+        position: 'absolute',
+        left: this.props.store.background.position.x,
+        bottom: -this.props.store.background.position.y,
+        height: GLOBALS.initBackgroundDimensions.height,
+        width: GLOBALS.initBackgroundDimensions.width,
+        transform: [
+          {translateX: this.props.store.background.offset.x},
+          {rotate: '180deg'}
+        ]
+      }
     }
   }
   onLoadEnd(x){
     this.props.store.background.loaded = true
+  }
+  componentWillUnmount(){
+    this.setState({mounted: false})
+  }
+
+  componentDidMount(){
+    this.setState({mounted: true})
   }
   render() {
     return (

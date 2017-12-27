@@ -1,6 +1,6 @@
 import {observable} from 'mobx';
 import {GLOBALS} from '../globals';
-import { Vibration } from 'react-native'
+import { Vibration, Animated} from 'react-native'
 let index = 0
 let add = true
 var lastId = 0
@@ -8,6 +8,7 @@ var count = 1
 var range = 5000000000
 import {ifBetween} from '../utils/ifBetween'
 import {coinLayouts} from '../utils/coinLayout'
+import {enableLogging} from 'mobx-logger';
 class ObservableListStore {
   @observable background = {
     position: GLOBALS.initBackgroundPosition,
@@ -19,9 +20,33 @@ class ObservableListStore {
       x: GLOBALS.initBackgroundPosition.x,
       y: GLOBALS.initBackgroundPosition.y
     },
-    loaded: false
+    loaded: false,
+    speed: 5
   };
-  @observable enemies = [this.initialEnemies('HAMMERHEAD', 100)]
+  @observable enemies = [
+    {
+    type: 'HAMMERHEAD',
+    position: {
+      x: 1000,
+      y: this.background.position.y,
+      x0: 1000,
+      y0: this.background.position.y
+    },
+    dimensions: {
+      height: 50,
+      width: 50
+    },
+    collided: false,
+    speed: 7,
+    path: {
+      type: 'WAVE',
+      frequency: 200,
+      wavelength: 200
+    },
+    angle: 0,
+    health: 1,
+    loaded: false
+  }]
   @observable alert = '';
   @observable navigationState = 'HOME';
   @observable forceUp = 0;
@@ -32,6 +57,7 @@ class ObservableListStore {
   @observable paused = false;
   @observable coins = 0;
   @observable region = 'Beach Zone';
+
   @observable coinLayoutArray = [{
     position: {
       x: 1000,
@@ -54,7 +80,7 @@ class ObservableListStore {
   @observable player = {
     width: this.scale * GLOBALS.tileWidth,
     height: this.scale * GLOBALS.tileHeight,
-    angle: 90,
+    angle: 0,
     animationState: GLOBALS.SeaLord.fallingAnimation,
     isStatic: false,
     type: 'SEA_LORD',
@@ -66,32 +92,9 @@ class ObservableListStore {
     health: 100
   };
   @observable scale = .5;
-  initialEnemies(enemyType, position){
-    return {
-      enemyType,
-      position: {
-        x: 1000,
-        y: position,
-        x0: 1000,
-        y0: position
-      },
-      dimensions: {
-        height: 50,
-        width: 50
-      },
-      collided: false,
-      speed: 7,
-      path: {
-        type: 'WAVE',
-        frequency: 200,
-        wavelength: 200
-      },
-      angle: 0,
-      health: 1,
-      loaded: false
-    }
 
-  }
+
+
   loseHeart(){
     if(this.player.health > 0){
       this.player.health -= 20
@@ -99,22 +102,23 @@ class ObservableListStore {
       this.die()
     }
   }
-  reset(){
-    this.background.position = { x: 0, y: 0};
-    this.background.offset = GLOBALS.initBackgroundPosition;
+  movePlayer(distanceBetween){
+    this.player.angle = (distanceBetween/(5/4))
+    this.forceUp = -(distanceBetween/5)
+    this.background.speed = (Math.abs((Math.abs(distanceBetween))/(50/4) - 10))
+    if(distanceBetween < 0){
+      this.player.animationState = this.player.animate.goingUp
+    } else {
+
+      this.player.animationState = this.player.animate.goingDown
+    }
+  }
+  resetGame(){
+    this.background.position = GLOBALS.initBackgroundPosition
+    this.background.offset = {x: 0, y: 0};
     coinArray = coinLayouts.SquareLayout;
-    this.enemies = [this.initialEnemies('HAMMERHEAD', 100)]
-    this.hearts = [
-      {
-        animationState: 0
-      },
-      {
-        animationState: 0
-      },
-      {
-        animationState: 0
-      },
-    ]
+    this.player.health = 100
+    this.enemies.clear()
   }
   pause(){
     this.navigationState = 'PAUSED'
@@ -124,9 +128,8 @@ class ObservableListStore {
   inactive(){
     this.navigationState = 'PAUSED'
   }
-
   moveBackground () {
-    this.background.position.x -= 5
+    this.background.position.x -= this.background.speed
     if((this.background.position.x + this.background.offset.x) < -(GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)){
       this.background.offset.x += (GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)
     }
@@ -138,7 +141,7 @@ class ObservableListStore {
 
           this.enemies[x].position.x -= this.enemies[x].speed;
           this.checkEnemyPosition(x);
-          this.moveInWave(x)
+          // this.moveInWave(x)
         }
       }
     }
@@ -168,27 +171,27 @@ class ObservableListStore {
     }
   }
   checkEnemyPosition(x){
-    if(this.enemies[x].position.x < -300){
+    if(this.enemies[x].position.x < 300){
       this.randomlyGenerateEnemy();
-      this.deleteEnemy(0);
+      this.enemies.splice(x, 1);
     }
   }
   randomlyGenerateEnemy(){
     var randomStart;
     switch(this.region){
       case 'BEACH':
-        randomStart = (Math.random() * (GLOBALS.regions.beach.start-GLOBALS.regions.midsea.start)) + GLOBALS.regions.midsea.start
-        // randomStart = (Math.random() * 500)
+        // randomStart = (Math.random() * (GLOBALS.regions.beach.start-GLOBALS.regions.midsea.start)) + GLOBALS.regions.midsea.start
+        randomStart = 6000
         this.addEnemy(GLOBALS.regions.beach.enemies[Math.round(Math.random() *  (GLOBALS.regions.beach.enemies.length-1))], randomStart)
         break;
       case 'MIDSEA':
-        randomStart = (Math.random() * GLOBALS.regions.midsea.start-GLOBALS.regions.midnight.start) + GLOBALS.regions.midnight.start
-        // randomStart = (Math.random() * 500)
+        // randomStart = (Math.random() * GLOBALS.regions.midsea.start-GLOBALS.regions.midnight.start) + GLOBALS.regions.midnight.start
+        randomStart = 6000
         this.addEnemy(GLOBALS.regions.midsea.enemies[Math.round(Math.random() *  (GLOBALS.regions.midsea.enemies.length-1))], randomStart)
         break;
       case 'MIDNIGHT':
-        randomStart = (Math.random() * GLOBALS.regions.midnight.start)
-        // randomStart = (Math.random() * 500)
+        // randomStart = (Math.random() * GLOBALS.regions.midnight.start)
+        randomStart = (Math.random() * 500)
         this.addEnemy(GLOBALS.regions.midnight.enemies[Math.round(Math.random() * (GLOBALS.regions.midnight.enemies.length-1))], randomStart)
         break;
     }
@@ -202,30 +205,40 @@ class ObservableListStore {
       this.enemies[index].angle = angle* (180/Math.PI)
     }
   }
-  pressScreen (upOrDown) {
-    if(upOrDown == 'UP'){
-      this.forceUp = GLOBALS.forceUp
-      this.player.animationState = this.player.animate.goingUp
-      this.player.angle = 80
-    } else {
-      this.forceUp = -GLOBALS.forceUp
-      this.player.animationState = this.player.animate.goingDown
-      this.player.angle = 100
 
-    }
-  }
   releaseScreen () {
     this.forceUp = -1
     this.player.animationState = this.player.animate.falling
-    this.player.angle = 90
-
+    this.player.angle = 0
   }
-  addEnemy(enemyType, position) {
-    this.enemies.push(this.initialEnemies(enemyType.type, position))
+  addEnemy(type, position) {
+    this.enemies.push({
+      type,
+      position: {
+        x: 1000,
+        y: this.background.position.y,
+        x0: 1000,
+        y0: this.background.position.y
+      },
+      dimensions: {
+        height: 50,
+        width: 50
+      },
+      collided: false,
+      speed: 7,
+      path: {
+        type: 'WAVE',
+        frequency: 200,
+        wavelength: 200
+      },
+      angle: 0,
+      health: 1,
+      loaded: false
+    })
   }
   deleteEnemy(index){
     if(this.enemies.length != 0 && index > -1){
-      this.enemies.splice(0, 1);
+      this.enemies.remove(index);
     }
   }
   checkCollisions(){

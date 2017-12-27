@@ -13,33 +13,39 @@ class SeaLord extends Component {
   constructor(props){
     super(props)
     this.state = {
-      scale: this.getScale()
+      mounted: false,
+      scale: this.getScale(),
     }
   }
   getPlayerStyles() {
-    return {
-      position: 'absolute',
-      bottom: GLOBALS.initCharacterPosition.y,
-      left: GLOBALS.initCharacterPosition.x,
-      opacity: .75,
-      transform: [
-        { rotate: (this.props.store.player.angle+'deg') },
-        { scaleX: this.state.scale },
-        { scaleY: this.state.scale },
-      ],
-    };
+    if(this.state.mounted){
+      return {
+        position: 'absolute',
+        bottom: GLOBALS.initCharacterPosition.y,
+        left: GLOBALS.initCharacterPosition.x,
+        opacity: .75,
+        transform: [
+          { rotate: (90+this.props.store.player.angle+'deg') },
+          { scaleX: this.state.scale },
+          { scaleY: this.state.scale },
+        ],
+      };
+    }
   }
 
   getScale(){
-    var currentHeight = GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileHeight;
-    var neededHeight = GLOBALS.playerHeightInMeters * GLOBALS.pixelsInAMeter;
-    var scale = (neededHeight/currentHeight);
-    this.setState({
-      scale
-    })
-    return scale
+      var currentHeight = GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileHeight;
+      var neededHeight = GLOBALS.playerHeightInMeters * GLOBALS.pixelsInAMeter;
+      var scale = (neededHeight/currentHeight);
+      return scale
+
   }
-  onLoadEnd(){
+  componentWillUnmount(){
+    this.setState({mounted: false})
+  }
+
+  componentDidMount(){
+    this.setState({mounted: true})
   }
   render() {
     return (
@@ -54,7 +60,6 @@ class SeaLord extends Component {
         offset={[0, GLOBALS.SeaLord.offsetY]}
         ticksPerFrame={2}
         style={this.getPlayerStyles()}
-        onLoadEnd={this.onLoadEnd()}
         />
     );
   }

@@ -46,7 +46,9 @@ class Navigation extends Component {
         )
       case 'DEAD':
         return(
-          <GameOver store={store}/>
+          <Overlay store={store}>
+            <GameOver store={store}/>
+          </Overlay>
         )
       case 'PAUSED':
         return(

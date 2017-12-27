@@ -19,12 +19,8 @@ class Enemy extends Component {
     store = this.props.store
     enemy = this.props.position
     this.state = {
-      index: this.props.index,
-      collided: enemy.collided,
       opacity: getOpacity(this.props.distanceAway),
-      background: this.props.background,
-      mounted: true,
-      angle: this.props.store.enemies[this.props.index].angle
+      mounted: false,
     }
   }
   componentWillUnmount(){
@@ -36,31 +32,27 @@ class Enemy extends Component {
   }
   getPosition() {
     if(this.state.mounted){
-
       return {
         left: this.props.store.enemies[this.props.index].position.x,
         bottom: this.props.store.enemies[this.props.index].position.y,
         opacity: this.props.store.enemies[this.props.index].opacity,
         transform: [
-          {translateY: this.state.mounted ? this.state.background.position.y : 0},
+          {translateY: this.props.store.background.position.y},
           {rotate: (-this.props.store.enemies[this.props.index].angle+'deg') },
         ],
       }
-    } else {
-      return {
-      }
+    }
+}
 
-    }
-  }
   getState(){
-    if(this.props.store.enemies[this.props.index].health <= 0 && this.state.mounted){
-      return 1
-    } else {
-      return 0
+    if(this.state.mounted){
+      this.props.store.enemies[this.props.index].loaded = true
+      if(this.props.store.enemies[this.props.index].health <= 0 && this.state.mounted){
+        return 1
+      } else {
+        return 0
+      }
     }
-  }
-  onLoadEnd(){
-    this.props.store.enemies[this.props.index].loaded = true
   }
   render() {
     return (
@@ -74,8 +66,7 @@ class Enemy extends Component {
         scale={1}
         offset={[0, 0]}
         ticksPerFrame={5}
-        style={this.state.mounted ? this.getPosition() : console.log('false')}
-        onLoadEnd={this.onLoadEnd()}
+        style={this.getPosition()}
         />
     );
   }
