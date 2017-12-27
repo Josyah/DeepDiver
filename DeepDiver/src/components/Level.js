@@ -42,6 +42,20 @@ class Level extends Component {
   componentDidMount(){
     this.setState({mounted: true})
   }
+  handleUpdate = (engine) => {
+    if((this.props.store.paused != true && this.props.store.unPausing != true) && (this.props.store.background.loaded && this.state.mounted)){
+        this.state.setToZero = true;
+        this.props.store.background.position.y += store.forceUp
+        store.moveBackground();
+          store.moveEnemies();
+
+        if(store.projectiles.length != 0){
+          store.moveProjectiles();
+        }
+        store.checkCollisions();
+        store.checkRegion();
+    }
+  }
   render() {
     var renderCountdown = () => {
       if(this.props.store.unPausing == true){
@@ -71,8 +85,9 @@ class Level extends Component {
           height={GLOBALS.dimensions.height}
           width={GLOBALS.dimensions.width}
         >
-
-          <Game store={store}>
+        <World
+         onUpdate={this.handleUpdate}
+         >
 
             <View style={styles.container}>
               <Background store={store}/>
@@ -112,7 +127,7 @@ class Level extends Component {
                 renderAlerts()
               }
               </View>
-            </Game>
+          </World>
         </Stage>
       </Loop>
     );

@@ -100,10 +100,10 @@ class ObservableListStore {
     }
   }
   movePlayer(distanceBetween){
-    console.log(this.background.position.y, GLOBALS.regions.beach.start)
     this.player.angle = (distanceBetween/(5/4))
     this.forceUp = -(distanceBetween/5)
-    this.background.speed = (Math.abs((Math.abs(distanceBetween))/(50/4) - 10))
+    this.background.speed = (Math.abs((Math.abs(distanceBetween))/(50/4) - 5))
+    console.log(this.background.speed)
     if(distanceBetween < 0){
       this.player.animationState = this.player.animate.goingUp
     } else {
@@ -182,11 +182,11 @@ class ObservableListStore {
       this.enemies[index].angle = angle* (180/Math.PI)
     }
   }
-
   releaseScreen () {
     this.forceUp = -1
     this.player.animationState = this.player.animate.falling
     this.player.angle = 0
+    this.background.speed = 5
   }
   addEnemy() {
     console.log('ADDED ENEMY')
@@ -228,6 +228,8 @@ class ObservableListStore {
             if (projectileInLine && (this.enemies[i].position.x < 175)) {
               this.projectiles.splice(p, 1)
               this.enemies[i].health -= 1
+              this.enemies.splice(i, 1)
+              this.addEnemy()
             }
           }
         }
