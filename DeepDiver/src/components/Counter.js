@@ -11,22 +11,43 @@ class Counter extends Component {
     super(props)
 
     this.state ={
-      secondsRemaining: 3
+      secondsRemaining: 3,
+      mounted: false
     };
   }
 
-  tick(secondsRemaining) {
+  tick() {
     // var secondsRemaining = this.state.secondsRemaining
     // secondsRemaining -= 1
     // console.log(secondsRemaining)
     // if (this.state.secondsRemaining <= 0) {
     //   clearInterval(this.interval);
     // }
-    this.props.store.unPausing = false
+      setTimeout(() => {
+        var secondsRemaining = this.state.secondsRemaining -1
+        this.setState({secondsRemaining})
+      }, 1000);
+
+
+  }
+  componentDidUpdate() {
+    // this.tick()
+
+    if(this.state.secondsRemaining > 0 && this.state.mounted){
+      this.tick()
+      console.log(this.state.secondsRemaining)
+    } else {
+      this.props.store.unPausing = false
+    }
+  }
+  componentWillUnmount() {
+
+    this.state.mounted = false
   }
   componentDidMount() {
-    this.setState({ secondsRemaining: this.state.secondsRemaining });
-    this.interval = setInterval(() => this.tick(this.state.secondsRemaining), 3000);
+    console.log('COUNTER MOUNTED')
+    this.state.mounted = true
+    this.tick()
   }
   render() {
     return (
@@ -56,7 +77,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   number: {
-    fontSize: 50
+    fontSize: 100,
+    fontFamily: GLOBALS.font,
+    color: 'white'
   }
 });
 

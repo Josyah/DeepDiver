@@ -21,7 +21,7 @@ class Overlay extends Component {
     Animated.timing(
       this.state.opacity,
       {
-        toValue: .95,
+        toValue: .6,
         duration: 200
       }
     ).start(() => console.log('done'))
@@ -36,7 +36,7 @@ class Overlay extends Component {
   render() {
     return (
       <Animated.View style={[styles.container, {opacity: this.state.opacity}]}>
-        {this.props.children}
+
       </Animated.View>
     );
   }

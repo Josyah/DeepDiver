@@ -49,9 +49,9 @@ class Navigation extends Component {
         )
       case 'PAUSED':
         return(
-          <Overlay store={store}>
-            <Paused store={store}/>
-          </Overlay>
+          <Paused store={store}>
+
+          </Paused>
         )
       case 'SHOP':
         return(

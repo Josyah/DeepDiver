@@ -37,6 +37,8 @@ class Paused extends Component {
   }
   render() {
     return (
+      <View style={{position: 'absolute'}}>
+      {this.props.children}
       <Animated.View style={[styles.container, {top: this.state.offset}]}>
         <TouchableOpacity onPress={() => {
             this.props.store.paused = false
@@ -65,6 +67,7 @@ class Paused extends Component {
         </TouchableOpacity>
 
       </Animated.View>
+    </View>
     );
   }
 }

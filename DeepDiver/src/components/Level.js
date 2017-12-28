@@ -47,8 +47,9 @@ class Level extends Component {
         this.state.setToZero = true;
         this.props.store.background.position.y += store.forceUp
         store.moveBackground();
+        if(store.enemies.length != 0){
           store.moveEnemies();
-
+        }
         if(store.projectiles.length != 0){
           store.moveProjectiles();
         }
@@ -72,9 +73,10 @@ class Level extends Component {
     var renderOverlay = () => {
       if(this.props.store.paused == true){
         return(
-          <Overlay store ={this.props.store}>
-            <Paused store ={this.props.store}/>
-          </Overlay>
+          <Paused store ={this.props.store}>
+
+            <Overlay store ={this.props.store}/>
+          </Paused>
         )
       }
     }
@@ -101,8 +103,9 @@ class Level extends Component {
                 />
               <Projectile store={store}/>
               <View style={styles.distance}>
-                <Text style={styles.distanceText}>{Math.round(-this.props.store.background.position.x/GLOBALS.pixelsInAMeter)}</Text>
+                <Text style={styles.distanceText}>{Math.round(-this.props.store.background.position.x/GLOBALS.pixelsInAMeter)} m</Text>
                 <Text style={styles.coinText}>{this.props.store.coins} Coins</Text>
+                <Text style={styles.ammoText}>{this.props.store.shop.harpoons} Harpoons</Text>
               </View>
               <HealthBar
                 isActive={false}
@@ -110,7 +113,7 @@ class Level extends Component {
                 />
               <HandleTouch store={store}/>
               <TouchableOpacity
-                onPress={() => this.props.store.paused = true}
+                onPress={() => this.props.store.pause()}
                 style={styles.pauseButton}
                 >
                 <IonIcons
@@ -177,6 +180,12 @@ const styles = StyleSheet.create({
     fontFamily: GLOBALS.font
   },
   coinText: {
+    fontSize: 30,
+    color: 'white',
+    backgroundColor: 'transparent',
+    fontFamily: GLOBALS.font
+  },
+  ammoText: {
     fontSize: 30,
     color: 'white',
     backgroundColor: 'transparent',
