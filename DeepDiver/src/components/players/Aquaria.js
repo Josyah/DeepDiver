@@ -23,7 +23,7 @@ class SeaLord extends Component {
       left: GLOBALS.initCharacterPosition.x,
       opacity: .75,
       transform: [
-        { rotate: (this.props.store.player.angle+'deg') },
+        { rotate: (90+this.props.store.player.angle+'deg') },
         { scaleX: this.state.scale },
         { scaleY: this.state.scale },
       ],
@@ -46,12 +46,12 @@ class SeaLord extends Component {
         <Sprite
           repeat={true}
           src={require('../../images/Aquaria.png')}
-          tileHeight={GLOBALS.Aquaria.tiles[this.props.store.player.animationState].tileHeight}
-          tileWidth={GLOBALS.Aquaria.tiles[this.props.store.player.animationState].tileWidth}
+          tileHeight={GLOBALS.Aquaria.tileHeight}
+          tileWidth={GLOBALS.Aquaria.tileWidth}
           steps={GLOBALS.Aquaria.steps}
           state={this.props.store.player.animationState}
           scale={this.state.scale}
-          offset={[0, 0]}
+          offset={[88, 0]}
           ticksPerFrame={5}
           style={this.getPlayerStyles()}
           onLoadEnd={this.onLoadEnd()}

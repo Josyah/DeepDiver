@@ -71,7 +71,7 @@ class Enemies extends Component {
                       src={require('../../images/ElectricEel.png')}
                       />
                   )
-                case 'STINGRAY':
+                case 'STING_RAY':
                   return (
                     <Enemy
                       key={index}
@@ -85,6 +85,32 @@ class Enemies extends Component {
                       />
                   )
                 case 'PUFFER':
+                  return (
+                    <Enemy
+                      key={index}
+                      index={index}
+                      store={this.props.store}
+                      distanceAway={25}
+                      tileHeight={GLOBALS.Puffer.tileHeight}
+                      tileWidth={GLOBALS.Puffer.tileWidth}
+                      steps={GLOBALS.Puffer.steps}
+                      src={require('../../images/Puffer.png')}
+                      />
+                  )
+                case 'LIGHT_FISH':
+                  return (
+                    <Enemy
+                      key={index}
+                      index={index}
+                      store={this.props.store}
+                      distanceAway={25}
+                      tileHeight={GLOBALS.Puffer.tileHeight}
+                      tileWidth={GLOBALS.Puffer.tileWidth}
+                      steps={GLOBALS.Puffer.steps}
+                      src={require('../../images/Puffer.png')}
+                      />
+                  )
+                case 'GREAT_WHITE':
                   return (
                     <Enemy
                       key={index}

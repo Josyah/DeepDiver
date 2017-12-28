@@ -9,6 +9,7 @@ import {
 import {observer} from 'mobx-react/native';
 import { Body , Sprite} from 'react-game-kit/native';
 import Harpoon from './Harpoon';
+import Torpedo from './Torpedo';
 import {GLOBALS} from '../../globals';
 @observer
 class Projectile extends Component {
@@ -24,13 +25,22 @@ class Projectile extends Component {
             if(this.props.store.projectiles.length != 0){
               switch(eachProjectile.type){
                 case 'HARPOON':
-                return (
-                  <Harpoon
-                    store={store}
-                    key={index}
-                    index={index}
-                    />
-                );
+                  return (
+                    <Harpoon
+                      store={store}
+                      key={index}
+                      index={index}
+                      />
+                  );
+                case 'TORPEDO':
+                  return (
+                    <Torpedo
+                      store={store}
+                      key={index}
+                      index={index}
+                      />
+
+                  )
                 default:
                 return (
                   <Harpoon

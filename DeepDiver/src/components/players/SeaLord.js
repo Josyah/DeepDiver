@@ -6,7 +6,7 @@ import {
   PropTypes
 } from 'react-native';
 import {observer} from 'mobx-react/native';
-import { Body , Sprite} from 'react-game-kit/native';
+import { Sprite, Loop} from 'react-game-kit/native';
 import {GLOBALS} from '../../globals'
 @observer
 class SeaLord extends Component {
@@ -49,18 +49,20 @@ class SeaLord extends Component {
   }
   render() {
     return (
-      <Sprite
-        repeat={true}
-        src={require('../../images/SeaLord.png')}
-        tileHeight={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileHeight}
-        tileWidth={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileWidth}
-        steps={GLOBALS.SeaLord.steps}
-        state={this.props.store.player.animationState}
-        scale={this.state.scale}
-        offset={[0, GLOBALS.SeaLord.offsetY]}
-        ticksPerFrame={2}
-        style={this.getPlayerStyles()}
-        />
+      <Loop>
+        <Sprite
+          repeat={true}
+          src={require('../../images/SeaLord.png')}
+          tileHeight={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileHeight}
+          tileWidth={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileWidth}
+          steps={GLOBALS.SeaLord.steps}
+          state={this.props.store.player.animationState}
+          scale={this.state.scale}
+          offset={[0, GLOBALS.SeaLord.offsetY]}
+          ticksPerFrame={2}
+          style={this.getPlayerStyles()}
+          />
+      </Loop>
     );
   }
 }

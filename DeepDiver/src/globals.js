@@ -7,8 +7,8 @@ exports.GLOBALS = {
     height: Dimensions.get('screen').height
   },
   initCharacterPosition: {
-    x: 50,
-    y: Dimensions.get('window').height*.3,
+    x: 10,
+    y: Dimensions.get('window').height*.15,
   },
   initBackgroundPosition: {
     x: 0,
@@ -122,41 +122,9 @@ exports.GLOBALS = {
     fallingAnimation: 2,
     upAnimation: 3,
     downAnimation: 4,
-    tiles: [
-      {
-        tileWidth: 150,
-        tileHeight: 200,
-      },
-      {
-        tileWidth: 150,
-        tileHeight: 200,
-      },
-      {
-        tileWidth: 100,
-        tileHeight: 200
-      },
-      {
-        tileWidth: 100,
-        tileHeight: 200,
-      },
-      {
-        tileWidth: 100,
-        tileHeight: 200,
-      },
-      {
-        tileHeight: 100,
-        tileWidth: 200
-      },
-      {
-        tileHeight: 100,
-        tileWidth: 200
-      },
-      {
-        tileHeight: 100,
-        tileWidth: 200
-      },
+    tileWidth: 150,
+    tileHeight: 250,
 
-    ],
   },
   HammerHead: {
     tileWidth: 200.25,
@@ -203,8 +171,8 @@ exports.GLOBALS = {
   jumpConstant: 40,
   defaultEnemyHeight: 75,
   defaultEnemyWidth: 75,
-  playerHeightInMeters: 1.8796,
-  playerWidthInMeters: 0.3048,
+  playerHeightInMeters: 2,
+  playerWidthInMeters: 0.5,
   pixelsInAMeter: 50,
   playerMass: 95.2544,
   seaWeedDistance: 50,

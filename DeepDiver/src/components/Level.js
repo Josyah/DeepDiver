@@ -52,7 +52,6 @@ class Level extends Component {
         if(store.projectiles.length != 0){
           store.moveProjectiles();
         }
-        store.checkCollisions();
         store.checkRegion();
     }
   }
@@ -91,10 +90,13 @@ class Level extends Component {
 
             <View style={styles.container}>
               <Background store={store}/>
-              <Enemies
+              <Coins
                 store={store}
                 />
               <Player
+                store={store}
+                />
+              <Enemies
                 store={store}
                 />
               <Projectile store={store}/>
