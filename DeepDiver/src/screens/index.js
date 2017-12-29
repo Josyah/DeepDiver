@@ -12,7 +12,7 @@ import CharSelect from './StoryMode/CharacterSelect';
 import Level from '../components/Level';
 import GameOver from './GameOver';
 import Paused from './Paused';
-import Shop from './StoryMode/Shop';
+import Shop from './Shop';
 import Settings from '../utils/Settings';
 import Overlay from '../components/overlay';
 import Sprite from '../components/sprite'

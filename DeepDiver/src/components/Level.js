@@ -26,7 +26,8 @@ import Counter from './Counter';
 import Coins from './coins';
 import Projectile from './projectiles';
 import Alert from './Alert';
-import Game from './Game'
+import Game from './Game';
+import Loading from '../utils/loading'
 @observer
 class Level extends Component {
   constructor(props) {
@@ -80,6 +81,15 @@ class Level extends Component {
         )
       }
     }
+    var renderLoading = () => {
+      if(!this.props.store.background.loading){
+
+        return(
+          <Loading store={this.props.store}/>
+        )
+      }
+
+    }
     return (
       <Loop>
         <Stage
@@ -131,6 +141,9 @@ class Level extends Component {
               {
                 renderAlerts()
               }
+              {
+                renderLoading()
+              }
               </View>
           </World>
         </Stage>
@@ -151,7 +164,7 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 3,
+    margin: 5,
     marginTop: 5,
     backgroundColor: 'transparent',
     padding: 5,

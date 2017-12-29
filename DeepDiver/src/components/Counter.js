@@ -35,7 +35,6 @@ class Counter extends Component {
 
     if(this.state.secondsRemaining > 0 && this.state.mounted){
       this.tick()
-      console.log(this.state.secondsRemaining)
     } else {
       this.props.store.unPausing = false
     }
@@ -45,7 +44,6 @@ class Counter extends Component {
     this.state.mounted = false
   }
   componentDidMount() {
-    console.log('COUNTER MOUNTED')
     this.state.mounted = true
     this.tick()
   }

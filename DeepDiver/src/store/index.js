@@ -1,13 +1,17 @@
 import {observable} from 'mobx';
 import {GLOBALS} from '../globals';
-import { Vibration, Animated} from 'react-native'
+import { Vibration, Animated, AsyncStorage} from 'react-native'
 let index = 0
 let add = true
 var count = 1
+var lastAlert = '';
 import {ifBetween} from '../utils/ifBetween'
 import {coinLayouts} from '../utils/coinLayout'
-import {enableLogging} from 'mobx-logger';
+import { create, persist } from 'mobx-persist'
 class ObservableListStore {
+  @persist @observable coins = 0;
+  @persist @observable vibration = true;
+  @persist @observable score = 0;
   @observable background = {
     position: GLOBALS.initBackgroundPosition,
     dimensions: {
@@ -44,17 +48,16 @@ class ObservableListStore {
     angle: 0,
     health: 1,
     loaded: false,
+    loading: false,
     mounted: true
   }]
   @observable alert = '';
   @observable navigationState = 'LEVEL';
   @observable forceUp = 0;
   @observable forceLeft = 2;
-  @observable gravity = {x: 0, y: -2, scale: 0.0005 };
   @observable repeat = true;
   @observable unPausing = false;
   @observable paused = false;
-  @observable coins = 0;
   @observable region = 'Beach Zone';
 
   @observable coinLayoutArray = [{
@@ -103,13 +106,15 @@ class ObservableListStore {
     }
   }
   movePlayer(distanceBetween){
-    this.player.angle = (distanceBetween/(5/4))
-    this.forceUp = -(distanceBetween/5)
-    this.background.speed = (Math.abs((Math.abs(distanceBetween))/(50/4) - 5))
-    if(distanceBetween < 0){
-      this.player.animationState = this.player.animate.goingUp
-    } else {
-      this.player.animationState = this.player.animate.goingDown
+    if(!this.unPausing){
+      this.player.angle = (distanceBetween/(5/4))
+      this.forceUp = -(distanceBetween/5)
+      this.background.speed = (Math.abs((Math.abs(distanceBetween))/(50/4) - 5))
+      if(distanceBetween < 0){
+        this.player.animationState = this.player.animate.goingUp
+      } else {
+        this.player.animationState = this.player.animate.goingDown
+      }
     }
   }
   resetGame(){
@@ -123,6 +128,7 @@ class ObservableListStore {
   }
   pause(){
     this.paused = true
+    this.alert = ''
   }
   active(){
   }
@@ -154,7 +160,7 @@ class ObservableListStore {
     }
   }
   addProjectile(){
-    if(this.shop.harpoons > 0){
+    if(this.shop.harpoons > 0 && (!this.paused && !this.unPausing)){
       this.shop.harpoons -= 1;
       this.projectiles.push({
         type: 'HARPOON',
@@ -187,6 +193,22 @@ class ObservableListStore {
       })
     }
   }
+  randomlyGenerateAlert(){
+    if((Math.random()*100) < 50){
+      var sampleAlerts = [
+        "Nice!",
+        "Slick!",
+        "Good Job!",
+        "Good Job!",
+      ];
+      var rndm = Math.round(Math.random()*sampleAlerts.length);
+      alert = sampleAlerts[rndm]
+      if(alert != lastAlert){
+        lastAlert = alert
+        this.alert = alert
+      }
+    }
+  }
   moveInWave(index){
     if(this.enemies[index] && this.checkLength(this.enemies.length)){
       let {y0, y, x, path} = this.enemies[index].position
@@ -211,11 +233,13 @@ class ObservableListStore {
         if(this.checkLength(this.projectiles.length)){
           for(var p = 0; p < this.projectiles.length; p++){
             var projectileInLine = ifBetween(this.projectiles[p].position.y ,(this.enemies[i].position.y - this.background.position.y) ,(this.enemies[i].position.y + this.enemies[i].dimensions.height-this.background.position.y))
-            if (projectileInLine && (this.enemies[i].position.x > 20 && this.enemies[i].position.x < GLOBALS.dimensions.width)) {
+            var projectileOnX = ifBetween(this.projectiles[p].position.x ,(this.enemies[i].position.x) ,(this.enemies[i].position.x + this.enemies[i].dimensions.width))
+            if ((projectileInLine && projectileOnX) && (this.enemies[i].position.x > 20 && this.enemies[i].position.x < GLOBALS.dimensions.width)) {
               this.projectiles.splice(p, 1);
               this.enemies[i].health -= 1;
               this.enemies.splice(i, 1);
               this.randomlyGenerateEnemies()
+              this.randomlyGenerateAlert()
             }
           }
         }
@@ -268,8 +292,17 @@ class ObservableListStore {
       return true
     }
   }
+  switchVibration() {
+    if(this.vibration){
+      this.vibration = false
+    } else {
+      this.vibration = true
+    }
+  }
   vibrate(){
-    Vibration.vibrate(500)
+    if(this.vibration){
+      Vibration.vibrate(500)
+    }
   }
   addEnemy(type, dimensions) {
     this.enemies.push({
@@ -289,8 +322,25 @@ class ObservableListStore {
       mounted: true
     })
   }
+  buy(type) {
+    if(this.coins > 0){
+      switch(type){
+        case 'HARPOON':
+        this.coins -= 1
+        this.shop.harpoons += 1
+        console.log('Bought 1 Harpoon')
+      }
+    } else {
+      console.log('Not enough money to buy anything')
+    }
+  }
 }
-
+const hydrate = create({
+    storage: AsyncStorage
+})
 
 const store = new ObservableListStore()
 export default store
+hydrate('store', store)
+    // post hydration
+    .then(() => console.log('store hydrated'))

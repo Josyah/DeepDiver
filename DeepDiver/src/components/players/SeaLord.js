@@ -51,7 +51,7 @@ class SeaLord extends Component {
     return (
       <Loop>
         <Sprite
-          repeat={true}
+          repeat={this.props.store.player.repeat}
           src={require('../../images/SeaLord.png')}
           tileHeight={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileHeight}
           tileWidth={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileWidth}
@@ -61,6 +61,7 @@ class SeaLord extends Component {
           offset={[0, GLOBALS.SeaLord.offsetY]}
           ticksPerFrame={2}
           style={this.getPlayerStyles()}
+          onPlayStateChanged={()=>console.log('PLAY STATE CHANGED')}
           />
       </Loop>
     );

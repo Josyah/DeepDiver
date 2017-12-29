@@ -32,6 +32,7 @@ class Background extends Component {
   }
   onLoadEnd(x){
     this.props.store.background.loaded = true
+    this.props.store.background.loading = true
   }
   componentWillUnmount(){
     this.setState({mounted: false})

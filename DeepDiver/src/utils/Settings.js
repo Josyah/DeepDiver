@@ -7,8 +7,11 @@ import {
   ScrollView,
   TouchableOpacity
 } from 'react-native';
+import {GLOBALS} from '../globals'
 import IonIcons from 'react-native-vector-icons/Ionicons';
-class StoryMode extends Component {
+import {observer} from 'mobx-react/native';
+@observer
+class Settings extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -21,14 +24,9 @@ class StoryMode extends Component {
             name={'md-arrow-back'}
             />
         </TouchableOpacity>
-        <Text>
-          Settings
-        </Text>
-        <ScrollView
-          horizontal={true}
-          >
-          <Text>Items</Text>
-        </ScrollView>
+        <TouchableOpacity onPress={()=> this.props.store.switchVibration()}>
+          <Text style={styles.vibration}>Vibration {(this.props.store.vibration) ? 'On' : 'Off'}</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -52,6 +50,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  vibration: {
+    borderWidth: 1,
+    padding: 20,
+    borderRadius: 15,
+    color: 'white',
+    fontFamily: GLOBALS.font,
+    fontSize: 50,
+    borderColor: 'white'
+  }
 });
 
-module.exports = StoryMode;
+module.exports = Settings;

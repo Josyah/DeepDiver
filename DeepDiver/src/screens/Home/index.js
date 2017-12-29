@@ -15,7 +15,7 @@ class Home extends Component {
           Water Wars
         </Text>
         <TouchableOpacity
-          onPress={() => this.props.store.navigationState = 'CHAR_SELECT'}
+          onPress={() => this.props.store.navigationState = 'LEVEL'}
           style={styles.start}
           >
           <Text style={styles.startText}>Start</Text>
