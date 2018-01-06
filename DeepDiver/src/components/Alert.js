@@ -23,7 +23,7 @@ class Alert extends Component {
     Animated.timing(
       this.state.offset,
       {
-        toValue: ((GLOBALS.dimensions.height-200)),
+        toValue: ((GLOBALS.dimensions.height-150)),
         duration: 1500
       }
     ).start(() => {
@@ -32,7 +32,7 @@ class Alert extends Component {
   }
   flyOut() {
     this.fadeOpacity();
-    this.state.offset.setValue(GLOBALS.dimensions.height-200)
+    this.state.offset.setValue(GLOBALS.dimensions.height-150)
     Animated.timing(
       this.state.offset,
       {

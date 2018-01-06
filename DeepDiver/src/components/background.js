@@ -15,17 +15,14 @@ class Background extends Component {
       mounted: false,
     }
   }
-  backgroundPosition(){
+  backgroundPosition(startX, startY, repeat){
     if(this.state.mounted){
       return{
         position: 'absolute',
-        left: this.props.store.background.position.x,
-        bottom: -this.props.store.background.position.y,
-        height: GLOBALS.initBackgroundDimensions.height,
-        width: GLOBALS.initBackgroundDimensions.width,
+        left: startX + this.props.store.background.position.x,
+        bottom: startY - this.props.store.background.position.y,
         transform: [
-          {translateX: this.props.store.background.offset.x},
-          {rotate: '180deg'}
+          {translateX: (repeat) ? (this.props.store.background.offset.x) : (0)},
         ]
       }
     }
@@ -37,7 +34,6 @@ class Background extends Component {
   componentWillUnmount(){
     this.setState({mounted: false})
   }
-
   componentDidMount(){
     this.setState({mounted: true})
   }
@@ -47,10 +43,24 @@ class Background extends Component {
         style={styles.container}
         >
         <Image
-          source={require('../images/Ocean.png')}
-          style={[this.backgroundPosition()]}
+          source={require('../images/background/Ocean.png')}
+          style={[this.backgroundPosition(0, 0, true),
+            {
+              height: GLOBALS.initBackgroundDimensions.height,
+              width: GLOBALS.initBackgroundDimensions.width
+            }
+          ]}
           onLoadEnd={this.onLoadEnd()}
           />
+        {
+          this.props.store.backgroundComponents.slice().map((eachComponent, index) => {
+            <Image
+              source={eachComponent.src}
+              style={[this.backgroundPosition(eachComponent.x, eachComponent.y, false)]}
+              key={index}
+              />
+          })
+        }
       </View>
     );
   }

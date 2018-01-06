@@ -14,16 +14,16 @@ class SeaLord extends Component {
     super(props)
     this.state = {
       mounted: false,
-      scale: this.getScale(),
+      scale: this.getScale()
     }
   }
   getPlayerStyles() {
     if(this.state.mounted){
       return {
         position: 'absolute',
-        bottom: GLOBALS.initCharacterPosition.y,
-        left: GLOBALS.initCharacterPosition.x,
-        opacity: .75,
+        left: this.props.store.absPlayerPosition.x,
+        bottom: this.props.store.absPlayerPosition.y,
+        opacity: .9,
         transform: [
           { rotate: (90+this.props.store.player.angle+'deg') },
           { scaleX: this.state.scale },
@@ -38,7 +38,6 @@ class SeaLord extends Component {
       var neededHeight = GLOBALS.playerHeightInMeters * GLOBALS.pixelsInAMeter;
       var scale = (neededHeight/currentHeight);
       return scale
-
   }
   componentWillUnmount(){
     this.setState({mounted: false})
@@ -47,11 +46,14 @@ class SeaLord extends Component {
   componentDidMount(){
     this.setState({mounted: true})
   }
+  onLoadEnd(x){
+    this.props.store.player.loaded = true
+  }
   render() {
     return (
       <Loop>
         <Sprite
-          repeat={this.props.store.player.repeat}
+          repeat={(this.props.store.player.repeat) ? (true) : (false)}
           src={require('../../images/SeaLord.png')}
           tileHeight={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileHeight}
           tileWidth={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileWidth}
@@ -61,19 +63,11 @@ class SeaLord extends Component {
           offset={[0, GLOBALS.SeaLord.offsetY]}
           ticksPerFrame={2}
           style={this.getPlayerStyles()}
-          onPlayStateChanged={()=>console.log('PLAY STATE CHANGED')}
+          onLoadEnd={this.onLoadEnd()}
           />
       </Loop>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 module.exports = SeaLord;

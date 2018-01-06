@@ -6,14 +6,28 @@ let add = true
 var count = 1
 var lastAlert = '';
 import {ifBetween} from '../utils/ifBetween'
+import {getPlayerStats} from '../utils/getPlayerStats'
 import {coinLayouts} from '../utils/coinLayout'
 import { create, persist } from 'mobx-persist'
+import { getWheelCharacters } from '../screens/Shop/getWheelCharacters'
+import { getBackgroundComponents } from '../utils/getBackgroundComponents'
 class ObservableListStore {
   @persist @observable coins = 0;
   @persist @observable vibration = true;
-  @persist @observable score = 0;
+  @persist @observable bestScore = 0;
+  @persist @observable controls = 'HORIZONTAL';
+  @persist @observable selectedPlayer = 'SEA_LORD';
+  @observable outOfBounds = false;
+  @observable wheelOffset = 0;
+  @observable wheelItems = getWheelCharacters();
+  @observable player = getPlayerStats(this.selectedPlayer);
+  @observable absPlayerPosition = GLOBALS.initCharacterPosition;
+  @observable backgroundComponents = getBackgroundComponents();
   @observable background = {
-    position: GLOBALS.initBackgroundPosition,
+    position: {
+      x: GLOBALS.initBackgroundPosition.x,
+      y: this.player.verticalStart
+    },
     dimensions: {
       height: GLOBALS.initBackgroundHeight,
       width: GLOBALS.initBackgroundWidth,
@@ -25,91 +39,57 @@ class ObservableListStore {
     loaded: false,
     speed: 5
   };
-  @observable enemies = [
-    {
-    type: 'HAMMERHEAD',
-    position: {
-      x: 1000,
-      y: this.background.position.y + 500 - GLOBALS.dimensions.height,
-      x0: 1000,
-      y0: this.background.position.y + 500 - GLOBALS.dimensions.height
-    },
-    dimensions: {
-      height: 50,
-      width: 50
-    },
-    collided: false,
-    speed: 7,
-    path: {
-      type: 'WAVE',
-      frequency: 200,
-      wavelength: 200
-    },
-    angle: 0,
-    health: 1,
-    loaded: false,
-    loading: false,
-    mounted: true
-  }]
+  @observable enemies = [];
+  @observable maxEnemies = 1;
   @observable alert = '';
-  @observable navigationState = 'LEVEL';
+  @observable info = '';
+  @observable navigationState = 'HOME';
   @observable forceUp = 0;
   @observable forceLeft = 2;
   @observable repeat = true;
+  @observable scoringSystem = {
+    enemiesKilled: 0,
+    finalDistance: 0,
+    finalScore: 0
+  };
   @observable unPausing = false;
   @observable paused = false;
-  @observable region = 'Beach Zone';
-
+  @observable region = '';
+  @observable dimensions = {
+    width: GLOBALS.dimensions.width,
+    height: GLOBALS.dimensions.height,
+  }
   @observable coinLayoutArray = [{
     position: {
       x: 1000,
-      y: 6000
+      y: 29000
     },
     speed: 3
   }];
   @observable coinArray = coinLayouts.SquareLayout
-  @observable projectiles = [
-    {
-      type: 'HARPOON',
-      speed: GLOBALS.projectiles.harpoon.speed,
-      position: {
-        x: 150,
-        y: GLOBALS.initCharacterPosition.y+(GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter/2)+30
-      },
-      loaded: false
-    }
-  ];
-  @observable player = {
-    width: this.scale * GLOBALS.tileWidth,
-    height: this.scale * GLOBALS.tileHeight,
-    angle: 0,
-    animationState: GLOBALS.SeaLord.fallingAnimation,
-    isStatic: false,
-    type: 'SEA_LORD',
-    animate: {
-      falling: GLOBALS.SeaLord.fallingAnimation,
-      goingUp: GLOBALS.SeaLord.upAnimation,
-      goingDown: GLOBALS.SeaLord.downAnimation,
-    },
-    health: 100,
-    repeat: true
-  };
+  @observable projectiles = [];
   @observable shop = {
-    harpoons: 5
+    harpoons: 200
   };
   @observable scale = .5;
-  loseHeart(){
-    if(this.player.health > 0){
-      this.player.health -= 20
+  loseLife(amount){
+    if(this.player.health > 0 && amount < this.player.health){
+      this.player.health -= amount
     } else{
       this.die()
     }
   }
+  rotate(whichWay){
+    if(whichWay === 'LANDSCAPE'){
+      this.dimensions.width = GLOBALS.dimensions.width
+      this.dimensions.height = GLOBALS.dimensions.height
+    }
+  }
   movePlayer(distanceBetween){
     if(!this.unPausing){
-      this.player.angle = (distanceBetween/(5/4))
-      this.forceUp = -(distanceBetween/5)
-      this.background.speed = (Math.abs((Math.abs(distanceBetween))/(50/4) - 5))
+      this.forceUp = -(distanceBetween/(20 - this.player.agility)) //10?
+      this.player.angle = -this.forceUp*4 // = 40
+      // this.background.speed = (Math.abs((Math.abs(distanceBetween))/(50/this.player.speed) - this.player.speed))
       if(distanceBetween < 0){
         this.player.animationState = this.player.animate.goingUp
       } else {
@@ -117,18 +97,26 @@ class ObservableListStore {
       }
     }
   }
-  resetGame(){
-    this.background.position = GLOBALS.initBackgroundPosition
-    this.background.offset = {x: 0, y: 0};
-    coinArray = coinLayouts.SquareLayout;
-    this.player.health = 100
-    this.enemies.clear()
+  startGame(){
+    this.navigationState = 'LEVEL'
     this.randomlyGenerateEnemies()
+  }
+  resetGame(){
+    this.enemies.clear();
+    this.randomlyGenerateEnemies()
+    this.background.position = {
+      x: GLOBALS.initBackgroundPosition.x,
+      y: this.player.verticalStart
+    }
+    this.background.offset = {x: 0, y: 0};
+    this.coinArray = coinLayouts.SquareLayout;
+    this.player.health = 100
     this.background.loaded = false
   }
   pause(){
-    this.paused = true
+    // this.player.repeat = false
     this.alert = ''
+    this.paused = true
   }
   active(){
   }
@@ -138,30 +126,46 @@ class ObservableListStore {
     }
   }
   moveBackground () {
-    this.background.position.x -= this.background.speed
+    var constant = 0;
+    if(this.background.speed < 10){
+      this.background.speed = ((Math.sqrt(-this.background.position.x*GLOBALS.pixelsInAMeter) - constant)/1000)+5
+    }
     if((this.background.position.x + this.background.offset.x) < -(GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)){
       this.background.offset.x += (GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)
     }
+    if((-this.background.position.x*GLOBALS.pixelsInAMeter) > 10000){
+      this.maxEnemies = 3
+    }
+    else if((-this.background.position.x*GLOBALS.pixelsInAMeter) > 1000){
+      this.maxEnemies = 2
+    }
+    this.background.position.x -= this.background.speed
   }
-  checkEnemyPosition(x){
+  isEnemyOffScreen(x){
     if(this.enemies[x].position.x < -300 && this.enemies.length > 0){
       this.enemies.splice(x, 1);
-      this.randomlyGenerateEnemies()
+      if(this.enemies.length <= 1){
+        this.randomlyGenerateEnemies();
+        this.randomlyGenerateEnemies();
+      }
     }
   }
   moveEnemies(){
     if(this.checkLength(this.enemies.length)){
       for(var x = 0; x < this.enemies.length ; x++){
-        this.enemies[x].position.x -= this.enemies[x].speed;
-        this.checkEnemyPosition(x);
-        this.checkCollisions(x);
-
+        if(this.checkExists(this.enemies[x])){
+          this.enemies[x].position.x -= (this.background.speed + this.enemies[x].speed);
+          this.isEnemyOffScreen(x);
+          this.checkCollisions(x);
+          this.moveInWave(x);
+        }
       }
     }
   }
   addProjectile(){
     if(this.shop.harpoons > 0 && (!this.paused && !this.unPausing)){
       this.shop.harpoons -= 1;
+      this.player.attacking = true;
       this.projectiles.push({
         type: 'HARPOON',
         speed: GLOBALS.projectiles.harpoon.speed,
@@ -187,19 +191,40 @@ class ObservableListStore {
     }
   }
   randomlyGenerateEnemies(){
-    if(this.enemies.length==0){
-      this.addEnemy('HAMMERHEAD', {
-        height: GLOBALS.HammerHead.tileHeight, width: GLOBALS.HammerHead.tileWidth
-      })
+    if(this.enemies.length < this.maxEnemies){
+      var enemy;
+      var rndm;
+      switch(this.region){
+        case 'BEACH':
+          rndm = Math.round(Math.random()*(GLOBALS.regions.beach.enemies.length-1))
+          enemy = GLOBALS.regions.beach.enemies[rndm]
+          break;
+        case 'MIDSEA':
+          rndm = Math.round(Math.random()*(GLOBALS.regions.midsea.enemies.length-1))
+          enemy = GLOBALS.regions.midsea.enemies[rndm]
+          break;
+        case 'MIDNIGHT':
+          rndm = Math.round(Math.random()*(GLOBALS.regions.midnight.enemies.length-1))
+          enemy = GLOBALS.regions.midnight.enemies[rndm]
+          break;
+        default:
+          rndm = Math.round(Math.random()*(GLOBALS.regions.beach.enemies.length-1))
+          enemy = GLOBALS.regions.beach.enemies[rndm]
+      }
+      this.addEnemy(enemy)
     }
   }
   randomlyGenerateAlert(){
     if((Math.random()*100) < 50){
       var sampleAlerts = [
         "Nice!",
-        "Slick!",
         "Good Job!",
-        "Good Job!",
+        "Obscene!",
+        "Murderous",
+        "Bada$$",
+        "Wild",
+        "Insane",
+        "Whaat?"
       ];
       var rndm = Math.round(Math.random()*sampleAlerts.length);
       alert = sampleAlerts[rndm]
@@ -210,12 +235,14 @@ class ObservableListStore {
     }
   }
   moveInWave(index){
-    if(this.enemies[index] && this.checkLength(this.enemies.length)){
+    if(this.enemies[index] && (this.checkLength(this.enemies.length) && this.checkExists(this.enemies[index]))){
       let {y0, y, x, path} = this.enemies[index].position
-      let {frequency, wavelength} = this.enemies[index].path
+      let {frequency, wavelength, trackAngle} = this.enemies[index].wave
       this.enemies[index].position.y = y0 + frequency* Math.sin(x / wavelength)
-      var angle = Math.atan((frequency/wavelength) *Math.cos(x/wavelength))
-      this.enemies[index].angle = angle* (180/Math.PI)
+      if(trackAngle){
+        var angle = Math.atan((frequency/wavelength) *Math.cos(x/wavelength))
+        this.enemies[index].angle = angle* (180/Math.PI)
+      }
     }
   }
   releaseScreen () {
@@ -225,10 +252,10 @@ class ObservableListStore {
     this.background.speed = 5
   }
   checkCollisions(i){
-    if(this.checkLength(this.enemies.length)){
+    if(this.checkLength(this.enemies.length) && this.checkExists(this.enemies[i])){
         var here = ifBetween((GLOBALS.initCharacterPosition.y - ((GLOBALS.playerWidthInMeters*GLOBALS.pixelsInAMeter)/2)), this.enemies[i].position.y - (this.enemies[i].dimensions.height) -this.background.position.y, this.enemies[i].position.y -this.background.position.y)
         if((this.enemies[i].position.x < (GLOBALS.initCharacterPosition.x+ (GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter)) && here) && (this.enemies[i].position.x > 0 && this.enemies[i].health >0)){
-          this.onEnemyCollision(i);
+          this.onHitByEnemy(i);
         }
         if(this.checkLength(this.projectiles.length)){
           for(var p = 0; p < this.projectiles.length; p++){
@@ -238,58 +265,95 @@ class ObservableListStore {
               this.projectiles.splice(p, 1);
               this.enemies[i].health -= 1;
               this.enemies.splice(i, 1);
-              this.randomlyGenerateEnemies()
-              this.randomlyGenerateAlert()
+              this.randomlyGenerateEnemies();
+              this.randomlyGenerateAlert();
+              this.scoringSystem.enemiesKilled += 1;
             }
           }
         }
-
     }
     if(this.checkLength(this.coinArray.length)){
       for(var i = 0; i < this.coinArray.length; i++){
-        var here = ifBetween((GLOBALS.initCharacterPosition.y - ((GLOBALS.playerWidthInMeters*GLOBALS.pixelsInAMeter)/2)), ((this.coinArray[i].y*GLOBALS.coins.multiplier)+this.coinLayoutArray[0].position.y) - (GLOBALS.coins.height/2) -this.background.position.y, ((this.coinArray[i].y*GLOBALS.coins.multiplier)+this.coinLayoutArray[0].position.y) -this.background.position.y)
-        if(((((this.coinLayoutArray[0].position.x+this.coinArray[i].x*GLOBALS.coins.multiplier) + this.background.position.x) < (GLOBALS.initCharacterPosition.x+ (GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter))) && here) && (((this.coinLayoutArray[0].position.x+this.coinArray[i].x*GLOBALS.coins.multiplier) + this.background.position.x) > 0)){
-          this.onCoinCollision(i)
+        var playerMinY = (GLOBALS.initCharacterPosition.y - ((this.player.width)*GLOBALS.pixelsInAMeter))
+        var playerMaxY = (GLOBALS.initCharacterPosition.y )
+        var playerMinX = (GLOBALS.initCharacterPosition.x)
+        var playerMaxX = (GLOBALS.initCharacterPosition.x + (GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter))
+        var coinX = this.coinArray[i].x*GLOBALS.coins.multiplier+this.background.position.x+this.coinLayoutArray[0].position.x
+        var coinY = ((this.coinArray[i].y*GLOBALS.coins.multiplier)+this.coinLayoutArray[0].position.y-this.background.position.y - (GLOBALS.coins.height/2))
+        var coinOnX = ifBetween(coinX, playerMinX, playerMaxX)
+        var coinOnY = ifBetween(coinY, playerMinY, playerMaxY)
+        if(coinOnY && coinOnX){
+          this.onPickUpCoin(i)
         }
       }
     }
   }
   die() {
-    this.navigationState = 'DEAD'
-    this.vibrate()
+    this.scoringSystem.finalDistance = (-this.background.position.x/GLOBALS.pixelsInAMeter)
+    this.vibrate();
+    this.navigationState = 'DEAD';
   }
   checkRegion(){
-    var pos = this.background.position.y-GLOBALS.initBackgroundPosition.y
-    if((pos < GLOBALS.regions.beach.start) && (pos > GLOBALS.regions.midsea.start)){
+    var pos = this.background.position.y
+    if(pos>GLOBALS.initBackgroundDimensions.height){
+      this.outOfBounds = true
+    } else if ((pos < GLOBALS.regions.beach.start) && (pos > GLOBALS.regions.midsea.start)){
+      if(this.region != 'BEACH'){
+        this.info = 'Now entering Beach Zone';
+      }
       this.region = 'BEACH'
+      this.outOfBounds = false
     } else if((pos < GLOBALS.regions.midsea.start) && (pos > GLOBALS.regions.midnight.start)){
+      if(this.region != 'MIDSEA'){
+        this.info = 'Now entering the Mid-Sea Zone';
+      }
       this.region = 'MIDSEA'
+      this.outOfBounds = false
     } else if((pos < GLOBALS.regions.midnight.start) && (pos > 0)){
+      if(this.region != 'MIDNIGHT'){
+        this.info = 'Now entering the Midnight Zone';
+      }
       this.region = 'MIDNIGHT'
+      this.outOfBounds = false
     }
   }
-  onEnemyCollision(id) {
+  onHitByEnemy(id) {
     if(this.checkLength(this.enemies.length)){
       if(this.enemies[id].collided == false){
-        this.enemies[id].mounted = false
-        this.enemies[id].collided = true
-        this.loseHeart()
-        this.vibrate()
+        this.enemies[id].mounted = false;
+        this.enemies[id].collided = true;
+        this.vibrate();
+        this.loseLife(this.enemies[id].damage);
+        this.takingDamage = true;
       }
     }
   }
-  onCoinCollision(id) {
+  onPickUpCoin(id) {
     if(this.checkLength(this.coinArray.length)){
       if(this.coinArray[id].collided == false){
-        this.coinArray[id].collided = true
+        this.coinArray[id].collided = true;
         this.coinArray.splice(id, 1);
-        this.coins += 1
+        this.coins += 1;
       }
     }
   }
   checkLength(length){
     if(length > 0){
       return true
+    }
+  }
+  checkExists(object){
+    if(typeof object != "undefined"){
+      return true
+    }
+  }
+  toggleControls(){
+    if(this.controls == 'HORIZONTAL'){
+      this.controls = 'VERTICAL'
+    } else if(this.controls == 'VERTICAL'){
+      this.controls = 'VERTICAL_INVERTED'
+    } else if(this.controls == 'VERTICAL_INVERTED'){
+      this.controls = 'HORIZONTAL'
     }
   }
   switchVibration() {
@@ -304,18 +368,25 @@ class ObservableListStore {
       Vibration.vibrate(500)
     }
   }
-  addEnemy(type, dimensions) {
+  addEnemy(enemy) {
+    let {type, dimensions, damage, wave, speed, widthInMeters, steps, src, distanceAway} = enemy;
     this.enemies.push({
       type,
       dimensions,
+      damage,
+      wave,
+      speed,
+      steps,
+      src,
+      distanceAway,
+      widthInMeters,
       position: {
-        x: 1000,
-        y: this.background.position.y + 500 - GLOBALS.dimensions.height,
-        x0: 1000,
-        y0: this.background.position.y + 500 - GLOBALS.dimensions.height
+        x: (Math.random() * (GLOBALS.dimensions.width/4)+GLOBALS.dimensions.width+100),
+        y: this.background.position.y + (Math.random() * GLOBALS.dimensions.height),
+        x0: (Math.random() * (GLOBALS.dimensions.width/4)+GLOBALS.dimensions.width+100),
+        y0: this.background.position.y + (Math.random() * GLOBALS.dimensions.height)
       },
       collided: false,
-      speed: 7,
       angle: 0,
       health: 1,
       loaded: false,

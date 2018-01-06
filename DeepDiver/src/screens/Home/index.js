@@ -15,7 +15,9 @@ class Home extends Component {
           Water Wars
         </Text>
         <TouchableOpacity
-          onPress={() => this.props.store.navigationState = 'LEVEL'}
+          onPress={() => {
+            this.props.store.startGame()
+          }}
           style={styles.start}
           >
           <Text style={styles.startText}>Start</Text>

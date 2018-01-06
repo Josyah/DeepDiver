@@ -45,7 +45,7 @@ class SeaLord extends Component {
     return (
         <Sprite
           repeat={true}
-          src={require('../../images/Aquaria.png')}
+          src={require('../../images/AquariaStatic.png')}
           tileHeight={GLOBALS.Aquaria.tileHeight}
           tileWidth={GLOBALS.Aquaria.tileWidth}
           steps={GLOBALS.Aquaria.steps}

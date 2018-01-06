@@ -19,7 +19,7 @@ class Enemy extends Component {
     store = this.props.store
     enemy = this.props.position
     this.state = {
-      opacity: getOpacity(this.props.distanceAway),
+      opacity: getOpacity(this.props.store.enemies[this.props.index].distanceAway),
     }
   }
   componentWillUnmount(){
@@ -35,9 +35,13 @@ class Enemy extends Component {
         left: this.props.store.enemies[this.props.index].position.x,
         bottom: this.props.store.enemies[this.props.index].position.y,
         opacity: this.props.store.enemies[this.props.index].opacity,
+        width: this.props.store.enemies[this.props.index].dimensions.width,
+        height: this.props.store.enemies[this.props.index].dimensions.height,
         transform: [
           {translateY: this.props.store.background.position.y},
           {rotate: (-this.props.store.enemies[this.props.index].angle+'deg') },
+          {scaleX: ((this.props.store.enemies[this.props.index].widthInMeters*GLOBALS.pixelsInAMeter)/(this.props.store.enemies[this.props.index].dimensions.width))},
+          {scaleY: ((this.props.store.enemies[this.props.index].widthInMeters*GLOBALS.pixelsInAMeter)/(this.props.store.enemies[this.props.index].dimensions.width))}
         ],
       }
     }
@@ -60,10 +64,10 @@ class Enemy extends Component {
 
         <Sprite
           repeat={this.props.store.enemies[this.props.index].mounted}
-          src={this.props.src}
-          tileHeight={this.props.tileHeight}
-          tileWidth={this.props.tileWidth}
-          steps={this.props.steps}
+          src={this.props.store.enemies[this.props.index].src}
+          tileHeight={this.props.store.enemies[this.props.index].dimensions.height}
+          tileWidth={this.props.store.enemies[this.props.index].dimensions.width}
+          steps={this.props.store.enemies[this.props.index].steps}
           state={0}
           scale={1}
           offset={[0, 0]}

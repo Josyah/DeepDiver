@@ -17,7 +17,6 @@ import {GLOBALS} from '../../globals'
 class Player extends Component {
   render() {
     {
-      console.log(GLOBALS.player.type)
       switch(GLOBALS.player.type){
         case 'SEA_LORD':
           return (

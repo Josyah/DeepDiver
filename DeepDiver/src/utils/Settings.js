@@ -20,12 +20,15 @@ class Settings extends Component {
           style={styles.backButton}
           >
           <IonIcons
-            size={30}
+            size={35}
             name={'md-arrow-back'}
             />
         </TouchableOpacity>
         <TouchableOpacity onPress={()=> this.props.store.switchVibration()}>
           <Text style={styles.vibration}>Vibration {(this.props.store.vibration) ? 'On' : 'Off'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=> this.props.store.toggleControls()}>
+          <Text style={styles.vibration}>Controls: {(this.props.store.controls=='HORIZONTAL') ? 'Horizontal' : ((this.props.store.controls == 'VERTICAL') ? 'Vertical' : 'Vertical Inverted')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -45,10 +48,11 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 5,
-    left: 10,
+    top: 0,
+    left: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    margin: 12
   },
   vibration: {
     borderWidth: 1,

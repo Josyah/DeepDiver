@@ -10,12 +10,13 @@ import {observer} from 'mobx-react';
 import store from '../store';
 import CharSelect from './StoryMode/CharacterSelect';
 import Level from '../components/Level';
-import GameOver from './GameOver';
+import Summary from './Summary';
 import Paused from './Paused';
 import Shop from './Shop';
 import Settings from '../utils/Settings';
 import Overlay from '../components/overlay';
-import Sprite from '../components/sprite'
+import Sprite from '../components/sprite';
+import Ad from '../utils/sampleAd'
 @observer
 class Navigation extends Component {
   render() {
@@ -43,14 +44,12 @@ class Navigation extends Component {
         )
       case 'DEAD':
         return(
-          <Overlay store={store}>
-            <GameOver store={store}/>
-          </Overlay>
+          <Summary store={store}/>
         )
       case 'PAUSED':
         return(
           <Paused store={store}>
-
+            <Overlay/>
           </Paused>
         )
       case 'SHOP':

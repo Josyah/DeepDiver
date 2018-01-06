@@ -18,7 +18,9 @@ import Matter from 'matter-js';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import Background from './background';
 import HealthBar from './healthBar';
-import HandleTouch from '../controls/planeControls';
+import VerticalControls from '../controls/verticalControls';
+import HorizontalControls from '../controls/horizontalControls';
+import DamageOverlay from './DamageOverlay';
 import Paused from '../screens/Paused';
 import Overlay from './overlay';
 import {GLOBALS} from '../globals';
@@ -26,15 +28,15 @@ import Counter from './Counter';
 import Coins from './coins';
 import Projectile from './projectiles';
 import Alert from './Alert';
-import Game from './Game';
-import Loading from '../utils/loading'
+import Information from './Information';
 @observer
 class Level extends Component {
   constructor(props) {
     super(props);
     store = this.props.store;
     this.state = {
-      mounted: false
+      mounted: false,
+      count: 0
     }
   }
   componentWillUnmount(){
@@ -44,17 +46,22 @@ class Level extends Component {
     this.setState({mounted: true})
   }
   handleUpdate = (engine) => {
-    if((this.props.store.paused != true && this.props.store.unPausing != true) && (this.props.store.background.loaded && this.state.mounted)){
-        this.state.setToZero = true;
-        this.props.store.background.position.y += store.forceUp
-        store.moveBackground();
-        if(store.enemies.length != 0){
-          store.moveEnemies();
-        }
-        if(store.projectiles.length != 0){
-          store.moveProjectiles();
-        }
-        store.checkRegion();
+    if((this.props.store.paused != true && this.props.store.unPausing != true) && ((this.props.store.background.loaded && this.props.store.player.loaded) && this.state.mounted)){
+      this.props.store.background.position.y += store.forceUp
+
+      store.moveBackground();
+      if(store.enemies.length != 0){
+        store.moveEnemies();
+      }
+      if(store.projectiles.length != 0){
+        store.moveProjectiles();
+      }
+      store.checkRegion();
+      // if(this.state.count > 250){
+      //   this.props.store.randomlyGenerateEnemies()
+      //   this.state.count = 0
+      // }
+      // this.state.count++;
     }
   }
   render() {
@@ -71,6 +78,12 @@ class Level extends Component {
           <Alert store={store}/>
         )
     }
+    var renderInformation = () => {
+      if(this.props.store.info != "")
+        return(
+          <Information store={store}/>
+        )
+    }
     var renderOverlay = () => {
       if(this.props.store.paused == true){
         return(
@@ -81,14 +94,37 @@ class Level extends Component {
         )
       }
     }
-    var renderLoading = () => {
-      if(!this.props.store.background.loading){
-
+    var renderDamage = () => {
+      if(this.props.store.takingDamage == true){
         return(
-          <Loading store={this.props.store}/>
+          <DamageOverlay store={this.props.store}/>
         )
       }
-
+    }
+    var renderControls = () => {
+      if(this.props.store.controls == 'VERTICAL'){
+        return(
+          <VerticalControls
+            store={store}
+            inverted={false}
+            />
+        )
+      }
+      else if(this.props.store.controls == 'VERTICAL_INVERTED'){
+        return(
+          <VerticalControls
+            store={store}
+            inverted={true}
+            />
+        )
+      }
+      else if(this.props.store.controls == 'HORIZONTAL'){
+        return(
+          <HorizontalControls
+            store={store}
+            />
+        )
+      }
     }
     return (
       <Loop>
@@ -121,28 +157,35 @@ class Level extends Component {
                 isActive={false}
                 store={this.props.store}
                 />
-              <HandleTouch store={store}/>
+              {
+                renderControls()
+              }
               <TouchableOpacity
-                onPress={() => this.props.store.pause()}
+                onPress={() => {
+                  this.props.store.pause()
+                }}
                 style={styles.pauseButton}
                 >
                 <IonIcons
                   name={'ios-pause'}
-                  size={40}
+                  size={50}
                   color={'white'}
                   />
               </TouchableOpacity>
               {
-                renderCountdown()
-              }
-              {
-                renderOverlay()
-              }
-              {
                 renderAlerts()
               }
               {
-                renderLoading()
+                renderInformation()
+              }
+              {
+                renderCountdown()
+              }
+              {
+                renderDamage()
+              }
+              {
+                renderOverlay()
               }
               </View>
           </World>
@@ -161,13 +204,12 @@ const styles = StyleSheet.create({
   pauseButton: {
     position: 'absolute',
     top: 0,
-    right: 0,
+    right: 10,
     justifyContent: 'center',
     alignItems: 'center',
     margin: 5,
-    marginTop: 5,
+    marginTop: 6,
     backgroundColor: 'transparent',
-    padding: 5,
     borderRadius: 3,
     opacity: .8
   },
@@ -177,29 +219,30 @@ const styles = StyleSheet.create({
     left: 200,
     justifyContent: 'center',
     padding: 5,
+    marginTop: 6,
     margin: 3,
   },
   distance: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    margin: 6,
-    opacity: .8
+    left: 10,
+    opacity: .8,
+    marginTop: 6
   },
   distanceText: {
-    fontSize: 42,
+    fontSize: 65,
     color: 'white',
     backgroundColor: 'transparent',
     fontFamily: GLOBALS.font
   },
   coinText: {
-    fontSize: 30,
+    fontSize: 25,
     color: 'white',
     backgroundColor: 'transparent',
     fontFamily: GLOBALS.font
   },
   ammoText: {
-    fontSize: 30,
+    fontSize: 25,
     color: 'white',
     backgroundColor: 'transparent',
     fontFamily: GLOBALS.font

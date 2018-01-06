@@ -51,6 +51,7 @@ class Paused extends Component {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
             this.props.store.paused = false
+            this.props.store.navigationState = 'LEVEL'
             this.props.store.resetGame()
           }}>
           <Text style={styles.text}>
@@ -58,6 +59,7 @@ class Paused extends Component {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
+            this.props.store.navigationState = 'LEVEL'
             this.props.store.paused = false
             this.props.store.unPausing = true
           }}>
