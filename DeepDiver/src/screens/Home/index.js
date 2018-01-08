@@ -4,6 +4,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Image
 } from 'react-native';
 import {GLOBALS} from '../../globals';
@@ -12,16 +13,18 @@ class Home extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>
-          Water Wars
+          Water Warfare
         </Text>
-        <TouchableOpacity
+        <TouchableWithoutFeedback
           onPress={() => {
             this.props.store.startGame()
           }}
           style={styles.start}
           >
-          <Text style={styles.startText}>Start</Text>
-        </TouchableOpacity>
+          <View>
+            <Text style={styles.startText}>Start</Text>
+          </View>
+        </TouchableWithoutFeedback>
         <TouchableOpacity
           onPress={() => this.props.store.navigationState = 'SHOP'}
           style={styles.storeButton}>

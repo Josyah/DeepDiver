@@ -1446,7 +1446,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.WaterWarfare;
+				PRODUCT_BUNDLE_IDENTIFIER = org.Anubis.WaterWarfare;
 				PRODUCT_NAME = DeepDiver;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1472,7 +1472,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.WaterWarfare;
+				PRODUCT_BUNDLE_IDENTIFIER = org.Anubis.WaterWarfare;
 				PRODUCT_NAME = DeepDiver;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";

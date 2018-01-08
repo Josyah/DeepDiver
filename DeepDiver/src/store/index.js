@@ -15,8 +15,13 @@ class ObservableListStore {
   @persist @observable coins = 0;
   @persist @observable vibration = true;
   @persist @observable bestScore = 0;
-  @persist @observable controls = 'HORIZONTAL';
+  @persist @observable controls = 'VERTICAL';
   @persist @observable selectedPlayer = 'SEA_LORD';
+  @persist @observable shop = {
+    harpoons: 200,
+    ownedCharacters: [],
+    coins: 0
+  };
   @observable outOfBounds = false;
   @observable wheelOffset = 0;
   @observable wheelItems = getWheelCharacters();
@@ -68,9 +73,7 @@ class ObservableListStore {
   }];
   @observable coinArray = coinLayouts.SquareLayout
   @observable projectiles = [];
-  @observable shop = {
-    harpoons: 200
-  };
+
   @observable scale = .5;
   loseLife(amount){
     if(this.player.health > 0 && amount < this.player.health){
@@ -89,6 +92,7 @@ class ObservableListStore {
     if(!this.unPausing){
       this.forceUp = -(distanceBetween/(20 - this.player.agility)) //10?
       this.player.angle = -this.forceUp*4 // = 40
+      this.player.offset = -this.forceUp
       // this.background.speed = (Math.abs((Math.abs(distanceBetween))/(50/this.player.speed) - this.player.speed))
       if(distanceBetween < 0){
         this.player.animationState = this.player.animate.goingUp
@@ -102,6 +106,7 @@ class ObservableListStore {
     this.randomlyGenerateEnemies()
   }
   resetGame(){
+    this.player = getPlayerStats(this.selectedPlayer);
     this.enemies.clear();
     this.randomlyGenerateEnemies()
     this.background.position = {
@@ -110,8 +115,8 @@ class ObservableListStore {
     }
     this.background.offset = {x: 0, y: 0};
     this.coinArray = coinLayouts.SquareLayout;
-    this.player.health = 100
-    this.background.loaded = false
+    this.background.loaded = false;
+    this.alert = '';
   }
   pause(){
     // this.player.repeat = false
@@ -139,7 +144,8 @@ class ObservableListStore {
     else if((-this.background.position.x*GLOBALS.pixelsInAMeter) > 1000){
       this.maxEnemies = 2
     }
-    this.background.position.x -= this.background.speed
+    this.background.position.x -= this.background.speed;
+    console.log(this.background.speed)
   }
   isEnemyOffScreen(x){
     if(this.enemies[x].position.x < -300 && this.enemies.length > 0){
@@ -188,6 +194,13 @@ class ObservableListStore {
           }
         }
       }
+    }
+  }
+  isBestScore(){
+    if(this.scoringSystem.finalDistance == this.bestScore){
+      return true;
+    } else  {
+      return false;
     }
   }
   randomlyGenerateEnemies(){
@@ -289,7 +302,12 @@ class ObservableListStore {
     }
   }
   die() {
-    this.scoringSystem.finalDistance = (-this.background.position.x/GLOBALS.pixelsInAMeter)
+    this.scoringSystem.finalDistance = (-this.background.position.x/GLOBALS.pixelsInAMeter);
+    console.log('LAST SCORE'+ this.bestScore);
+    if(this.scoringSystem.finalDistance > this.bestScore){
+      this.bestScore = this.scoringSystem.finalDistance;
+      console.log('BEST SCORE'+ this.bestScore);
+    }
     this.vibrate();
     this.navigationState = 'DEAD';
   }

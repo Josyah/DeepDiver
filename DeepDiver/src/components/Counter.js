@@ -26,7 +26,7 @@ class Counter extends Component {
       setTimeout(() => {
         var secondsRemaining = this.state.secondsRemaining -1
         this.setState({secondsRemaining})
-      }, 1000);
+      }, 700);
 
 
   }

@@ -2,6 +2,7 @@ import {Dimensions} from 'react-native';
 
 exports.GLOBALS = {
   font: 'Noise Machine',
+  sensitivity: 75,
   dimensions: {
     width: Dimensions.get('screen').width,
     height: Dimensions.get('screen').height
@@ -59,7 +60,7 @@ exports.GLOBALS = {
             height: 75
           },
           widthInMeters: 0.75,
-          damage: 1,
+          damage: 5,
           wave: {
             frequency: -50,
             wavelength: 100,

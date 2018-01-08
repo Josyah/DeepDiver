@@ -26,6 +26,7 @@ class SeaLord extends Component {
         opacity: .9,
         transform: [
           { rotate: (90+this.props.store.player.angle+'deg') },
+          { translateY: this.props.store.player.offset },
           { scaleX: this.state.scale },
           { scaleY: this.state.scale },
         ],
