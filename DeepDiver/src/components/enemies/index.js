@@ -20,6 +20,7 @@ class Enemies extends Component {
               <Enemy
                 key={index}
                 index={index}
+                uniqueIdentifier={eachEnemy.uniqueIdentifier}
                 store={this.props.store}
                 />
             );

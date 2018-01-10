@@ -17,7 +17,7 @@ class ObservableListStore {
   @persist @observable bestScore = 0;
   @persist @observable controls = 'VERTICAL';
   @persist @observable selectedPlayer = 'SEA_LORD';
-  @persist @observable shop = {
+  @observable shop = {
     harpoons: 200,
     ownedCharacters: [],
     coins: 0
@@ -133,7 +133,7 @@ class ObservableListStore {
   moveBackground () {
     var constant = 0;
     if(this.background.speed < 10){
-      this.background.speed = ((Math.sqrt(-this.background.position.x*GLOBALS.pixelsInAMeter) - constant)/1000)+5
+      this.background.speed = ((Math.sqrt(-this.background.position.x*GLOBALS.pixelsInAMeter) - constant)/750)+5
     }
     if((this.background.position.x + this.background.offset.x) < -(GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)){
       this.background.offset.x += (GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)
@@ -145,7 +145,6 @@ class ObservableListStore {
       this.maxEnemies = 2
     }
     this.background.position.x -= this.background.speed;
-    console.log(this.background.speed)
   }
   isEnemyOffScreen(x){
     if(this.enemies[x].position.x < -300 && this.enemies.length > 0){
@@ -262,7 +261,7 @@ class ObservableListStore {
     this.forceUp = -1
     this.player.animationState = this.player.animate.falling
     this.player.angle = 0
-    this.background.speed = 5
+    // this.background.speed = 5
   }
   checkCollisions(i){
     if(this.checkLength(this.enemies.length) && this.checkExists(this.enemies[i])){
@@ -386,9 +385,32 @@ class ObservableListStore {
       Vibration.vibrate(500)
     }
   }
+  checkUnique(uniqueIdentifier){
+
+    var isUnique = true;
+    for(var i = 1; ((i < this.enemies.length) && (this.checkExists(this.enemies[i]))); i++){
+      if(this.enemies[i].uniqueIdentifier == uniqueIdentifier){
+        isUnique = false;
+      }
+    }
+    return isUnique;
+  }
+  getUniqueId(){
+    var uniqueIdentifier = Math.random() * 10000;
+    var found = false;
+    while(!found){
+      if(this.checkUnique(uniqueIdentifier)){
+        found = true;
+        return uniqueIdentifier;
+      }
+    }
+
+  }
   addEnemy(enemy) {
     let {type, dimensions, damage, wave, speed, widthInMeters, steps, src, distanceAway} = enemy;
+    var uniqueIdentifier = this.getUniqueId();
     this.enemies.push({
+      uniqueIdentifier,
       type,
       dimensions,
       damage,

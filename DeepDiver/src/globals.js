@@ -17,8 +17,8 @@ exports.GLOBALS = {
     y: 10000,
   },
   initBackgroundDimensions: {
-    width: 15000,
-    height: 30000,
+    width: 6656,
+    height: 10740,
   },
   projectiles: {
     harpoon: {

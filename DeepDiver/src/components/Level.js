@@ -47,8 +47,13 @@ class Level extends Component {
   }
   handleUpdate = (engine) => {
     if((this.props.store.paused != true && this.props.store.unPausing != true) && ((this.props.store.background.loaded && this.props.store.player.loaded) && this.state.mounted)){
-      this.props.store.background.position.y += store.forceUp
-
+      if(this.props.store.background.position.y > GLOBALS.initBackgroundDimensions.height){
+        if(!store.forceUp > 0){
+          this.props.store.background.position.y += store.forceUp
+        }
+      } else {
+        this.props.store.background.position.y += store.forceUp
+      }
       store.moveBackground();
       if(store.enemies.length != 0){
         store.moveEnemies();
@@ -57,11 +62,6 @@ class Level extends Component {
         store.moveProjectiles();
       }
       store.checkRegion();
-      // if(this.state.count > 250){
-      //   this.props.store.randomlyGenerateEnemies()
-      //   this.state.count = 0
-      // }
-      // this.state.count++;
     }
   }
   render() {
