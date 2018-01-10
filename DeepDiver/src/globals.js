@@ -2,7 +2,9 @@ import {Dimensions} from 'react-native';
 
 exports.GLOBALS = {
   font: 'Noise Machine',
+  secondaryFont: 'Raleway-Bold',
   sensitivity: 75,
+  topBoundary: 7066,
   dimensions: {
     width: Dimensions.get('screen').width,
     height: Dimensions.get('screen').height

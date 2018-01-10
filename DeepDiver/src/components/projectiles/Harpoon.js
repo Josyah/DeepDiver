@@ -24,6 +24,9 @@ class Projectile extends Component {
         bottom: this.props.store.projectiles[this.props.index].position.y,
         left: this.props.store.projectiles[this.props.index].position.x,
         opacity: .75,
+        transform: [
+          {rotate: (this.props.store.projectiles[this.props.index].angle + 'deg')}
+        ]
       };
     }
   }

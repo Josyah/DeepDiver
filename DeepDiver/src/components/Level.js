@@ -27,8 +27,9 @@ import {GLOBALS} from '../globals';
 import Counter from './Counter';
 import Coins from './coins';
 import Projectile from './projectiles';
-import Alert from './Alert';
-import Information from './Information';
+import Alert from './messages/Alert';
+import Warning from './messages/Warning';
+import Information from './messages/Information';
 @observer
 class Level extends Component {
   constructor(props) {
@@ -40,15 +41,18 @@ class Level extends Component {
     }
   }
   componentWillUnmount(){
+    this.props.store.currentlyPlaying = false
     this.setState({mounted: false})
   }
   componentDidMount(){
+    // this.props.store.currentlyPlaying = true
     this.setState({mounted: true})
   }
   handleUpdate = (engine) => {
-    if((this.props.store.paused != true && this.props.store.unPausing != true) && ((this.props.store.background.loaded && this.props.store.player.loaded) && this.state.mounted)){
-      if(this.props.store.background.position.y > GLOBALS.initBackgroundDimensions.height){
-        if(!store.forceUp > 0){
+    if(((this.props.store.background.loaded && this.props.store.player.loaded) && this.props.store.currentlyPlaying)){
+      console.log(this.props.store.currentlyPlaying)
+      if((this.props.store.background.position.y > GLOBALS.topBoundary) || (this.props.store.background.position.y > (GLOBALS.initBackgroundDimensions.height - GLOBALS.dimensions.height))){
+        if(store.forceUp < 0){
           this.props.store.background.position.y += store.forceUp
         }
       } else {
@@ -76,6 +80,12 @@ class Level extends Component {
       if(this.props.store.alert != "")
         return(
           <Alert store={store}/>
+        )
+    }
+    var renderWarnings = () => {
+      if(this.props.store.warning != "")
+        return(
+          <Warning store={store}/>
         )
     }
     var renderInformation = () => {
@@ -158,7 +168,25 @@ class Level extends Component {
                 store={this.props.store}
                 />
               {
+                renderAlerts()
+              }
+              {
+                renderInformation()
+              }
+              {
+                renderWarnings()
+              }
+              {
+                renderCountdown()
+              }
+              {
+                renderDamage()
+              }
+              {
                 renderControls()
+              }
+              {
+                renderOverlay()
               }
               <TouchableOpacity
                 onPress={() => {
@@ -172,21 +200,6 @@ class Level extends Component {
                   color={'white'}
                   />
               </TouchableOpacity>
-              {
-                renderAlerts()
-              }
-              {
-                renderInformation()
-              }
-              {
-                renderCountdown()
-              }
-              {
-                renderDamage()
-              }
-              {
-                renderOverlay()
-              }
               </View>
           </World>
         </Stage>
@@ -233,19 +246,19 @@ const styles = StyleSheet.create({
     fontSize: 65,
     color: 'white',
     backgroundColor: 'transparent',
-    fontFamily: GLOBALS.font
+    fontFamily: GLOBALS.secondaryFont
   },
   coinText: {
     fontSize: 25,
     color: 'white',
     backgroundColor: 'transparent',
-    fontFamily: GLOBALS.font
+    fontFamily: GLOBALS.secondaryFont
   },
   ammoText: {
     fontSize: 25,
     color: 'white',
     backgroundColor: 'transparent',
-    fontFamily: GLOBALS.font
+    fontFamily: GLOBALS.secondaryFont
   },
 
 });

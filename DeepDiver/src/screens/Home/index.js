@@ -12,9 +12,18 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>
-          Water Warfare
-        </Text>
+        <Image
+          source={require('../../images/AltOcean.png')}
+          style={styles.background}
+          />
+        <View style={styles.titleContainer}>
+          <Text style={styles.waterTitle}>
+            Water
+          </Text>
+          <Text style={styles.warfareTitle}>
+            Warfare
+          </Text>
+        </View>
         <TouchableWithoutFeedback
           onPress={() => {
             this.props.store.startGame()
@@ -46,11 +55,22 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#3a9bdc'
+    backgroundColor: 'transparent'
   },
-  title: {
-    fontSize: 100,
+  titleContainer: {
+    alignItems: 'flex-end',
+    flexDirection: 'row',
     marginBottom: 15,
+  },
+  waterTitle: {
+    paddingLeft: 120 - (120 * 0.75),
+    fontSize: 85,
+    fontFamily: GLOBALS.font,
+    color: 'white',
+  },
+  warfareTitle: {
+    paddingLeft: 120 - (120 * 0.75),
+    fontSize: 90,
     fontFamily: GLOBALS.font,
     color: 'white'
   },
@@ -88,6 +108,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 10
+  },
+  background: {
+    position: 'absolute',
+    height: GLOBALS.dimensions.height+100,
+    width: GLOBALS.dimensions.width+100,
+    resizeMode: 'cover'
   },
 
 });

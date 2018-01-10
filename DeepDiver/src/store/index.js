@@ -17,15 +17,17 @@ class ObservableListStore {
   @persist @observable bestScore = 0;
   @persist @observable controls = 'VERTICAL';
   @persist @observable selectedPlayer = 'SEA_LORD';
+  @persist('list') @observable ownedCharacters = ['SEA_LORD']
+  @observable player = getPlayerStats(this.selectedPlayer);
   @observable shop = {
     harpoons: 200,
     ownedCharacters: [],
     coins: 0
   };
+  @observable currentlyPlaying = false;
   @observable outOfBounds = false;
   @observable wheelOffset = 0;
   @observable wheelItems = getWheelCharacters();
-  @observable player = getPlayerStats(this.selectedPlayer);
   @observable absPlayerPosition = GLOBALS.initCharacterPosition;
   @observable backgroundComponents = getBackgroundComponents();
   @observable background = {
@@ -52,6 +54,7 @@ class ObservableListStore {
   @observable forceUp = 0;
   @observable forceLeft = 2;
   @observable repeat = true;
+  @observable tooFarDown = false;
   @observable scoringSystem = {
     enemiesKilled: 0,
     finalDistance: 0,
@@ -74,6 +77,10 @@ class ObservableListStore {
   @observable coinArray = coinLayouts.SquareLayout
   @observable projectiles = [];
 
+  @observable warning = {
+    text: '',
+    visible: false
+  };
   @observable scale = .5;
   loseLife(amount){
     if(this.player.health > 0 && amount < this.player.health){
@@ -103,7 +110,8 @@ class ObservableListStore {
   }
   startGame(){
     this.navigationState = 'LEVEL'
-    this.randomlyGenerateEnemies()
+    this.randomlyGenerateEnemies();
+    this.currentlyPlaying = true
   }
   resetGame(){
     this.player = getPlayerStats(this.selectedPlayer);
@@ -117,21 +125,27 @@ class ObservableListStore {
     this.coinArray = coinLayouts.SquareLayout;
     this.background.loaded = false;
     this.alert = '';
+    this.warning.text = '';
+    this.warning.visible = false;
   }
   pause(){
     // this.player.repeat = false
     this.alert = ''
     this.paused = true
+    this.currentlyPlaying = false
+  }
+  unPause(){
+    console.log('currentlyPlaying')
+    this.currentlyPlaying = true
   }
   active(){
   }
   inactive(){
-    if(this.navigationState == 'LEVEL'){
-      this.navigationState = 'PAUSED'
-    }
+    this.currentlyPlaying = false
   }
   moveBackground () {
     var constant = 0;
+    this.checkPressure()
     if(this.background.speed < 10){
       this.background.speed = ((Math.sqrt(-this.background.position.x*GLOBALS.pixelsInAMeter) - constant)/750)+5
     }
@@ -145,6 +159,35 @@ class ObservableListStore {
       this.maxEnemies = 2
     }
     this.background.position.x -= this.background.speed;
+  }
+  warningBlink(){
+    visible = this.warning.visible
+    setTimeout(() => {
+      if(this.warning.visible){
+        this.warning.visible = false
+      } else {
+        this.warning.visible = true
+        this.vibrate()
+        this.loseLife(10)
+      }
+      if(this.currentlyPlaying && (this.background.position.y < this.player.maxDepth)){
+        this.warningBlink()
+      }
+    }, 850);
+  }
+  checkPressure(){
+    if(this.background.position.y < this.player.maxDepth){
+      if(this.tooFarDown == false){
+        this.tooFarDown = true;
+        this.warning.text = 'Pressure Warning!'
+        this.warningBlink()
+      }
+    } else {
+      this.tooFarDown = false;
+      this.warning.text = ''
+      this.warning.visible = false
+
+    }
   }
   isEnemyOffScreen(x){
     if(this.enemies[x].position.x < -300 && this.enemies.length > 0){
@@ -176,8 +219,9 @@ class ObservableListStore {
         speed: GLOBALS.projectiles.harpoon.speed,
         position: {
           x: 150,
-          y: GLOBALS.initCharacterPosition.y+(GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter/2)+30
-        }
+          y: GLOBALS.initCharacterPosition.y+(GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter/2)+35
+        },
+        angle: this.player.angle,
       })
     }
   }
@@ -185,8 +229,14 @@ class ObservableListStore {
     if(this.checkLength(this.projectiles.length)){
       for(var x = 0; x < this.projectiles.length ; x++){
         if(this.projectiles[x].loaded){
+          //this.projectiles.speed
+          // angle of 0
+          var angleInRads = this.projectiles[x].angle * (Math.PI/180)
+          var speedX = (this.projectiles[x].speed * Math.cos(angleInRads))
+          var speedY = -(this.projectiles[x].speed * Math.sin(angleInRads))
+          this.projectiles[x].position.x += speedX;
+          this.projectiles[x].position.y += speedY;
 
-          this.projectiles[x].position.x += this.projectiles[x].speed;
           //check collisions
           if(this.projectiles[x].position.x > GLOBALS.dimensions.width*1.2){
             this.projectiles.splice(x, 1);
@@ -274,12 +324,7 @@ class ObservableListStore {
             var projectileInLine = ifBetween(this.projectiles[p].position.y ,(this.enemies[i].position.y - this.background.position.y) ,(this.enemies[i].position.y + this.enemies[i].dimensions.height-this.background.position.y))
             var projectileOnX = ifBetween(this.projectiles[p].position.x ,(this.enemies[i].position.x) ,(this.enemies[i].position.x + this.enemies[i].dimensions.width))
             if ((projectileInLine && projectileOnX) && (this.enemies[i].position.x > 20 && this.enemies[i].position.x < GLOBALS.dimensions.width)) {
-              this.projectiles.splice(p, 1);
-              this.enemies[i].health -= 1;
-              this.enemies.splice(i, 1);
-              this.randomlyGenerateEnemies();
-              this.randomlyGenerateAlert();
-              this.scoringSystem.enemiesKilled += 1;
+              this.onProjectileHitEnemy(p, i)
             }
           }
         }
@@ -344,6 +389,14 @@ class ObservableListStore {
         this.takingDamage = true;
       }
     }
+  }
+  onProjectileHitEnemy(p, i){
+    this.projectiles.splice(p, 1);
+    this.enemies[i].health -= 1;
+    this.enemies.splice(i, 1);
+    this.randomlyGenerateEnemies();
+    this.randomlyGenerateAlert();
+    this.scoringSystem.enemiesKilled += 1;
   }
   onPickUpCoin(id) {
     if(this.checkLength(this.coinArray.length)){
@@ -437,14 +490,28 @@ class ObservableListStore {
     if(this.coins > 0){
       switch(type){
         case 'HARPOON':
-        this.coins -= 1
-        this.shop.harpoons += 1
-        console.log('Bought 1 Harpoon')
+          this.coins -= 1
+          this.shop.harpoons += 1
+          console.log('Bought 1 Harpoon')
+        case 'AQUARIA':
+          this.coins -= 5
+          this.ownedCharacters.push('AQUARIA')
+          console.log('Bought Aquaria for 5 Coins')
+          console.log(this.ownedCharacters.length)
+
       }
     } else {
       console.log('Not enough money to buy anything')
     }
   }
+  // upgrade(item){
+  //   switch(item){
+  //     case 'PLAYER':
+  //       this.coins -= 1
+  //       this.shop.harpoons += 1
+  //       console.log('Bought 1 Harpoon')
+  //   }
+  // }
 }
 const hydrate = create({
     storage: AsyncStorage

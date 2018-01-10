@@ -36,7 +36,9 @@ class Counter extends Component {
     if(this.state.secondsRemaining > 0 && this.state.mounted){
       this.tick()
     } else {
-      this.props.store.unPausing = false
+
+      // this.props.store.unPause()
+      // this.props.store.unPausing = false
     }
   }
   componentWillUnmount() {

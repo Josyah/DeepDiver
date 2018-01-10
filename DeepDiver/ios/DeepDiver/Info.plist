@@ -29,11 +29,11 @@
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
-			<string></string>
+			<string/>
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -56,6 +56,20 @@
 		<string>Heroes Legend Hollow.ttf</string>
 		<string>Heroes Legend.ttf</string>
 		<string>Wild Font.ttf</string>
+		<string>Raleway-Bold.ttf</string>
+		<string>Raleway-ExtraBold.ttf</string>
+		<string>Raleway-ExtraLight.ttf</string>
+		<string>Raleway-Heavy.ttf</string>
+		<string>Raleway-Light.ttf</string>
+		<string>Raleway-Medium.ttf</string>
+		<string>Raleway-Regular.ttf</string>
+		<string>Raleway-SemiBold.ttf</string>
+		<string>Raleway-Thin.ttf</string>
+		<string>velocity-font.ttf</string>
+		<string>SLANT.TTF</string>
+		<string>slice.ttf</string>
+		<string>Jet Pilot Regular.otf</string>
+		<string>Jet Pilot Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

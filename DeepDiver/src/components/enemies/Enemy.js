@@ -17,9 +17,10 @@ class Enemy extends Component {
   constructor(props){
     super(props)
     store = this.props.store
-    this.enemy = this.props.store.enemies.find((eachEnemy) => {
-      return (eachEnemy.uniqueIdentifier == this.props.uniqueIdentifier)
-    })
+    // this.enemy = this.props.store.enemies.find((eachEnemy) => {
+    //   return (eachEnemy.uniqueIdentifier == this.props.uniqueIdentifier)
+    // })
+    this.enemy = this.props.store.enemies[this.props.index]
     this.state = {
       opacity: getOpacity(this.enemy.distanceAway),
     }
@@ -28,22 +29,22 @@ class Enemy extends Component {
   }
 
   componentDidMount(){
-    this.enemy.mounted = true;
+    this.props.store.enemies[this.props.index].mounted = true;
   }
   getPosition() {
-    if(this.enemy.mounted){
+    if(this.props.store.enemies[this.props.index].mounted){
       return {
         position: 'absolute',
-        left: this.enemy.position.x,
-        bottom: this.enemy.position.y,
-        opacity: this.enemy.opacity,
-        width: this.enemy.dimensions.width,
-        height: this.enemy.dimensions.height,
+        left: this.props.store.enemies[this.props.index].position.x,
+        bottom: this.props.store.enemies[this.props.index].position.y,
+        opacity: this.props.store.enemies[this.props.index].opacity,
+        width: this.props.store.enemies[this.props.index].dimensions.width,
+        height: this.props.store.enemies[this.props.index].dimensions.height,
         transform: [
           {translateY: this.props.store.background.position.y},
-          {rotate: (-this.enemy.angle+'deg') },
-          {scaleX: ((this.enemy.widthInMeters*GLOBALS.pixelsInAMeter)/(this.enemy.dimensions.width))},
-          {scaleY: ((this.enemy.widthInMeters*GLOBALS.pixelsInAMeter)/(this.enemy.dimensions.width))}
+          {rotate: (-this.props.store.enemies[this.props.index].angle+'deg') },
+          {scaleX: ((this.props.store.enemies[this.props.index].widthInMeters*GLOBALS.pixelsInAMeter)/(this.props.store.enemies[this.props.index].dimensions.width))},
+          {scaleY: ((this.props.store.enemies[this.props.index].widthInMeters*GLOBALS.pixelsInAMeter)/(this.props.store.enemies[this.props.index].dimensions.width))}
         ],
       }
     }
@@ -51,9 +52,9 @@ class Enemy extends Component {
 }
 
   getState(){
-    if(this.enemy.mounted){
-      this.enemy.loaded = true
-      if(this.enemy.health <= 0){
+    if(this.props.store.enemies[this.props.index].mounted){
+      this.props.store.enemies[this.props.index].loaded = true
+      if(this.props.store.enemies[this.props.index].health <= 0){
         return 1
       } else {
         return 0
@@ -65,11 +66,11 @@ class Enemy extends Component {
       <Loop>
 
         <Sprite
-          repeat={this.enemy.mounted}
-          src={this.enemy.src}
-          tileHeight={this.enemy.dimensions.height}
-          tileWidth={this.enemy.dimensions.width}
-          steps={this.enemy.steps}
+          repeat={this.props.store.enemies[this.props.index].mounted}
+          src={this.props.store.enemies[this.props.index].src}
+          tileHeight={this.props.store.enemies[this.props.index].dimensions.height}
+          tileWidth={this.props.store.enemies[this.props.index].dimensions.width}
+          steps={this.props.store.enemies[this.props.index].steps}
           state={0}
           scale={1}
           offset={[0, 0]}
