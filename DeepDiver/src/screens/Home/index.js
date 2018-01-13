@@ -17,12 +17,7 @@ class Home extends Component {
           style={styles.background}
           />
         <View style={styles.titleContainer}>
-          <Text style={styles.waterTitle}>
-            Water
-          </Text>
-          <Text style={styles.warfareTitle}>
-            Warfare
-          </Text>
+          <Text style={styles.title}>Water Warfare</Text>
         </View>
         <TouchableWithoutFeedback
           onPress={() => {
@@ -62,17 +57,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 15,
   },
-  waterTitle: {
+  title: {
     paddingLeft: 120 - (120 * 0.75),
     fontSize: 85,
     fontFamily: GLOBALS.font,
     color: 'white',
-  },
-  warfareTitle: {
-    paddingLeft: 120 - (120 * 0.75),
-    fontSize: 90,
-    fontFamily: GLOBALS.font,
-    color: 'white'
   },
   start: {
 

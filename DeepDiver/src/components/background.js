@@ -43,7 +43,7 @@ class Background extends Component {
         style={styles.container}
         >
         <Image
-          source={require('../images/AltOcean.png')}
+          source={require('../images/background/NuOcean.png')}
           style={[this.backgroundPosition(0, 0, true),
             {
               height: GLOBALS.initBackgroundDimensions.height,

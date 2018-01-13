@@ -50,7 +50,7 @@ class Level extends Component {
   }
   handleUpdate = (engine) => {
     if(((this.props.store.background.loaded && this.props.store.player.loaded) && this.props.store.currentlyPlaying)){
-      console.log(this.props.store.currentlyPlaying)
+      // console.log(this.props.store.currentlyPlaying)
       if((this.props.store.background.position.y > GLOBALS.topBoundary) || (this.props.store.background.position.y > (GLOBALS.initBackgroundDimensions.height - GLOBALS.dimensions.height))){
         if(store.forceUp < 0){
           this.props.store.background.position.y += store.forceUp
@@ -160,8 +160,8 @@ class Level extends Component {
               <Projectile store={store}/>
               <View style={styles.distance}>
                 <Text style={styles.distanceText}>{Math.round(-this.props.store.background.position.x/GLOBALS.pixelsInAMeter)} m</Text>
-                <Text style={styles.coinText}>{this.props.store.coins} Coins</Text>
-                <Text style={styles.ammoText}>{this.props.store.shop.harpoons} Harpoons</Text>
+                <Text style={styles.coinText}>{this.props.store.coins} coins</Text>
+                <Text style={styles.ammoText}>{this.props.store.shop.harpoons} harpoons</Text>
               </View>
               <HealthBar
                 isActive={false}
@@ -243,19 +243,19 @@ const styles = StyleSheet.create({
     marginTop: 6
   },
   distanceText: {
-    fontSize: 65,
+    fontSize: 50,
     color: 'white',
     backgroundColor: 'transparent',
     fontFamily: GLOBALS.secondaryFont
   },
   coinText: {
-    fontSize: 25,
+    fontSize: 20,
     color: 'white',
     backgroundColor: 'transparent',
     fontFamily: GLOBALS.secondaryFont
   },
   ammoText: {
-    fontSize: 25,
+    fontSize: 20,
     color: 'white',
     backgroundColor: 'transparent',
     fontFamily: GLOBALS.secondaryFont

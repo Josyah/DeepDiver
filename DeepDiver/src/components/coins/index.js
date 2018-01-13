@@ -10,7 +10,7 @@ import CoinLayout from './CoinLayout';
 class MapCoins extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <View>
         {
           this.props.store.coinLayoutArray.slice().map((eachEnemy, index) => {
             if(this.props.store.coinLayoutArray.length != 0){

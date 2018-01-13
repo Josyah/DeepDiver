@@ -17,6 +17,7 @@ class ObservableListStore {
   @persist @observable bestScore = 0;
   @persist @observable controls = 'VERTICAL';
   @persist @observable selectedPlayer = 'SEA_LORD';
+  @persist @observable maxHarpoons = 200;
   @persist('list') @observable ownedCharacters = ['SEA_LORD']
   @observable player = getPlayerStats(this.selectedPlayer);
   @observable shop = {
@@ -26,9 +27,14 @@ class ObservableListStore {
   };
   @observable currentlyPlaying = false;
   @observable outOfBounds = false;
+  @observable lastAnimationState = 0;
   @observable wheelOffset = 0;
+  @observable stopAnimations = false;
   @observable wheelItems = getWheelCharacters();
-  @observable absPlayerPosition = GLOBALS.initCharacterPosition;
+  @observable absPlayerPosition = {
+    x: GLOBALS.initCharacterPosition.x,
+    y: GLOBALS.initCharacterPosition.y,
+  };
   @observable backgroundComponents = getBackgroundComponents();
   @observable background = {
     position: {
@@ -70,7 +76,7 @@ class ObservableListStore {
   @observable coinLayoutArray = [{
     position: {
       x: 1000,
-      y: 29000
+      y: 4750
     },
     speed: 3
   }];
@@ -96,15 +102,23 @@ class ObservableListStore {
     }
   }
   movePlayer(distanceBetween){
-    if(!this.unPausing){
-      this.forceUp = -(distanceBetween/(20 - this.player.agility)) //10?
-      this.player.angle = -this.forceUp*4 // = 40
-      this.player.offset = -this.forceUp
+    if(!this.unPausing ){
+      var angle = distanceBetween/2
+      // this.forceUp = -(distanceBetween/(20 - this.player.agility)) //10?
+      this.player.angle = angle// = 40
+      this.forceUp = -(this.background.speed*(Math.sin(angle*(Math.PI/180)))) //10?
+      // console.log(this.forceUp)
+      // this.player.offset = -this.forceUp
       // this.background.speed = (Math.abs((Math.abs(distanceBetween))/(50/this.player.speed) - this.player.speed))
+
       if(distanceBetween < 0){
-        this.player.animationState = this.player.animate.goingUp
+        if(!this.stopAnimations){
+          this.player.animationState = this.player.animate.goingUp
+        }
       } else {
-        this.player.animationState = this.player.animate.goingDown
+        if(!this.stopAnimations){
+          this.player.animationState = this.player.animate.goingDown
+        }
       }
     }
   }
@@ -127,6 +141,10 @@ class ObservableListStore {
     this.alert = '';
     this.warning.text = '';
     this.warning.visible = false;
+    this.scoringSystem.enemiesKilled = 0;
+    this.scoringSystem.finalDistance = 0;
+    this.scoringSystem.finalScore = 0;
+    this.shop.harpoons = this.maxHarpoons
   }
   pause(){
     // this.player.repeat = false
@@ -147,7 +165,7 @@ class ObservableListStore {
     var constant = 0;
     this.checkPressure()
     if(this.background.speed < 10){
-      this.background.speed = ((Math.sqrt(-this.background.position.x*GLOBALS.pixelsInAMeter) - constant)/750)+5
+      this.background.speed = ((Math.sqrt(-this.background.position.x*GLOBALS.pixelsInAMeter) - constant)/750)+7
     }
     if((this.background.position.x + this.background.offset.x) < -(GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)){
       this.background.offset.x += (GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)
@@ -158,7 +176,9 @@ class ObservableListStore {
     else if((-this.background.position.x*GLOBALS.pixelsInAMeter) > 1000){
       this.maxEnemies = 2
     }
-    this.background.position.x -= this.background.speed;
+    var speedX =  Math.abs((this.background.speed)*Math.cos(this.player.angle*(Math.PI/180)))
+    // console.log('SPEED',speedX)
+    this.background.position.x -= speedX;
   }
   warningBlink(){
     visible = this.warning.visible
@@ -214,12 +234,28 @@ class ObservableListStore {
     if(this.shop.harpoons > 0 && (!this.paused && !this.unPausing)){
       this.shop.harpoons -= 1;
       this.player.attacking = true;
+      this.lastAnimationState = this.player.animationState;
+      if(this.lastAnimationState == GLOBALS.SeaLord.attackingAnimation){
+        this.lastAnimationState = GLOBALS.SeaLord.fallingAnimation
+      }
+      this.player.animationState = GLOBALS.SeaLord.attackingAnimation
+      this.stopAnimations = true
+    }
+  }
+  stopAnimation(type){
+    this.stopAnimations = false
+    if(this.player.animationState == this.lastAnimationState){
+      this.lastAnimationState = GLOBALS.SeaLord.fallingAnimation
+    } else {
+      this.player.animationState = this.lastAnimationState
+    }
+    if(type == 'HARPOON'){
       this.projectiles.push({
         type: 'HARPOON',
         speed: GLOBALS.projectiles.harpoon.speed,
         position: {
           x: 150,
-          y: GLOBALS.initCharacterPosition.y+(GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter/2)+35
+          y: this.absPlayerPosition.y + this.player.width*.82
         },
         angle: this.player.angle,
       })
@@ -331,14 +367,17 @@ class ObservableListStore {
     }
     if(this.checkLength(this.coinArray.length)){
       for(var i = 0; i < this.coinArray.length; i++){
-        var playerMinY = (GLOBALS.initCharacterPosition.y - ((this.player.width)*GLOBALS.pixelsInAMeter))
-        var playerMaxY = (GLOBALS.initCharacterPosition.y )
-        var playerMinX = (GLOBALS.initCharacterPosition.x)
-        var playerMaxX = (GLOBALS.initCharacterPosition.x + (GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter))
+        var playerMinY = (this.absPlayerPosition.y - ((GLOBALS.playerWidthInMeters)*GLOBALS.pixelsInAMeter) /2)
+        var playerMaxY = (this.absPlayerPosition.y)
+        var playerMinX = (this.absPlayerPosition.x)
+        var playerMaxX = (this.absPlayerPosition.x + (GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter))
         var coinX = this.coinArray[i].x*GLOBALS.coins.multiplier+this.background.position.x+this.coinLayoutArray[0].position.x
-        var coinY = ((this.coinArray[i].y*GLOBALS.coins.multiplier)+this.coinLayoutArray[0].position.y-this.background.position.y - (GLOBALS.coins.height/2))
+        var coinY = ((this.coinArray[i].y*GLOBALS.coins.multiplier)-this.background.position.y+this.coinLayoutArray[0].position.y)
         var coinOnX = ifBetween(coinX, playerMinX, playerMaxX)
         var coinOnY = ifBetween(coinY, playerMinY, playerMaxY)
+        if(i == 0){
+          // console.log(coinY, playerMinY, playerMaxY)
+        }
         if(coinOnY && coinOnX){
           this.onPickUpCoin(i)
         }
@@ -387,6 +426,21 @@ class ObservableListStore {
         this.vibrate();
         this.loseLife(this.enemies[id].damage);
         this.takingDamage = true;
+        this.stopAnimations = true;
+        if(this.enemies[id].type == 'ELECTRICEEL'){
+          this.lastAnimationState = this.player.animationState;
+          if(this.lastAnimationState == GLOBALS.SeaLord.eelDamageAnimation){
+            this.lastAnimationState = GLOBALS.SeaLord.fallingAnimation
+          }
+          this.player.animationState = GLOBALS.SeaLord.eelDamageAnimation
+        } else {
+
+          this.lastAnimationState = this.player.animationState;
+          if(this.lastAnimationState == GLOBALS.SeaLord.damageAnimation){
+            this.lastAnimationState = GLOBALS.SeaLord.fallingAnimation
+          }
+          this.player.animationState = GLOBALS.SeaLord.damageAnimation
+        }
       }
     }
   }
@@ -435,7 +489,7 @@ class ObservableListStore {
   }
   vibrate(){
     if(this.vibration){
-      Vibration.vibrate(500)
+      Vibration.vibrate()
     }
   }
   checkUnique(uniqueIdentifier){
@@ -462,12 +516,34 @@ class ObservableListStore {
   addEnemy(enemy) {
     let {type, dimensions, damage, wave, speed, widthInMeters, steps, src, distanceAway} = enemy;
     var uniqueIdentifier = this.getUniqueId();
+    var sign;
+    var yStart;
+    if(Math.random() > .5){
+      sign = 1
+    } else {
+      sign = (-1)
+    }
+    if(this.forceUp > 4){
+      yStart = this.background.position.y + (Math.random() * this.absPlayerPosition.y) + GLOBALS.dimensions.height * this.forceUp/3
+    } else if(this.forceUp < -4){
+      yStart = this.background.position.y + (Math.random() * this.absPlayerPosition.y) - GLOBALS.dimensions.height * (Math.abs(this.forceUp))/3
+    } else {
+      if(Math.random() > .5){
+        yStart = this.background.position.y + (Math.random() * this.absPlayerPosition.y)
+      } else {
+        yStart = this.background.position.y + (Math.random() * this.absPlayerPosition.y) + GLOBALS.dimensions.height / 3
+      }
+    }
     this.enemies.push({
       uniqueIdentifier,
       type,
       dimensions,
       damage,
-      wave,
+      wave: {
+        frequency: sign*(Math.random() + .9) * 1.1 * wave.frequency,
+        wavelength: (Math.random() + 0.9) * 1.1 * wave.wavelength,
+        trackAngle: wave.trackAngle
+      },
       speed,
       steps,
       src,
@@ -475,9 +551,9 @@ class ObservableListStore {
       widthInMeters,
       position: {
         x: (Math.random() * (GLOBALS.dimensions.width/4)+GLOBALS.dimensions.width+100),
-        y: this.background.position.y + (Math.random() * GLOBALS.dimensions.height),
+        y: yStart,
         x0: (Math.random() * (GLOBALS.dimensions.width/4)+GLOBALS.dimensions.width+100),
-        y0: this.background.position.y + (Math.random() * GLOBALS.dimensions.height)
+        y0: yStart
       },
       collided: false,
       angle: 0,

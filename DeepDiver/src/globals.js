@@ -4,7 +4,7 @@ exports.GLOBALS = {
   font: 'Noise Machine',
   secondaryFont: 'Raleway-Bold',
   sensitivity: 75,
-  topBoundary: 7066,
+  topBoundary: 29500,
   dimensions: {
     width: Dimensions.get('screen').width,
     height: Dimensions.get('screen').height
@@ -12,15 +12,15 @@ exports.GLOBALS = {
   wheelSpacing: 150,
   initCharacterPosition: {
     x: 40,
-    y: Dimensions.get('window').height*.15,
+    y: Dimensions.get('window').height*.13,
   },
   initBackgroundPosition: {
     x: 0,
-    y: 10000,
+    y: 29000,
   },
   initBackgroundDimensions: {
-    width: 6656,
-    height: 10740,
+    width: 2000*5,
+    height: 6000*5,
   },
   projectiles: {
     harpoon: {
@@ -220,11 +220,14 @@ exports.GLOBALS = {
   forceUp: 5,
   forceLeft: 5,
   SeaLord: {
-    steps: [0, 5, 16, 16, 15, 16],
+    steps: [0, 5, 16, 16, 15, 16, 2, 2, 2],
     fallingAnimation: 3,
     upAnimation: 4,
     downAnimation: 5,
-    offsetY: 80,
+    attackingAnimation: 6,
+    damageAnimation: 7,
+    eelDamageAnimation: 8,
+    offsetY: 73,
     tileWidth: 150,
     tileHeight: 200,
     tiles: [
@@ -239,6 +242,14 @@ exports.GLOBALS = {
       {
         tileWidth: 150,
         tileHeight: 200
+      },
+      {
+        tileWidth: 150,
+        tileHeight: 200,
+      },
+      {
+        tileWidth: 150,
+        tileHeight: 200,
       },
       {
         tileWidth: 150,

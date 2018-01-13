@@ -18,7 +18,7 @@ class Projectile extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <View>
 
         {
           this.props.store.projectiles.slice().map((eachProjectile, index) => {

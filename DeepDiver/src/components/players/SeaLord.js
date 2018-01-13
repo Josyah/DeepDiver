@@ -65,6 +65,18 @@ class SeaLord extends Component {
           ticksPerFrame={2}
           style={this.getPlayerStyles()}
           onLoadEnd={this.onLoadEnd()}
+          onLastFrame={() => {
+            if(this.props.store.player.animationState === GLOBALS.SeaLord.attackingAnimation){
+              // console.log('HARPOON THROWN')
+              this.props.store.stopAnimation('HARPOON');
+            } else if (this.props.store.player.animationState === GLOBALS.SeaLord.damageAnimation){
+
+              this.props.store.stopAnimation('DAMAGE');
+            } else if (this.props.store.player.animationState === GLOBALS.SeaLord.eelDamageAnimation){
+
+              this.props.store.stopAnimation('DAMAGE');
+            }
+          }}
           />
       </Loop>
     );
