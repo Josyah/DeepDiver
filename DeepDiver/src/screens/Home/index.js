@@ -9,12 +9,32 @@ import {
 } from 'react-native';
 import {GLOBALS} from '../../globals';
 class Home extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: true
+    }
+  }
   render() {
+    var renderLoading = () => {
+      if(this.state.loading){
+        return (
+          <View style={styles.loadingContainer}>
+            <Text>Loading...</Text>
+          </View>
+        )
+      }
+    }
     return (
       <View style={styles.container}>
         <Image
           source={require('../../images/AltOcean.png')}
           style={styles.background}
+          onLoadStart={() => console.log('STARTED LOADING')}
+          onLoad={() => {
+            console.log('FINISHED LOADING')
+            this.setState({loading: false})
+          }}
           />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Water Warfare</Text>
@@ -39,6 +59,9 @@ class Home extends Component {
           style={styles.settingsButton}>
           <Text style={styles.linkToPage}>Settings</Text>
         </TouchableOpacity>
+        {
+          renderLoading()
+        }
       </View>
     );
   }
@@ -51,6 +74,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent'
+  },
+  loadingContainer: {
+    position: 'absolute',
+    height: GLOBALS.dimensions.height,
+    width: GLOBALS.dimensions.width,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white'
   },
   titleContainer: {
     alignItems: 'flex-end',
