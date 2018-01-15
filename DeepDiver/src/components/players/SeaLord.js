@@ -55,6 +55,7 @@ class SeaLord extends Component {
       <Loop>
         <Sprite
           repeat={(this.props.store.player.repeat) ? (true) : (false)}
+          move={false}
           src={require('../../images/SeaLord.png')}
           tileHeight={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileHeight}
           tileWidth={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileWidth}

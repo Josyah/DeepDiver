@@ -19,10 +19,7 @@ class Settings extends Component {
           onPress={() => this.props.store.navigationState = 'HOME'}
           style={styles.backButton}
           >
-          <IonIcons
-            size={35}
-            name={'md-arrow-back'}
-            />
+          <Text>Back</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=> this.props.store.switchVibration()}>
           <Text style={styles.vibration}>Vibration {(this.props.store.vibration) ? 'On' : 'Off'}</Text>
