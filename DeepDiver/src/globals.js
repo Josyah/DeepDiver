@@ -110,7 +110,7 @@ exports.GLOBALS = {
             trackAngle: true
           },
           speed: 3,
-          steps: [3, 5],
+          steps: [3, 3, 1, 1, 1],
           src: require('./images/GreatWhite.png'),
           distanceAway: 75
         },
@@ -322,5 +322,187 @@ exports.GLOBALS = {
   pixelsInAMeter: 60,
   playerMass: 95.2544,
   seaWeedDistance: 50,
-  visibilityInMeters: 100
+  visibilityInMeters: 100,
+  enemies: [
+    {
+      type: 'HAMMERHEAD',
+      dimensions: {
+        width: 200,
+        height: 100
+      },
+      widthInMeters: 6,
+      damage: 25,
+      wave: {
+        frequency: -150,
+        wavelength: 400,
+        trackAngle: true
+      },
+      speed: 3,
+      steps: [3, 1],
+      src: require('./images/HammerHead.png'),
+      distanceAway: 75
+    },
+    {
+      type: 'PIRANHA',
+      dimensions: {
+        width: 100,
+        height: 100
+      },
+      widthInMeters: 0.75,
+      damage: 5,
+      wave: {
+        frequency: -50,
+        wavelength: 100,
+        trackAngle: true
+      },
+      speed: 2,
+      steps: [3],
+      src: require('./images/Piranha.png'),
+      distanceAway: 75
+    },
+    {
+      type: 'STING_RAY',
+      dimensions: {
+        width: 100,
+        height: 100
+      },
+      widthInMeters: 2.1336,
+      damage: 10,
+      wave: {
+        frequency: 100,
+        wavelength: 300,
+        trackAngle: true
+      },
+      speed: 1,
+      steps: [3],
+      src: require('./images/StingRay.png'),
+      distanceAway: 75
+    },
+    {
+      type: 'GREAT_WHITE',
+      dimensions: {
+        width: 300,
+        height: 150
+      },
+      widthInMeters: 6.4008,
+      damage: 10,
+      wave: {
+        frequency: 100,
+        wavelength: 300,
+        trackAngle: true
+      },
+      speed: 3,
+      steps: [3, 3, 1, 1, 1],
+      src: require('./images/GreatWhite.png'),
+      distanceAway: 75
+    },
+    {
+      type: 'JELLYFISH',
+      dimensions: {
+        width: 100,
+        height: 100
+      },
+      widthInMeters: 0.4,
+      damage: 5,
+      wave: {
+        frequency: 70,
+        wavelength: 100,
+        trackAngle: false
+      },
+      speed: 0.1,
+      steps: [4],
+      src: require('./images/JellyFish.png'),
+      distanceAway: 75
+    },
+    {
+      type: 'STING_RAY',
+      dimensions: {
+        width: 150,
+        height: 125
+      },
+      widthInMeters: 2.1336,
+      damage: 10,
+      wave: {
+        frequency: 100,
+        wavelength: 300,
+        trackAngle: true
+      },
+      speed: 1,
+      steps: [3],
+      src: require('./images/StingRay.png'),
+      distanceAway: 75
+    },
+    {
+      type: 'PUFFER',
+      dimensions: {
+        width: 150,
+        height: 125
+      },
+      widthInMeters: 0.6,
+      damage: 5,
+      wave: {
+        frequency: 50,
+        wavelength: 150,
+        trackAngle: true
+      },
+      speed: 1,
+      steps: [3],
+      src: require('./images/Puffer.png'),
+      distanceAway: 75
+    },
+    {
+      type: 'ELECTRICEEL',
+      dimensions: {
+        width: 150,
+        height: 63
+      },
+      widthInMeters: 2.4384,
+      damage: 25,
+      wave: {
+        frequency: 50,
+        wavelength: 100,
+        trackAngle: true
+      },
+      speed: 2,
+      src: require('./images/ElectricEel.png'),
+      steps: [1],
+      distanceAway: 75
+    },
+    {
+      type: 'JELLYFISH-GLOW',
+      dimensions: {
+        width: 100,
+        height: 100
+      },
+      widthInMeters: 0.4,
+      damage: 10,
+      wave: {
+        frequency: 70,
+        wavelength: 100,
+        trackAngle: false
+      },
+      speed: 1,
+      steps: [4],
+      src: require('./images/Jellyfish-Glow.png'),
+      distanceAway: 75
+    },
+    {
+      type: 'LIGHT-FISH',
+      dimensions: {
+        width: 150,
+        height: 100
+      },
+      widthInMeters: 0.4,
+      damage: 10,
+      wave: {
+        frequency: 70,
+        wavelength: 100,
+        trackAngle: true
+      },
+      speed: 1,
+      steps: [4],
+      src: require('./images/LightFish.png'),
+      distanceAway: 75
+    }
+  ]
 }

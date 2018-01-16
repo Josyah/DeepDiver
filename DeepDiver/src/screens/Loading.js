@@ -4,7 +4,7 @@ import {
   Text,
   View
 } from 'react-native';
-
+import {GLOBALS} from '../globals'
 class Loading extends Component {
   render() {
     return (
@@ -19,8 +19,12 @@ class Loading extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    height: GLOBALS.dimensions.height,
+    width: GLOBALS.dimensions.width,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white'
   },
 });
 

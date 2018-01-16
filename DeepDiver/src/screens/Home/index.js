@@ -8,7 +8,8 @@ import {
   Image
 } from 'react-native';
 import {GLOBALS} from '../../globals';
-import DailyRewards from '../../components/dailyRewards'
+import DailyRewards from '../../components/dailyRewards';
+import Loading from '../Loading';
 import {observer} from 'mobx-react/native';
 @observer
 class Home extends Component {
@@ -22,9 +23,7 @@ class Home extends Component {
     var renderLoading = () => {
       if(this.state.loading){
         return (
-          <View style={styles.loadingContainer}>
-            <Text>Loading...</Text>
-          </View>
+          <Loading />
         )
       }
     }
@@ -89,14 +88,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent'
-  },
-  loadingContainer: {
-    position: 'absolute',
-    height: GLOBALS.dimensions.height,
-    width: GLOBALS.dimensions.width,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white'
   },
   titleContainer: {
     alignItems: 'flex-end',

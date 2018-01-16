@@ -29,6 +29,8 @@ import Projectile from './projectiles';
 import Alert from './messages/Alert';
 import Warning from './messages/Warning';
 import Information from './messages/Information';
+import Loading from '../screens/Loading';
+import Points from './points'
 @observer
 class Level extends Component {
   constructor(props) {
@@ -68,6 +70,20 @@ class Level extends Component {
     }
   }
   render() {
+    var renderLoading = () => {
+      if(this.props.store.background.loaded == false){
+        return(
+          <Loading />
+        )
+      }
+    }
+    var renderPoints = () => {
+      if(this.props.store.points.length > 0){
+        return(
+          <Points store={this.props.store}/>
+        )
+      }
+    }
     var renderCountdown = () => {
       if(this.props.store.unPausing == true){
         return(
@@ -176,6 +192,9 @@ class Level extends Component {
                 renderWarnings()
               }
               {
+                renderPoints()
+              }
+              {
                 renderCountdown()
               }
               {
@@ -195,6 +214,9 @@ class Level extends Component {
                 >
                 <Text>Pause</Text>
               </TouchableOpacity>
+              {
+                renderLoading()
+              }
               </View>
           </World>
         </Stage>

@@ -17,34 +17,37 @@ class Enemy extends Component {
   constructor(props){
     super(props)
     store = this.props.store
-    // this.enemy = this.props.store.enemies.find((eachEnemy) => {
-    //   return (eachEnemy.uniqueIdentifier == this.props.uniqueIdentifier)
-    // })
-    this.enemy = this.props.store.enemies[this.props.index]
+    this.enemyStats = GLOBALS.enemies.find((eachEnemy) => {
+      return (eachEnemy.type == this.props.type)
+    })
+    // this.props.store.enemies[this.props.index] = this.props.store.enemies[this.props.index]
     this.state = {
-      opacity: getOpacity(this.enemy.distanceAway),
+      opacity: getOpacity(this.props.store.enemies[this.props.index].distanceAway),
+      index: this.props.index
     }
   }
   componentWillUnmount(){
+    // this.props.store.enemies[this.props.index].mounted = false;
   }
 
   componentDidMount(){
-    this.props.store.enemies[this.props.index].mounted = true;
+    this.props.store.enemies[this.state.index].mounted = true;
   }
   getPosition() {
-    if(this.props.store.enemies[this.props.index].mounted){
+    if(!this.props.store.enemies[this.props.index].isDeleting){
+      console.log(this.props.store.enemies[this.state.index].position.x, this.props.store.enemies[this.state.index].position.y)
       return {
         position: 'absolute',
-        left: this.props.store.enemies[this.props.index].position.x,
-        bottom: this.props.store.enemies[this.props.index].position.y,
-        opacity: this.props.store.enemies[this.props.index].opacity,
-        width: this.props.store.enemies[this.props.index].dimensions.width,
-        height: this.props.store.enemies[this.props.index].dimensions.height,
+        left: this.props.store.enemies[this.state.index].position.x,
+        bottom: this.props.store.enemies[this.state.index].position.y,
+        opacity: this.props.store.enemies[this.state.index].opacity,
+        width: this.enemyStats.dimensions.width,
+        height: this.enemyStats.dimensions.height,
         transform: [
           {translateY: this.props.store.background.position.y},
-          {rotate: (-this.props.store.enemies[this.props.index].angle+'deg') },
-          {scaleX: ((this.props.store.enemies[this.props.index].widthInMeters*GLOBALS.pixelsInAMeter)/(this.props.store.enemies[this.props.index].dimensions.width))},
-          {scaleY: ((this.props.store.enemies[this.props.index].widthInMeters*GLOBALS.pixelsInAMeter)/(this.props.store.enemies[this.props.index].dimensions.width))}
+          {rotate: (-this.props.store.enemies[this.state.index].angle+'deg') },
+          {scaleX: ((this.props.store.enemies[this.state.index].widthInMeters*GLOBALS.pixelsInAMeter)/(this.props.store.enemies[this.state.index].dimensions.width))},
+          {scaleY: ((this.props.store.enemies[this.state.index].widthInMeters*GLOBALS.pixelsInAMeter)/(this.props.store.enemies[this.state.index].dimensions.width))}
         ],
       }
     }
@@ -52,9 +55,9 @@ class Enemy extends Component {
 }
 
   getState(){
-    if(this.props.store.enemies[this.props.index].mounted){
-      this.props.store.enemies[this.props.index].loaded = true
-      if(this.props.store.enemies[this.props.index].health <= 0){
+    if(this.props.store.enemies[this.state.index].mounted){
+      this.props.store.enemies[this.state.index].loaded = true
+      if(this.props.store.enemies[this.state.index].health <= 0){
         return 1
       } else {
         return 0
@@ -62,23 +65,33 @@ class Enemy extends Component {
     }
   }
   render() {
-    return (
-      <Loop>
-
-        <Sprite
-          repeat={this.props.store.enemies[this.props.index].mounted}
-          src={this.props.store.enemies[this.props.index].src}
-          tileHeight={this.props.store.enemies[this.props.index].dimensions.height}
-          tileWidth={this.props.store.enemies[this.props.index].dimensions.width}
-          steps={this.props.store.enemies[this.props.index].steps}
-          state={0}
-          scale={1}
-          offset={[0, 0]}
-          ticksPerFrame={5}
-          style={this.getPosition()}
-          />
-      </Loop>
-    );
+    var renderEnemy = () => {
+      if(!this.props.store.enemies[this.state.index].isDeleting){
+          return (
+            <Loop>
+              <Sprite
+                repeat={this.props.store.enemies[this.state.index].mounted}
+                src={this.enemyStats.src}
+                tileHeight={this.props.store.enemies[this.state.index].dimensions.height}
+                tileWidth={this.props.store.enemies[this.state.index].dimensions.width}
+                steps={this.enemyStats.steps}
+                state={0}
+                scale={1}
+                offset={[0, 0]}
+                ticksPerFrame={5}
+                style={this.getPosition()}
+                />
+            </Loop>
+          );
+        }
+    }
+    return(
+      <View>
+        {
+          renderEnemy()
+        }
+      </View>
+    )
   }
 }
 

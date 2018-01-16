@@ -21,6 +21,7 @@ class Enemies extends Component {
                 key={index}
                 index={index}
                 uniqueIdentifier={eachEnemy.uniqueIdentifier}
+                type={eachEnemy.type}
                 store={this.props.store}
                 />
             );

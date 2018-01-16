@@ -23,6 +23,7 @@ class ObservableListStore {
   @persist('list') @observable ownedCharacters = ['SEA_LORD']
   @observable player = getPlayerStats(this.selectedPlayer);
   @observable getRewarded = false;
+  @observable points = [];
   @observable shop = {
     harpoons: 200,
     ownedCharacters: [],
@@ -56,7 +57,7 @@ class ObservableListStore {
     speed: 5
   };
   @observable enemies = [];
-  @observable maxEnemies = 1;
+  @observable maxEnemies = 5;
   @observable alert = '';
   @observable info = '';
   @observable navigationState = 'HOME';
@@ -175,7 +176,10 @@ class ObservableListStore {
     }
     this.background.offset = {x: 0, y: 0};
     this.coinArray = coinLayouts.SquareLayout;
-    this.background.loaded = false;
+    if(this.navigationState != 'LEVEL'){
+      this.background.loaded = false;
+    }
+    this.player.loaded = false;
     this.alert = '';
     this.warning.text = '';
     this.warning.visible = false;
@@ -207,12 +211,6 @@ class ObservableListStore {
     }
     if((this.background.position.x + this.background.offset.x) < -(GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)){
       this.background.offset.x += (GLOBALS.initBackgroundDimensions.width-GLOBALS.dimensions.width)
-    }
-    if((-this.background.position.x*GLOBALS.pixelsInAMeter) > 10000){
-      this.maxEnemies = 3
-    }
-    else if((-this.background.position.x*GLOBALS.pixelsInAMeter) > 1000){
-      this.maxEnemies = 2
     }
     var speedX =  Math.abs((this.background.speed)*Math.cos(this.player.angle*(Math.PI/180)))
     // console.log('SPEED',speedX)
@@ -251,6 +249,10 @@ class ObservableListStore {
     if(this.enemies[x].position.x < -300 && this.enemies.length > 0){
       this.enemies.splice(x, 1);
       if(this.enemies.length <= 1){
+        this.randomlyGenerateEnemies();
+        this.randomlyGenerateEnemies();
+        this.randomlyGenerateEnemies();
+        this.randomlyGenerateEnemies();
         this.randomlyGenerateEnemies();
         this.randomlyGenerateEnemies();
       }
@@ -520,8 +522,16 @@ class ObservableListStore {
     }
   }
   onProjectileHitEnemy(p, i){
+    this.points.push({
+      x: this.projectiles[p].position.x,
+      y: this.projectiles[p].position.y,
+      text: "+10"
+    })
     this.projectiles.splice(p, 1);
     this.enemies[i].health -= 1;
+    this.enemies[i].position.x = -GLOBALS.dimensions.width
+    this.enemies[i].position.y = 0
+    this.enemies[i].isDeleting = true
     this.enemies.splice(i, 1);
     this.randomlyGenerateEnemies();
     this.randomlyGenerateAlert();
@@ -634,7 +644,8 @@ class ObservableListStore {
       angle: 0,
       health: 1,
       loaded: false,
-      mounted: true
+      mounted: true,
+      isDeleting: false
     })
   }
   buy(type) {
