@@ -553,7 +553,7 @@ class ObservableListStore {
     }
   }
   checkExists(object){
-    if(typeof object != "undefined" || typeof object != null){
+    if(typeof object != "undefined"){
       return true
     }
   }

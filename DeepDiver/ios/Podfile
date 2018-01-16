@@ -1,0 +1,5 @@
+target 'DeepDiver' do
+  pod 'Google-Mobile-Ads-SDK'
+  pod 'react-native-orientation', :path => '../node_modules/react-native-orientation'
+
+end
