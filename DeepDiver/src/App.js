@@ -22,6 +22,7 @@ export default class App extends Component<{}> {
     appState: AppState.currentState
   }
 componentWillMount() {
+  
   // The getOrientation method is async. It happens sometimes that
   // you need the orientation at the moment the JS runtime starts running on device.
   // `getInitialOrientation` returns directly because its a constant set at the

@@ -27,10 +27,6 @@ class Background extends Component {
       }
     }
   }
-  onLoadEnd(x){
-    this.props.store.background.loaded = true
-    this.props.store.background.loading = true
-  }
   componentWillUnmount(){
     this.setState({mounted: false})
   }
@@ -50,7 +46,10 @@ class Background extends Component {
               width: GLOBALS.initBackgroundDimensions.width
             }
           ]}
-          onLoadEnd={this.onLoadEnd()}
+          onLoad={() => {
+            this.props.store.background.loaded = true
+            console.log('BACKGROUND LOADED')
+          }}
           />
         {
           this.props.store.backgroundComponents.slice().map((eachComponent, index) => {

@@ -15,7 +15,6 @@ import Player from './players';
 import Enemies from './enemies';
 import {observer} from 'mobx-react/native';
 import Matter from 'matter-js';
-import IonIcons from 'react-native-vector-icons/Ionicons';
 import Background from './background';
 import HealthBar from './healthBar';
 import VerticalControls from '../controls/verticalControls';
@@ -194,11 +193,7 @@ class Level extends Component {
                 }}
                 style={styles.pauseButton}
                 >
-                <IonIcons
-                  name={'ios-pause'}
-                  size={50}
-                  color={'white'}
-                  />
+                <Text>Pause</Text>
               </TouchableOpacity>
               </View>
           </World>

@@ -17,9 +17,12 @@ class ObservableListStore {
   @persist @observable bestScore = 0;
   @persist @observable controls = 'VERTICAL';
   @persist @observable selectedPlayer = 'SEA_LORD';
+  @persist @observable dailyRewards = 0;
+  @persist @observable lastOpenTime = 0;
   @persist @observable maxHarpoons = 200;
   @persist('list') @observable ownedCharacters = ['SEA_LORD']
   @observable player = getPlayerStats(this.selectedPlayer);
+  @observable getRewarded = false;
   @observable shop = {
     harpoons: 200,
     ownedCharacters: [],
@@ -121,6 +124,41 @@ class ObservableListStore {
         }
       }
     }
+  }
+  initConfig(){
+    if(this.lastOpenTime > 0){
+      var currentTime = (Date.now() / 1000) /(60*60);
+      var elapsed = (currentTime - this.lastOpenTime);
+      if(elapsed > 48){
+        console.log('MORE THAN 48 HOURS :( NO REWARD')
+        console.log('resetting time')
+        this.lastOpenTime = currentTime;
+        this.dailyRewards = 0
+      }
+      else if(elapsed > 24){
+        console.log('MORE THAN 24 HOURS')
+        console.log('resetting time')
+        console.log('GIVING REWARD')
+        this.getRewarded = true;
+        if(this.dailyRewards <= 5){
+          this.dailyRewards += 1;
+        } else {
+          this.dailyRewards = 0
+        }
+        this.lastOpenTime = currentTime;
+      } else {
+        console.log('NOT YEET' + elapsed)
+      }
+    } else {
+      var currentTime = (Date.now() / 1000) /(60*60);
+      this.lastOpenTime = currentTime;
+      this.dailyRewards = 0
+      console.log('resetting time')
+    }
+  }
+  closeRewards(){
+    this.getRewarded = false
+    console.log('CLOSING REWARDS')
   }
   startGame(){
     this.navigationState = 'LEVEL'
@@ -349,6 +387,43 @@ class ObservableListStore {
     this.player.angle = 0
     // this.background.speed = 5
   }
+
+  // collisionMask(){
+  //   var collisions = [
+  //     {
+  //       x1: 0,
+  //       y1: enemyHeight/2,
+  //       x2: enemyWidth/2,
+  //       y2: 0,
+  //       greaterThan: true
+  //     },
+  //     {
+  //       x1: enemyWidth/2,
+  //       y1: 0,
+  //       x2: enemyWidth,
+  //       y2: enemyHeight/2,
+  //       greaterThan: true
+  //     }
+  //   ]
+  //   var checkPointY = (GLOBALS.initCharacterPosition.y - ((GLOBALS.playerWidthInMeters*GLOBALS.pixelsInAMeter)/2))
+  //   var checkPointX = (GLOBALS.initCharacterPosition.x+ (GLOBALS.playerHeightInMeters*GLOBALS.pixelsInAMeter))
+  //   for(var i = 0; i < collisions.length; i++){
+  //     var eachLine = collisions[i];
+  //     var slope = ((eachLine.y2 - eachLine.y1) / (eachLine.x2 - eachLine.x1));
+  //     var b = (eachLine.y1 - (slope * eachLine.x1));
+  //     if(eachLine.greaterThan){
+  //       if(checkPointY >= (slope * checkPointX) + b){
+  //         console.log('in range of greater than line')
+  //       }
+  //     } else {
+  //       if(checkPointY <= (slope * checkPointX) + b){
+  //         console.log('in range of less than line')
+  //       }
+  //     }
+  //   }
+  // }
+
+
   checkCollisions(i){
     if(this.checkLength(this.enemies.length) && this.checkExists(this.enemies[i])){
         var here = ifBetween((GLOBALS.initCharacterPosition.y - ((GLOBALS.playerWidthInMeters*GLOBALS.pixelsInAMeter)/2)), this.enemies[i].position.y - (this.enemies[i].dimensions.height) -this.background.position.y, this.enemies[i].position.y -this.background.position.y)

@@ -55,7 +55,7 @@ class SeaLord extends Component {
       <Loop>
         <Sprite
           repeat={(this.props.store.player.repeat) ? (true) : (false)}
-          move={false}
+          move={true}
           src={require('../../images/SeaLord.png')}
           tileHeight={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileHeight}
           tileWidth={GLOBALS.SeaLord.tiles[this.props.store.player.animationState].tileWidth}
@@ -65,7 +65,7 @@ class SeaLord extends Component {
           offset={[0, GLOBALS.SeaLord.offsetY]}
           ticksPerFrame={2}
           style={this.getPlayerStyles()}
-          onLoadEnd={this.onLoadEnd()}
+          onLoad={this.onLoadEnd()}
           onLastFrame={() => {
             if(this.props.store.player.animationState === GLOBALS.SeaLord.attackingAnimation){
               // console.log('HARPOON THROWN')

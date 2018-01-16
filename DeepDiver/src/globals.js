@@ -59,7 +59,7 @@ exports.GLOBALS = {
           type: 'PIRANHA',
           dimensions: {
             width: 100,
-            height: 75
+            height: 100
           },
           widthInMeters: 0.75,
           damage: 5,
@@ -135,8 +135,8 @@ exports.GLOBALS = {
         {
           type: 'STING_RAY',
           dimensions: {
-            width: 100,
-            height: 100
+            width: 150,
+            height: 125
           },
           widthInMeters: 2.1336,
           damage: 10,
@@ -153,8 +153,8 @@ exports.GLOBALS = {
         {
           type: 'PUFFER',
           dimensions: {
-            width: 100,
-            height: 100
+            width: 150,
+            height: 125
           },
           widthInMeters: 0.6,
           damage: 5,
@@ -207,6 +207,24 @@ exports.GLOBALS = {
           speed: 1,
           steps: [4],
           src: require('./images/Jellyfish-Glow.png'),
+          distanceAway: 75
+        },
+        {
+          type: 'LIGHT-FISH',
+          dimensions: {
+            width: 150,
+            height: 100
+          },
+          widthInMeters: 0.4,
+          damage: 10,
+          wave: {
+            frequency: 70,
+            wavelength: 100,
+            trackAngle: true
+          },
+          speed: 1,
+          steps: [4],
+          src: require('./images/LightFish.png'),
           distanceAway: 75
         }
       ]

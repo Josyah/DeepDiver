@@ -8,6 +8,9 @@ import {
   Image
 } from 'react-native';
 import {GLOBALS} from '../../globals';
+import DailyRewards from '../../components/dailyRewards'
+import {observer} from 'mobx-react/native';
+@observer
 class Home extends Component {
   constructor(props){
     super(props);
@@ -25,12 +28,21 @@ class Home extends Component {
         )
       }
     }
+    var renderDailyRewards = () => {
+      if(this.props.store.getRewarded == true && !this.state.loading){
+        return (
+          <DailyRewards store={this.props.store}/>
+        )
+      }
+    }
     return (
       <View style={styles.container}>
         <Image
           source={require('../../images/AltOcean.png')}
           style={styles.background}
-          onLoadStart={() => console.log('STARTED LOADING')}
+          onLoadStart={() => {
+            this.props.store.initConfig()
+          }}
           onLoad={() => {
             console.log('FINISHED LOADING')
             this.setState({loading: false})
@@ -61,6 +73,9 @@ class Home extends Component {
         </TouchableOpacity>
         {
           renderLoading()
+        }
+        {
+          renderDailyRewards()
         }
       </View>
     );
