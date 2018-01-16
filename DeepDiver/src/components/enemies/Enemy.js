@@ -35,7 +35,7 @@ class Enemy extends Component {
   }
   getPosition() {
     if(!this.props.store.enemies[this.props.index].isDeleting){
-      console.log(this.props.store.enemies[this.state.index].position.x, this.props.store.enemies[this.state.index].position.y)
+      // console.log(this.props.store.enemies[this.state.index].position.x, this.props.store.enemies[this.state.index].position.y)
       return {
         position: 'absolute',
         left: this.props.store.enemies[this.state.index].position.x,

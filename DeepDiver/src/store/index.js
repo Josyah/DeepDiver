@@ -24,6 +24,7 @@ class ObservableListStore {
   @observable player = getPlayerStats(this.selectedPlayer);
   @observable getRewarded = false;
   @observable points = [];
+  @observable score = 0;
   @observable shop = {
     harpoons: 200,
     ownedCharacters: [],
@@ -552,7 +553,7 @@ class ObservableListStore {
     }
   }
   checkExists(object){
-    if(typeof object != "undefined"){
+    if(typeof object != "undefined" || typeof object != null){
       return true
     }
   }
