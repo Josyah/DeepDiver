@@ -247,13 +247,9 @@ class ObservableListStore {
     }
   }
   isEnemyOffScreen(x){
-    if(this.enemies[x].position.x < -300 && this.enemies.length > 0){
-      this.enemies.splice(x, 1);
+    if(this.enemies[this.enemies.length-1].position.x < -300 && this.enemies.length > 0){
+      this.enemies.splice(this.enemies.length-1, 1);
       if(this.enemies.length <= 1){
-        this.randomlyGenerateEnemies();
-        this.randomlyGenerateEnemies();
-        this.randomlyGenerateEnemies();
-        this.randomlyGenerateEnemies();
         this.randomlyGenerateEnemies();
         this.randomlyGenerateEnemies();
       }
@@ -528,12 +524,18 @@ class ObservableListStore {
       y: this.projectiles[p].position.y,
       text: "+10"
     })
+    if(this.projectiles[p].angle > 0){
+      console.log('DIAGONAL RIGHT DEATH')
+    } else if(this.projectiles[p].angle < 0){
+      console.log('DIAGONAL DOWN DEATH')
+    } else if(this.projectiles[p].angle == 0){
+      console.log('STRAIGHT DEATH')
+    }
     this.projectiles.splice(p, 1);
     this.enemies[i].health -= 1;
     this.enemies[i].position.x = -GLOBALS.dimensions.width
     this.enemies[i].position.y = 0
     this.enemies[i].isDeleting = true
-    this.enemies.splice(i, 1);
     this.randomlyGenerateEnemies();
     this.randomlyGenerateAlert();
     this.scoringSystem.enemiesKilled += 1;
