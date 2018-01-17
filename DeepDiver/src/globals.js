@@ -53,7 +53,11 @@ exports.GLOBALS = {
           speed: 3,
           steps: [3, 1],
           src: require('./images/HammerHead.png'),
-          distanceAway: 75
+          damageAnimations: {
+            up: 2,
+            straight: 3,
+            down: 4,
+          }
         },
         {
           type: 'PIRANHA',
@@ -71,7 +75,11 @@ exports.GLOBALS = {
           speed: 2,
           steps: [3],
           src: require('./images/Piranha.png'),
-          distanceAway: 75
+          damageAnimations: {
+            up: 2,
+            straight: 3,
+            down: 4,
+          }
         },
         {
           type: 'STING_RAY',
@@ -87,9 +95,13 @@ exports.GLOBALS = {
             trackAngle: true
           },
           speed: 1,
-          steps: [3],
+          steps: [3, 4, 1, 1, 1],
           src: require('./images/StingRay.png'),
-          distanceAway: 75
+          damageAnimations: {
+            up: 2,
+            straight: 3,
+            down: 4,
+          }
         },
       ]
     },
@@ -112,7 +124,11 @@ exports.GLOBALS = {
           speed: 3,
           steps: [3, 3, 1, 1, 1],
           src: require('./images/GreatWhite.png'),
-          distanceAway: 75
+          damageAnimations: {
+            up: 2,
+            straight: 3,
+            down: 4,
+          }
         },
         {
           type: 'JELLYFISH',
@@ -128,9 +144,13 @@ exports.GLOBALS = {
             trackAngle: false
           },
           speed: 0.1,
-          steps: [4],
+          steps: [4, 1, 1, 1],
           src: require('./images/JellyFish.png'),
-          distanceAway: 75
+          damageAnimations: {
+            up: 1,
+            straight: 2,
+            down: 3,
+          }
         },
         {
           type: 'STING_RAY',
@@ -146,9 +166,13 @@ exports.GLOBALS = {
             trackAngle: true
           },
           speed: 1,
-          steps: [3],
+          steps: [3, 4, 1, 1, 1],
           src: require('./images/StingRay.png'),
-          distanceAway: 75
+          damageAnimations: {
+            up: 2,
+            straight: 3,
+            down: 4,
+          }
         },
         {
           type: 'PUFFER',
@@ -164,9 +188,13 @@ exports.GLOBALS = {
             trackAngle: true
           },
           speed: 1,
-          steps: [3],
+          steps: [3, 3, 1, 1],
           src: require('./images/Puffer.png'),
-          distanceAway: 75
+          damageAnimations: {
+            up: 2,
+            straight: 3,
+            down: 4,
+          }
         }
       ]
     },
@@ -189,7 +217,11 @@ exports.GLOBALS = {
           speed: 2,
           src: require('./images/ElectricEel.png'),
           steps: [1],
-          distanceAway: 75
+          damageAnimations: {
+            up: 2,
+            straight: 3,
+            down: 4,
+          }
         },
         {
           type: 'JELLYFISH-GLOW',
@@ -207,7 +239,11 @@ exports.GLOBALS = {
           speed: 1,
           steps: [4],
           src: require('./images/Jellyfish-Glow.png'),
-          distanceAway: 75
+          damageAnimations: {
+            up: 2,
+            straight: 3,
+            down: 4,
+          }
         },
         {
           type: 'LIGHT-FISH',
@@ -225,7 +261,11 @@ exports.GLOBALS = {
           speed: 1,
           steps: [4],
           src: require('./images/LightFish.png'),
-          distanceAway: 75
+          damageAnimations: {
+            up: 2,
+            straight: 3,
+            down: 4,
+          }
         }
       ]
     },

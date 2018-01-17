@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
+  Animated
 } from 'react-native';
 import {observer} from 'mobx-react/native';
 import {GLOBALS} from '../../globals';
@@ -17,18 +18,30 @@ class Enemy extends Component {
   constructor(props){
     super(props)
     store = this.props.store
-    // this.enemy = this.enemy
     this.enemy = store.enemies[this.props.index]
     this.state = {
-      index: this.props.index
+      index: this.props.index,
+      opacity: new Animated.Value(1),
     }
   }
-  componentWillUnmount(){
-    // this.enemy.mounted = false;
+  fadeOut() {
+    this.state.opacity.setValue(1)
+    Animated.timing(
+      this.state.opacity,
+      {
+        toValue: 0,
+        duration: 500
+      }
+    ).start(() => {
+      console.log('DONE')
+      this.enemy.isDeleting = false
+    })
   }
-
-  componentDidMount(){
-    this.enemy.mounted = true;
+  componentDidUpdate(){
+    if(this.enemy.isDeleting == true){
+      console.log('FADE OUT')
+      this.fadeOut()
+    }
   }
   getPosition() {
       // console.log(this.enemy.position.x, this.enemy.position.y)
@@ -51,24 +64,26 @@ class Enemy extends Component {
 
   render() {
     var renderEnemy = () => {
-      if(this.enemy.isDeleting != true){
           return (
             <Loop>
-              <Sprite
-                repeat={this.enemy.mounted}
-                src={this.enemy.src}
-                tileHeight={this.enemy.dimensions.height}
-                tileWidth={this.enemy.dimensions.width}
-                steps={this.enemy.steps}
-                state={0}
-                scale={1}
-                offset={[0, 0]}
-                ticksPerFrame={5}
-                style={this.getPosition()}
-                />
+              <Animated.View
+                style={{opacity: this.state.opacity}}>
+                <Sprite
+                  repeat={(this.enemy.animationState == 0) ? (true) : (false)}
+                  src={this.enemy.src}
+                  tileHeight={this.enemy.dimensions.height}
+                  tileWidth={this.enemy.dimensions.width}
+                  steps={this.enemy.steps}
+                  state={this.enemy.animationState}
+                  scale={1}
+                  offset={[0, 0]}
+                  ticksPerFrame={5}
+                  style={this.getPosition()}
+                  />
+              </Animated.View>
             </Loop>
           );
-        }
+        
     }
     return(
       <View>

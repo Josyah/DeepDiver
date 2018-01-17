@@ -31,6 +31,7 @@ import Warning from './messages/Warning';
 import Information from './messages/Information';
 import Loading from '../screens/Loading';
 import Points from './points'
+import Bubbles from './bubbles'
 @observer
 class Level extends Component {
   constructor(props) {
@@ -81,6 +82,13 @@ class Level extends Component {
       if(this.props.store.points.length > 0){
         return(
           <Points store={this.props.store}/>
+        )
+      }
+    }
+    var renderBubbles = () => {
+      if(this.props.store.bubbles.length > 0){
+        return(
+          <Bubbles store={this.props.store}/>
         )
       }
     }
@@ -190,6 +198,9 @@ class Level extends Component {
               }
               {
                 renderWarnings()
+              }
+              {
+                renderBubbles()
               }
               {
                 renderPoints()

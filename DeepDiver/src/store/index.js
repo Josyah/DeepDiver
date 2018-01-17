@@ -5,6 +5,7 @@ let index = 0
 let add = true
 var count = 1
 var lastAlert = '';
+var bubbleCount = 0;
 import {ifBetween} from '../utils/ifBetween'
 import {getPlayerStats} from '../utils/getPlayerStats'
 import {coinLayouts} from '../utils/coinLayout'
@@ -58,6 +59,7 @@ class ObservableListStore {
     speed: 5
   };
   @observable enemies = [];
+  @observable bubbles = [];
   @observable maxEnemies = 5;
   @observable alert = '';
   @observable info = '';
@@ -165,6 +167,7 @@ class ObservableListStore {
   startGame(){
     this.navigationState = 'LEVEL'
     this.randomlyGenerateEnemies();
+    this.randomlyGenerateBubbles();
     this.currentlyPlaying = true
   }
   resetGame(){
@@ -187,7 +190,8 @@ class ObservableListStore {
     this.scoringSystem.enemiesKilled = 0;
     this.scoringSystem.finalDistance = 0;
     this.scoringSystem.finalScore = 0;
-    this.shop.harpoons = this.maxHarpoons
+    this.shop.harpoons = this.maxHarpoons;
+    this.points.clear()
   }
   pause(){
     // this.player.repeat = false
@@ -323,6 +327,16 @@ class ObservableListStore {
       return true;
     } else  {
       return false;
+    }
+  }
+  randomlyGenerateBubbles(){
+    bubbleCount++;
+    if(bubbleCount > 30){
+      this.bubbles.push({
+        x: (Math.random() * 200)+10,
+        y: 0,
+      })
+      bubbleCount = 0
     }
   }
   randomlyGenerateEnemies(){
@@ -524,19 +538,22 @@ class ObservableListStore {
       y: this.projectiles[p].position.y,
       text: "+10"
     })
-    if(this.projectiles[p].angle > 0){
-      console.log('DIAGONAL RIGHT DEATH')
-    } else if(this.projectiles[p].angle < 0){
+    if(this.projectiles[p].angle < 0){
+      this.enemies[i].animationState = this.enemies[i].damageAnimations.up
+      console.log('DIAGONAL UP DEATH')
+    } else if(this.projectiles[p].angle > 0){
+      this.enemies[i].animationState = this.enemies[i].damageAnimations.down
       console.log('DIAGONAL DOWN DEATH')
     } else if(this.projectiles[p].angle == 0){
+      this.enemies[i].animationState = this.enemies[i].damageAnimations.straight
       console.log('STRAIGHT DEATH')
     }
     this.projectiles.splice(p, 1);
     this.enemies[i].health -= 1;
-    this.enemies[i].position.x = -GLOBALS.dimensions.width
-    this.enemies[i].position.y = 0
+    // this.enemies[i].position.x = -GLOBALS.dimensions.width
+    // this.enemies[i].position.y = 0
     this.enemies[i].isDeleting = true
-    this.randomlyGenerateEnemies();
+    // this.randomlyGenerateEnemies();
     this.randomlyGenerateAlert();
     this.scoringSystem.enemiesKilled += 1;
   }
@@ -602,7 +619,7 @@ class ObservableListStore {
 
   }
   addEnemy(enemy) {
-    let {type, dimensions, damage, wave, speed, widthInMeters, steps, src, distanceAway} = enemy;
+    let {type, dimensions, damage, wave, speed, widthInMeters, steps, src, distanceAway, damageAnimations} = enemy;
     var uniqueIdentifier = this.getUniqueId();
     var sign;
     var yStart;
@@ -627,6 +644,8 @@ class ObservableListStore {
       type,
       dimensions,
       damage,
+      damageAnimations,
+      animationState: 0,
       wave: {
         frequency: sign*(Math.random() + .9) * 1.1 * wave.frequency,
         wavelength: (Math.random() + 0.9) * 1.1 * wave.wavelength,
