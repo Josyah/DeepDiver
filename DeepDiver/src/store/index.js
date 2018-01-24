@@ -1,11 +1,12 @@
 import {observable} from 'mobx';
 import {GLOBALS} from '../globals';
-import { Vibration, Animated, AsyncStorage} from 'react-native'
-let index = 0
+import { Vibration, Animated, AsyncStorage} from 'react-native';
 let add = true
-var count = 1
 var lastAlert = '';
 var bubbleCount = 0;
+var numberToReach = Math.round((Math.random() * 100) + 100);
+var tick;
+var enemy;
 import {ifBetween} from '../utils/ifBetween'
 import {getPlayerStats} from '../utils/getPlayerStats'
 import {coinLayouts} from '../utils/coinLayout'
@@ -35,6 +36,7 @@ class ObservableListStore {
   @observable outOfBounds = false;
   @observable lastAnimationState = 0;
   @observable wheelOffset = 0;
+  @observable enemies = [];
   @observable stopAnimations = false;
   @observable wheelItems = getWheelCharacters();
   @observable absPlayerPosition = {
@@ -58,7 +60,6 @@ class ObservableListStore {
     loaded: false,
     speed: 5
   };
-  @observable enemies = [];
   @observable bubbles = [];
   @observable maxEnemies = 5;
   @observable alert = '';
@@ -339,10 +340,12 @@ class ObservableListStore {
       bubbleCount = 0
     }
   }
+
   randomlyGenerateEnemies(){
-    if(this.enemies.length < this.maxEnemies){
-      var enemy;
-      var rndm;
+    tick ++;
+    if(tick == numberToReach) {
+      tick = 0;
+      numberToReach = ((Math.random() * 100) + 100);
       switch(this.region){
         case 'BEACH':
           rndm = Math.round(Math.random()*(GLOBALS.regions.beach.enemies.length-1))
@@ -361,8 +364,35 @@ class ObservableListStore {
           enemy = GLOBALS.regions.beach.enemies[rndm]
       }
       this.addEnemy(enemy)
+    } else if (tick > numberToReach) {
+      tick = 0;
+      numberToReach = (Math.random() * 100) + 100;
     }
   }
+  // randomlyGenerateEnemies(){
+  //   if(this.enemies.length < this.maxEnemies){
+  //     var enemy;
+  //     var rndm;
+  //     switch(this.region){
+  //       case 'BEACH':
+  //         rndm = Math.round(Math.random()*(GLOBALS.regions.beach.enemies.length-1))
+  //         enemy = GLOBALS.regions.beach.enemies[rndm]
+  //         break;
+  //       case 'MIDSEA':
+  //         rndm = Math.round(Math.random()*(GLOBALS.regions.midsea.enemies.length-1))
+  //         enemy = GLOBALS.regions.midsea.enemies[rndm]
+  //         break;
+  //       case 'MIDNIGHT':
+  //         rndm = Math.round(Math.random()*(GLOBALS.regions.midnight.enemies.length-1))
+  //         enemy = GLOBALS.regions.midnight.enemies[rndm]
+  //         break;
+  //       default:
+  //         rndm = Math.round(Math.random()*(GLOBALS.regions.beach.enemies.length-1))
+  //         enemy = GLOBALS.regions.beach.enemies[rndm]
+  //     }
+  //     this.addEnemy(enemy)
+  //   }
+  // }
   randomlyGenerateAlert(){
     if((Math.random()*100) < 50){
       var sampleAlerts = [
