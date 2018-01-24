@@ -251,11 +251,11 @@ class ObservableListStore {
     }
   }
   isEnemyOffScreen(x){
-    if(this.enemies[this.enemies.length-1].position.x < -300 && this.enemies.length > 0){
+    if(this.enemies[this.enemies.length-1].position.x < -300 && (this.enemies.length > 0 && this.checkExists(this.enemies[x]))){
       this.enemies.splice(this.enemies.length-1, 1);
       if(this.enemies.length <= 1){
-        this.randomlyGenerateEnemies();
-        this.randomlyGenerateEnemies();
+        // this.randomlyGenerateEnemies();
+        // this.randomlyGenerateEnemies();
       }
     }
   }
@@ -264,9 +264,9 @@ class ObservableListStore {
       for(var x = 0; x < this.enemies.length ; x++){
         if(this.checkExists(this.enemies[x])){
           this.enemies[x].position.x -= (this.background.speed + this.enemies[x].speed);
-          this.isEnemyOffScreen(x);
-          this.checkCollisions(x);
-          this.moveInWave(x);
+          // this.isEnemyOffScreen(x);
+          // this.checkCollisions(x);
+          // this.moveInWave(x);
         }
       }
     }
@@ -507,7 +507,7 @@ class ObservableListStore {
     }
   }
   onHitByEnemy(id) {
-    if(this.checkLength(this.enemies.length)){
+    if(this.checkLength(this.enemies.length) && this.checkExists(this.enemies[id])){
       if(this.enemies[id].collided == false){
         this.enemies[id].mounted = false;
         this.enemies[id].collided = true;

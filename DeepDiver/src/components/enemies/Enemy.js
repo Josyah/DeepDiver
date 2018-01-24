@@ -45,20 +45,22 @@ class Enemy extends Component {
   }
   getPosition() {
       // console.log(this.enemy.position.x, this.enemy.position.y)
-      return {
-        position: 'absolute',
-        left: this.enemy.position.x,
-        bottom: this.enemy.position.y,
-        width: this.enemy.dimensions.width,
-        height: this.enemy.dimensions.height,
-        transform: [
-          {translateY: this.props.store.background.position.y},
-          {rotate: (-this.enemy.angle+'deg') },
-          {scaleX: ((this.enemy.widthInMeters*GLOBALS.pixelsInAMeter)/(this.enemy.dimensions.width))},
-          {scaleY: ((this.enemy.widthInMeters*GLOBALS.pixelsInAMeter)/(this.enemy.dimensions.width))}
-        ],
+      if(this.props.store.checkExists(this.props.store.enemies[this.props.index])){
+        return {
+          position: 'absolute',
+          left: this.enemy.position.x,
+          bottom: this.enemy.position.y,
+          width: this.enemy.dimensions.width,
+          height: this.enemy.dimensions.height,
+          transform: [
+            {translateY: this.props.store.background.position.y},
+            {rotate: (-this.enemy.angle+'deg') },
+            {scaleX: ((this.enemy.widthInMeters*GLOBALS.pixelsInAMeter)/(this.enemy.dimensions.width))},
+            {scaleY: ((this.enemy.widthInMeters*GLOBALS.pixelsInAMeter)/(this.enemy.dimensions.width))}
+          ],
 
-    }
+        }
+      }
 
 }
 
@@ -83,7 +85,7 @@ class Enemy extends Component {
               </Animated.View>
             </Loop>
           );
-        
+
     }
     return(
       <View>

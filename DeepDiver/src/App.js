@@ -22,7 +22,7 @@ export default class App extends Component<{}> {
     appState: AppState.currentState
   }
 componentWillMount() {
-  
+
   // The getOrientation method is async. It happens sometimes that
   // you need the orientation at the moment the JS runtime starts running on device.
   // `getInitialOrientation` returns directly because its a constant set at the
@@ -60,32 +60,27 @@ componentWillUnmount() {
   // // Remember to remove listener
   // Orientation.removeOrientationListener(this._orientationDidChange);
 }
+// _orientationDidChange = (orientation) => {
+//   if (orientation === 'LANDSCAPE') {
+//     // do something with landscape layout
+//     store.rotate('LANDSCAPE');
+//   } else {
+//     // do something with portrait layout
+//     store.rotate('PORTRAIT');
+//   }
+// }
 
-_handleAppStateChange = (nextAppState) => {
-  if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-    store.active()
-  } else {
-    store.inactive()
+  _handleAppStateChange = (nextAppState) => {
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      store.active()
+    } else {
+      store.inactive()
+    }
+    this.setState({appState: nextAppState});
   }
-  this.setState({appState: nextAppState});
-}
-_orientationDidChange = (orientation) => {
-  if (orientation === 'LANDSCAPE') {
-    // do something with landscape layout
-    store.rotate('LANDSCAPE');
-  } else {
-    // do something with portrait layout
-    store.rotate('PORTRAIT');
-  }
-}
-
-componentWillUnmount() {
-}
   render() {
     return (
-
-          <Navigation store={store}/>
-
+        <Navigation store={store}/>
     );
   }
 }

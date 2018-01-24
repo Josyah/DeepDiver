@@ -16,16 +16,17 @@ class Enemies extends Component {
           // "map" means for each item in an array, return whatever
           // this returns an enemy for every item in the array
           this.props.store.enemies.map((eachEnemy, index) => {
-            console.log(eachEnemy.uniqueIdentifier, eachEnemy.type, index)
-            return (
-              <Enemy
-                key={index}
-                index={index}
-                uniqueIdentifier={eachEnemy.uniqueIdentifier}
-                type={eachEnemy.type}
-                store={this.props.store}
-                />
-            );
+            if(this.props.store.checkExists(this.props.store.enemies[index])){
+              return (
+                <Enemy
+                  key={index}
+                  index={index}
+                  uniqueIdentifier={eachEnemy.uniqueIdentifier}
+                  type={eachEnemy.type}
+                  store={this.props.store}
+                  />
+              );
+            }
           })
 
         }

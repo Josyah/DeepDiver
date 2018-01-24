@@ -31,7 +31,7 @@
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
                BuildableName = "DeepDiver.app"
                BlueprintName = "DeepDiver"
-               ReferencedContainer = "container:DeepDiver.xcodeproj">
+               ReferencedContainer = "container:WaterWarriors.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -45,7 +45,7 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "DeepDiverTests.xctest"
                BlueprintName = "DeepDiverTests"
-               ReferencedContainer = "container:DeepDiver.xcodeproj">
+               ReferencedContainer = "container:WaterWarriors.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -64,7 +64,7 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "DeepDiverTests.xctest"
                BlueprintName = "DeepDiverTests"
-               ReferencedContainer = "container:DeepDiver.xcodeproj">
+               ReferencedContainer = "container:WaterWarriors.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -74,7 +74,7 @@
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "DeepDiver.app"
             BlueprintName = "DeepDiver"
-            ReferencedContainer = "container:DeepDiver.xcodeproj">
+            ReferencedContainer = "container:WaterWarriors.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -98,7 +98,7 @@
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "DeepDiver.app"
             BlueprintName = "DeepDiver"
-            ReferencedContainer = "container:DeepDiver.xcodeproj">
+            ReferencedContainer = "container:WaterWarriors.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -124,7 +124,7 @@
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "DeepDiver.app"
             BlueprintName = "DeepDiver"
-            ReferencedContainer = "container:DeepDiver.xcodeproj">
+            ReferencedContainer = "container:WaterWarriors.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

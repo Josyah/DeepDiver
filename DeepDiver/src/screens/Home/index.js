@@ -48,7 +48,7 @@ class Home extends Component {
           }}
           />
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Water Warfare</Text>
+          <Text style={styles.title}>Water Warriors</Text>
         </View>
         <TouchableWithoutFeedback
           onPress={() => {
